@@ -1,3 +1,6 @@
+pub mod render_xml;
+
+use crate::render_xml::RenderXml;
 use axum::{extract::State, response::IntoResponse, routing::get, Router};
 use axum_template::{engine::Engine, RenderHtml};
 use handlebars::{DirectorySourceOptions, Handlebars};
@@ -25,6 +28,7 @@ pub async fn app(_services: InjectableServices) -> Router {
 
     Router::new()
         .route("/", get(get_root))
+        .route("/twilio", get(get_twilio))
         .with_state(AppState {
             engine: Engine::from(hbs),
         })
@@ -32,4 +36,8 @@ pub async fn app(_services: InjectableServices) -> Router {
 
 async fn get_root(State(state): State<AppState>) -> impl IntoResponse {
     RenderHtml("root", state.engine, ())
+}
+
+async fn get_twilio(State(state): State<AppState>) -> impl IntoResponse {
+    RenderXml("twilio", state.engine, ())
 }

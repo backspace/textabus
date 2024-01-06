@@ -1,4 +1,5 @@
-use scraper::{Html, Selector};
+use select::{document::Document, predicate::Name};
+use speculoos::prelude::*;
 use textabus::{app, InjectableServices};
 use tokio::net::TcpListener;
 
@@ -12,14 +13,21 @@ async fn root_serves_placeholder() {
         "text/html; charset=utf-8"
     );
 
-    let document = Html::parse_document(&response.text().await.unwrap());
-    let h1_selector = Selector::parse("h1").unwrap();
+    let document = Document::from(response.text().await.unwrap().as_str());
 
-    assert_eq!(document.select(&h1_selector).count(), 1);
-    assert_eq!(
-        document.select(&h1_selector).next().unwrap().inner_html(),
-        "\n  textabus\n"
-    );
+    assert_that(&document.find(Name("h1")).next().unwrap().text()).contains("textabus");
+}
+
+#[tokio::test]
+async fn twilio_serves_placeholder() {
+    let response = get("/twilio").await.expect("Failed to execute request");
+
+    assert!(response.status().is_success());
+    assert_eq!(response.headers()["content-type"], "text/xml");
+
+    let document = Document::from(response.text().await.unwrap().as_str());
+
+    assert_that(&document.find(Name("body")).next().unwrap().text()).contains("textabus");
 }
 
 async fn get(path: &str) -> Result<reqwest::Response, reqwest::Error> {
