@@ -13,7 +13,11 @@ async fn main() {
 
     axum::serve(
         listener,
-        app(InjectableServices {}).await.into_make_service(),
+        app(InjectableServices {
+            winnipeg_transit_api_address: Some("https://api.winnipegtransit.com".to_string()),
+        })
+        .await
+        .into_make_service(),
     )
     .await
     .unwrap();

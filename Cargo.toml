@@ -11,15 +11,20 @@ path = "src/main.rs"
 name = "textabus"
 
 [dependencies]
-axum = { version = "0.7.3", features = ["macros"] }
+axum = { version = "0.7.3", features = ["macros", "query"] }
+axum-macros = "0.4.0"
 axum-template = { version = "2.1.0", features = ["handlebars"] }
 handlebars = { version = "5.0.0", features = ["dir_source"] }
 http = "1"
 mime = "0.3"
+regex = "1"
+reqwest = { version = "0.11", features = ["json"] }
 serde = "1.0.195"
+serde_json = "1"
+serde_with = "1"
 tokio = { version = "1.35.1", features = ["macros", "rt-multi-thread"] }
 
 [dev-dependencies]
-reqwest = "0.11"
 select = "0.6"
 speculoos = "0.11"
+wiremock = "0.5"
