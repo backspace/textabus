@@ -1,6 +1,6 @@
 use tokio::net::TcpListener;
 
-use textabus::app;
+use textabus::{app, InjectableServices};
 
 #[tokio::main]
 async fn main() {
@@ -11,7 +11,10 @@ async fn main() {
 
     println!("textabus listening on port 1312");
 
-    axum::serve(listener, app().await.into_make_service())
-        .await
-        .unwrap();
+    axum::serve(
+        listener,
+        app(InjectableServices {}).await.into_make_service(),
+    )
+    .await
+    .unwrap();
 }

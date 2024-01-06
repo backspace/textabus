@@ -9,7 +9,9 @@ pub struct AppState {
     engine: AppEngine,
 }
 
-pub async fn app() -> Router {
+pub struct InjectableServices {}
+
+pub async fn app(_services: InjectableServices) -> Router {
     let mut hbs = Handlebars::new();
     hbs.register_templates_directory(
         "templates",

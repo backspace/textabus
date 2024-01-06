@@ -16,3 +16,7 @@ axum-template = { version = "2.1.0", features = ["handlebars"] }
 handlebars = { version = "5.0.0", features = ["dir_source"] }
 serde = "1.0.195"
 tokio = { version = "1.35.1", features = ["macros", "rt-multi-thread"] }
+
+[dev-dependencies]
+scraper = "0.18"
+reqwest = "0.11"
