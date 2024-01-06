@@ -1,37 +1,17 @@
-use axum::{extract::State, response::IntoResponse, routing::get, Router};
-use axum_template::{engine::Engine, RenderHtml};
-use handlebars::{DirectorySourceOptions, Handlebars};
+use tokio::net::TcpListener;
 
-type AppEngine = Engine<Handlebars<'static>>;
-
-#[derive(Clone)]
-struct AppState {
-    engine: AppEngine,
-}
+use textabus::app;
 
 #[tokio::main]
 async fn main() {
-    let mut hbs = Handlebars::new();
-    hbs.register_templates_directory(
-        "templates",
-        DirectorySourceOptions {
-            tpl_extension: ".hbs".to_string(),
-            hidden: false,
-            temporary: false,
-        },
-    )
-    .expect("Failed to register templates directory");
+    let listener_address = "0.0.0.0:1312";
+    let listener = TcpListener::bind(listener_address)
+        .await
+        .expect("Failed to bind port 1312");
 
-    let app = Router::new()
-        .route("/", get(get_root))
-        .with_state(AppState {
-            engine: Engine::from(hbs),
-        });
+    println!("textabus listening on port 1312");
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:1312").await.unwrap();
-    axum::serve(listener, app).await.unwrap();
-}
-
-async fn get_root(State(state): State<AppState>) -> impl IntoResponse {
-    RenderHtml("root", state.engine, ())
+    axum::serve(listener, app().await.into_make_service())
+        .await
+        .unwrap();
 }
