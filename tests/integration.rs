@@ -1,3 +1,4 @@
+use indoc::indoc;
 use select::{document::Document, predicate::Name};
 use serde_json::json;
 use speculoos::prelude::*;
@@ -245,8 +246,15 @@ async fn stop_number_returns_stop_name() {
     assert_eq!(response.headers()["content-type"], "text/xml");
 
     let document = Document::from(response.text().await.unwrap().as_str());
+    let body = &document.find(Name("body")).next().unwrap().text();
 
-    assert_that(&document.find(Name("body")).next().unwrap().text()).contains("NB Osborne@Glasgow");
+    assert_that(body).contains(indoc! {"
+        10064 NB Osborne@Glasgow
+        4:29p 16 Via Manitoba
+        4:36p 16 Via Burrows
+        4:57p 16 Via Manitoba
+        5:19p 16 Via Burrows
+        5:43p 16 Via Manitoba"});
 }
 
 async fn get(

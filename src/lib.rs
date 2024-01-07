@@ -8,6 +8,7 @@ use axum::{
     Router,
 };
 use axum_template::{engine::Engine, RenderHtml};
+use chrono::NaiveDateTime;
 use handlebars::{DirectorySourceOptions, Handlebars};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
@@ -64,19 +65,55 @@ struct StopScheduleResponse {
     stop_schedule: StopSchedule,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Deserialize)]
+#[serde(rename_all = "kebab-case")]
 pub struct StopSchedule {
     stop: Stop,
+    route_schedules: Vec<RouteSchedule>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Deserialize)]
 pub struct Stop {
+    name: String,
+    number: u32,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "kebab-case")]
+struct RouteSchedule {
+    route: Route,
+    scheduled_stops: Vec<ScheduledStop>,
+}
+
+#[derive(Deserialize)]
+struct ScheduledStop {
+    times: Times,
+    variant: Variant,
+}
+
+#[derive(Deserialize)]
+struct Times {
+    departure: ArrivalDeparture,
+}
+
+#[derive(Deserialize)]
+struct ArrivalDeparture {
+    estimated: String,
+}
+
+#[derive(Deserialize)]
+struct Route {
+    number: u32,
+}
+
+#[derive(Deserialize)]
+struct Variant {
     name: String,
 }
 
 #[derive(Serialize)]
-pub struct TimesResponse {
-    stop_schedule: StopSchedule,
+pub struct MessageResponse {
+    body: String,
 }
 
 #[axum_macros::debug_handler]
@@ -104,11 +141,35 @@ async fn get_twilio(
             .await
             .unwrap();
 
+        let mut response_text = format!(
+            "{} {}\n",
+            response.stop_schedule.stop.number, response.stop_schedule.stop.name
+        );
+
+        for route_schedule in &response.stop_schedule.route_schedules {
+            for scheduled_stop in &route_schedule.scheduled_stops {
+                let time = NaiveDateTime::parse_from_str(
+                    &scheduled_stop.times.departure.estimated,
+                    "%Y-%m-%dT%H:%M:%S",
+                )
+                .unwrap()
+                .format("%-I:%M%p")
+                .to_string()
+                .to_lowercase()
+                .trim_end_matches('m')
+                .to_string();
+                response_text.push_str(&format!(
+                    "{} {} {}\n",
+                    time, route_schedule.route.number, scheduled_stop.variant.name
+                ));
+            }
+        }
+
         RenderXml(
-            "times",
+            "message-response",
             state.engine,
-            TimesResponse {
-                stop_schedule: response.stop_schedule,
+            MessageResponse {
+                body: response_text,
             },
         )
         .into_response()
