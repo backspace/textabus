@@ -14,6 +14,7 @@ use chrono::NaiveDateTime;
 use handlebars::{DirectorySourceOptions, Handlebars};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 use serde_with::{serde_as, NoneAsEmptyString};
 use std::env;
 
@@ -111,7 +112,7 @@ struct ArrivalDeparture {
 
 #[derive(Deserialize)]
 struct Route {
-    number: u32,
+    number: Value,
 }
 
 #[derive(Deserialize)]
@@ -154,23 +155,45 @@ async fn get_twilio(
             response.stop_schedule.stop.number, response.stop_schedule.stop.name
         );
 
+        let mut schedule_lines: Vec<(NaiveDateTime, String)> = Vec::new();
+
         for route_schedule in &response.stop_schedule.route_schedules {
             for scheduled_stop in &route_schedule.scheduled_stops {
                 let time = NaiveDateTime::parse_from_str(
                     &scheduled_stop.times.departure.estimated,
                     "%Y-%m-%dT%H:%M:%S",
                 )
-                .unwrap()
-                .format("%-I:%M%p")
-                .to_string()
-                .to_lowercase()
-                .trim_end_matches('m')
-                .to_string();
-                response_text.push_str(&format!(
-                    "{} {} {}\n",
-                    time, route_schedule.route.number, scheduled_stop.variant.name
-                ));
+                .unwrap();
+
+                let route_number = match route_schedule.route.number.clone() {
+                    Value::String(s) => s,
+                    Value::Number(n) => n.to_string(),
+                    _ => panic!("Unexpected type for number"),
+                };
+
+                let line = format!("{} {}", route_number, scheduled_stop.variant.name);
+                schedule_lines.push((time, line));
             }
+        }
+
+        schedule_lines.sort_by(|a, b| a.0.cmp(&b.0));
+
+        let sorted_schedule_lines: Vec<String> = schedule_lines
+            .iter()
+            .map(|(time, line)| {
+                format!(
+                    "{} {}",
+                    time.format("%-I:%M%p")
+                        .to_string()
+                        .to_lowercase()
+                        .trim_end_matches('m'),
+                    line
+                )
+            })
+            .collect();
+
+        for line in sorted_schedule_lines {
+            response_text.push_str(&format!("{}\n", line));
         }
 
         RenderXml(
