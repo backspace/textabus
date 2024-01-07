@@ -1,5 +1,7 @@
+pub mod config;
 pub mod render_xml;
 
+use crate::config::{Config, ConfigProvider, EnvVarProvider};
 use crate::render_xml::RenderXml;
 use axum::{
     extract::{Query, State},
@@ -13,11 +15,13 @@ use handlebars::{DirectorySourceOptions, Handlebars};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use serde_with::{serde_as, NoneAsEmptyString};
+use std::env;
 
 type AppEngine = Engine<Handlebars<'static>>;
 
 #[derive(Clone)]
 pub struct AppState {
+    config: Config,
     engine: AppEngine,
     winnipeg_transit_api_address: String,
 }
@@ -38,10 +42,14 @@ pub async fn app(services: InjectableServices) -> Router {
     )
     .expect("Failed to register templates directory");
 
+    let env_config_provider = EnvVarProvider::new(env::vars().collect());
+    let config = env_config_provider.get_config();
+
     Router::new()
         .route("/", get(get_root))
         .route("/twilio", get(get_twilio))
         .with_state(AppState {
+            config: config.clone(),
             engine: Engine::from(hbs),
             winnipeg_transit_api_address: services.winnipeg_transit_api_address.unwrap(),
         })
@@ -123,7 +131,7 @@ async fn get_twilio(
 ) -> impl IntoResponse {
     let stop_number_regex = Regex::new(r"^\d{5}$").unwrap();
 
-    let api_key = "FIXME";
+    let api_key = &state.config.winnipeg_transit_api_key;
 
     if params.body.is_some() && stop_number_regex.is_match(&params.body.clone().unwrap()) {
         let client = reqwest::Client::new();
