@@ -1220,41 +1220,6 @@ async fn stop_number_returns_stop_name() {
     12:22p BLUE Downtown
     12:25p 60 UofM
     12:33p 18 Assin Park
-    12:33p BLUE Downtown
-    12:37p 33 Via Mapleglen
-    12:39p 16 Southdale Ctr
-    12:40p 17 Misericordia
-    12:45p 20 Airport
-    12:45p BLUE Downtown
-    12:56p 18 Assin Park
-    12:56p BLUE Downtown
-    12:57p 60 UofM
-    12:59p 45 Downtown
-    1:00p 16 St Vital Ctr
-    1:08p BLUE Downtown
-    1:08p 33 Via Jefferson
-    1:09p 17 Misericordia
-    1:18p 18 Assin Park
-    1:19p BLUE Downtown
-    1:21p 16 Southdale Ctr
-    1:28p 60 UofM
-    1:29p 20 Airport
-    1:31p BLUE Downtown
-    1:34p 45 Downtown
-    1:38p 17 Misericordia
-    1:39p 33 Via Mapleglen
-    1:41p 18 Assin Park
-    1:42p 16 St Vital Ctr
-    1:42p BLUE Downtown
-    1:54p BLUE Downtown
-    2:00p 60 UofM
-    2:03p 16 Southdale Ctr
-    2:03p 18 Assin Park
-    2:05p BLUE Downtown
-    2:07p 17 Misericordia
-    2:10p 33 Via Jefferson
-    2:12p 20 Airport
-    2:14p 45 Downtown
     "});
 }
 

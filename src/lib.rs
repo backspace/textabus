@@ -192,10 +192,15 @@ async fn get_twilio(
             })
             .collect();
 
-        for line in sorted_schedule_lines {
-            response_text.push_str(&format!("{}\n", line));
-        }
+        const MAX_RESPONSE_LENGTH: usize = 140;
 
+        for line in sorted_schedule_lines {
+            if response_text.len() + line.len() < MAX_RESPONSE_LENGTH {
+                response_text.push_str(&format!("{}\n", line));
+            } else {
+                break;
+            }
+        }
         RenderXml(
             "message-response",
             state.engine,
