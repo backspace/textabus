@@ -11,6 +11,10 @@ use serde_json::Value;
 use serde_with::{serde_as, NoneAsEmptyString};
 use sqlx::types::Uuid;
 
+const MAX_RESPONSE_LENGTH: usize = 140;
+const DELAY_THRESHOLD: i64 = 3;
+const AHEAD_THRESHOLD: i64 = 1;
+
 #[axum_macros::debug_handler]
 pub async fn get_twilio(
     State(state): State<AppState>,
@@ -105,13 +109,49 @@ pub async fn get_twilio(
                 )
                 .unwrap();
 
+                let scheduled_time = NaiveDateTime::parse_from_str(
+                    &scheduled_stop.times.departure.scheduled,
+                    "%Y-%m-%dT%H:%M:%S",
+                )
+                .unwrap();
+
                 let route_number = match route_schedule.route.number.clone() {
                     Value::String(s) => s,
                     Value::Number(n) => n.to_string(),
                     _ => panic!("Unexpected type for number"),
                 };
 
-                let line = format!("{} {}", route_number, scheduled_stop.variant.name);
+                let mut line = format!("{} {}", route_number, scheduled_stop.variant.name);
+
+                println!(
+                    "thing {} {}, num minutes {}",
+                    time,
+                    route_number,
+                    time.signed_duration_since(scheduled_time).num_minutes()
+                );
+
+                if time.signed_duration_since(scheduled_time).num_minutes() >= DELAY_THRESHOLD {
+                    line.push_str(
+                        format!(
+                            " ({}min delay)",
+                            time.signed_duration_since(scheduled_time).num_minutes()
+                        )
+                        .as_str(),
+                    );
+                } else if time.signed_duration_since(scheduled_time).num_minutes()
+                    <= -AHEAD_THRESHOLD
+                {
+                    line.push_str(
+                        format!(
+                            " ({}min ahead)",
+                            time.signed_duration_since(scheduled_time)
+                                .num_minutes()
+                                .abs()
+                        )
+                        .as_str(),
+                    );
+                }
+
                 schedule_lines.push((time, line));
             }
         }
@@ -131,8 +171,6 @@ pub async fn get_twilio(
                 )
             })
             .collect();
-
-        const MAX_RESPONSE_LENGTH: usize = 140;
 
         for line in sorted_schedule_lines {
             if response_text.len() + line.len() < MAX_RESPONSE_LENGTH {
@@ -224,6 +262,7 @@ struct Times {
 #[derive(Deserialize)]
 struct ArrivalDeparture {
     estimated: String,
+    scheduled: String,
 }
 
 #[derive(Deserialize)]

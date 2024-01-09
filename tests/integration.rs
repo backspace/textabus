@@ -115,14 +115,15 @@ async fn stop_number_returns_stop_name(db: PgPool) {
     let document = Document::from(response.text().await.unwrap().as_str());
     let body = &document.find(Name("body")).next().unwrap().text();
 
-    assert_that(body).contains(indoc! {"
-    10619 WB Graham@Vaughan (The Bay)
-    12:18p 16 St Vital Ctr
-    12:19p BLUE Downtown
-    12:22p BLUE Downtown
-    12:25p 60 UofM
-    12:33p 18 Assin Park
-    "});
+    let expected_body = indoc! {"
+        10619 WB Graham@Vaughan (The Bay)
+        12:16p 16 St Vital Ctr (1min ahead)
+        12:19p BLUE Downtown (8min delay)
+        12:22p BLUE Downtown
+        12:25p 60 UofM
+        "};
+
+    assert_that(body).contains(expected_body);
 
     let [incoming_message, outgoing_message]: [Message; 2] =
         sqlx::query_as("SELECT * FROM messages ORDER BY created_at")
@@ -137,17 +138,7 @@ async fn stop_number_returns_stop_name(db: PgPool) {
     assert_eq!(incoming_message.destination, "textabus");
     assert_eq!(incoming_message.initial_message_id, None);
 
-    assert_eq!(
-        outgoing_message.body,
-        indoc! {"
-            10619 WB Graham@Vaughan (The Bay)
-            12:18p 16 St Vital Ctr
-            12:19p BLUE Downtown
-            12:22p BLUE Downtown
-            12:25p 60 UofM
-            12:33p 18 Assin Park
-            "}
-    );
+    assert_eq!(outgoing_message.body, expected_body,);
     assert_eq!(outgoing_message.origin, "textabus");
     assert_eq!(outgoing_message.destination, "sender");
     assert_eq!(
