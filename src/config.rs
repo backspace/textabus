@@ -1,8 +1,10 @@
 // Adapted from https://dev.to/bdhobare/managing-application-config-in-rust-23ai
 use std::collections::HashMap;
+use url::Url;
 
 #[derive(Clone, Debug)]
 pub struct Config {
+    pub database_url: Url,
     pub winnipeg_transit_api_key: String,
 }
 
@@ -15,6 +17,8 @@ pub struct EnvVarProvider(Config);
 impl EnvVarProvider {
     pub fn new(args: HashMap<String, String>) -> Self {
         let config = Config {
+            database_url: Url::parse(args.get("DATABASE_URL").expect("Missing DATABASE_URL"))
+                .expect("Unable to parse DATABASE_URL as a URL"),
             winnipeg_transit_api_key: args
                 .get("WINNIPEG_TRANSIT_API_KEY")
                 .expect("Missing WINNIPEG_TRANSIT_API_KEY")

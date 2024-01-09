@@ -4,11 +4,12 @@ use axum::{
     extract::{Query, State},
     response::IntoResponse,
 };
-use chrono::NaiveDateTime;
+use chrono::{NaiveDateTime, Utc};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use serde_with::{serde_as, NoneAsEmptyString};
+use sqlx::types::Uuid;
 
 #[axum_macros::debug_handler]
 pub async fn get_twilio(
@@ -18,6 +19,32 @@ pub async fn get_twilio(
     let stop_number_regex = Regex::new(r"^\d{5}$").unwrap();
 
     let api_key = &state.config.winnipeg_transit_api_key;
+
+    let incoming_message_id = Uuid::new_v4();
+    let incoming_message_insertion_result = sqlx::query(
+        r#"
+        INSERT INTO messages (id, message_sid, origin, destination, body, created_at, updated_at)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        "#,
+    )
+    .bind(incoming_message_id)
+    .bind(params.message_sid.clone())
+    .bind(params.from.clone())
+    .bind(params.to.clone())
+    .bind(params.body.clone())
+    .bind(Utc::now().naive_utc())
+    .bind(Utc::now().naive_utc())
+    .execute(&state.db)
+    .await;
+
+    let mut maybe_incoming_message_id = Some(incoming_message_id);
+
+    if let Err(e) = incoming_message_insertion_result {
+        maybe_incoming_message_id = None;
+        log::error!("Failed to insert incoming message: {}", e);
+    }
+
+    let mut response_text = "textabus".to_string();
 
     if params.body.is_some() && stop_number_regex.is_match(&params.body.clone().unwrap()) {
         let client = reqwest::Client::new();
@@ -35,7 +62,7 @@ pub async fn get_twilio(
             .await
             .unwrap();
 
-        let mut response_text = format!(
+        response_text = format!(
             "{} {}\n",
             response.stop_schedule.stop.number, response.stop_schedule.stop.name
         );
@@ -86,17 +113,36 @@ pub async fn get_twilio(
                 break;
             }
         }
-        RenderXml(
-            "message-response",
-            state.engine,
-            MessageResponse {
-                body: response_text,
-            },
-        )
-        .into_response()
-    } else {
-        RenderXml("twilio", state.engine, ()).into_response()
     }
+
+    let outgoing_message_insertion_result = sqlx::query(
+        r#"
+        INSERT INTO messages (id, origin, destination, body, initial_message_id, created_at, updated_at)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        "#,
+    )
+    .bind(Uuid::new_v4())
+    .bind(params.to.clone())
+    .bind(params.from.clone())
+    .bind(response_text.clone())
+    .bind(maybe_incoming_message_id)
+    .bind(Utc::now().naive_utc())
+    .bind(Utc::now().naive_utc())
+    .execute(&state.db)
+    .await;
+
+    if let Err(e) = outgoing_message_insertion_result {
+        log::error!("Failed to insert outgoing message: {}", e);
+    }
+
+    RenderXml(
+        "message-response",
+        state.engine,
+        MessageResponse {
+            body: response_text,
+        },
+    )
+    .into_response()
 }
 
 #[serde_as]
@@ -105,6 +151,9 @@ pub async fn get_twilio(
 pub struct TwilioParams {
     #[serde_as(as = "NoneAsEmptyString")]
     pub body: Option<String>,
+    pub message_sid: String,
+    pub from: String,
+    pub to: String,
 }
 
 #[derive(Deserialize)]

@@ -1,9 +1,26 @@
+use sqlx::PgPool;
+use std::env;
 use tokio::net::TcpListener;
 
-use textabus::{app, InjectableServices};
+use textabus::{
+    app,
+    config::{ConfigProvider, EnvVarProvider},
+    InjectableServices,
+};
 
 #[tokio::main]
 async fn main() {
+    let env_config_provider = EnvVarProvider::new(env::vars().collect());
+    let config = &env_config_provider.get_config();
+
+    let database_url = &config.database_url;
+    let db = PgPool::connect(database_url.as_str()).await.unwrap();
+
+    sqlx::migrate!()
+        .run(&db)
+        .await
+        .expect("Failed to run migrations");
+
     let listener_address = "0.0.0.0:1312";
     let listener = TcpListener::bind(listener_address)
         .await
@@ -14,6 +31,7 @@ async fn main() {
     axum::serve(
         listener,
         app(InjectableServices {
+            db,
             winnipeg_transit_api_address: Some("https://api.winnipegtransit.com".to_string()),
         })
         .await

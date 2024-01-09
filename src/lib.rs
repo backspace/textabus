@@ -1,4 +1,5 @@
 pub mod config;
+pub mod models;
 pub mod render_xml;
 pub mod routes;
 
@@ -8,6 +9,7 @@ use crate::routes::*;
 use axum::{routing::get, Router};
 use axum_template::engine::Engine;
 use handlebars::{DirectorySourceOptions, Handlebars};
+use sqlx::postgres::PgPool;
 use std::env;
 
 type AppEngine = Engine<Handlebars<'static>>;
@@ -15,11 +17,13 @@ type AppEngine = Engine<Handlebars<'static>>;
 #[derive(Clone)]
 pub struct AppState {
     config: Config,
+    db: PgPool,
     engine: AppEngine,
     winnipeg_transit_api_address: String,
 }
 
 pub struct InjectableServices {
+    pub db: PgPool,
     pub winnipeg_transit_api_address: Option<String>,
 }
 
@@ -43,6 +47,7 @@ pub async fn app(services: InjectableServices) -> Router {
         .route("/twilio", get(get_twilio))
         .with_state(AppState {
             config: config.clone(),
+            db: services.db,
             engine: Engine::from(hbs),
             winnipeg_transit_api_address: services.winnipeg_transit_api_address.unwrap(),
         })

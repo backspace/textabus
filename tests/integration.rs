@@ -1,17 +1,19 @@
 use indoc::indoc;
 use select::{document::Document, predicate::Name};
 use speculoos::prelude::*;
+use sqlx::postgres::PgPool;
 use std::fs;
-use textabus::{app, InjectableServices};
+use textabus::{app, models::Message, InjectableServices};
 use tokio::net::TcpListener;
 use wiremock::matchers::{any, method, path_regex};
 use wiremock::{Mock, MockServer, ResponseTemplate};
 
-#[tokio::test]
-async fn root_serves_placeholder() {
+#[sqlx::test]
+async fn root_serves_placeholder(db: PgPool) {
     let response = get(
         "/",
         InjectableServices {
+            db: db.clone(),
             winnipeg_transit_api_address: None,
         },
     )
@@ -29,11 +31,12 @@ async fn root_serves_placeholder() {
     assert_that(&document.find(Name("h1")).next().unwrap().text()).contains("textabus");
 }
 
-#[tokio::test]
-async fn twilio_serves_placeholder_with_unknown_body() {
+#[sqlx::test]
+async fn twilio_serves_placeholder_with_unknown_body_and_stores_messages(db: PgPool) {
     let response = get(
-        "/twilio?Body=wha",
+        "/twilio?Body=wha&From=sender&To=textabus&MessageSid=SM1312",
         InjectableServices {
+            db: db.clone(),
             winnipeg_transit_api_address: None,
         },
     )
@@ -46,10 +49,32 @@ async fn twilio_serves_placeholder_with_unknown_body() {
     let document = Document::from(response.text().await.unwrap().as_str());
 
     assert_that(&document.find(Name("body")).next().unwrap().text()).contains("textabus");
+
+    let [incoming_message, outgoing_message]: [Message; 2] =
+        sqlx::query_as("SELECT * FROM messages ORDER BY created_at")
+            .fetch_all(&db)
+            .await
+            .expect("Failed to fetch messages")
+            .try_into()
+            .expect("Expected exactly 2 messages");
+
+    assert_eq!(incoming_message.body, "wha");
+    assert_eq!(incoming_message.message_sid, Some("SM1312".to_string()));
+    assert_eq!(incoming_message.origin, "sender");
+    assert_eq!(incoming_message.destination, "textabus");
+    assert_eq!(incoming_message.initial_message_id, None);
+
+    assert_eq!(outgoing_message.body, "textabus");
+    assert_eq!(outgoing_message.origin, "textabus");
+    assert_eq!(outgoing_message.destination, "sender");
+    assert_eq!(
+        outgoing_message.initial_message_id,
+        Some(incoming_message.id)
+    );
 }
 
-#[tokio::test]
-async fn stop_number_returns_stop_name() {
+#[sqlx::test]
+async fn stop_number_returns_stop_name(db: PgPool) {
     let mock_winnipeg_transit_api = MockServer::start().await;
     let mock_stop_schedule_response = fs::read_to_string("tests/fixtures/stop_schedule.json")
         .expect("Failed to read stop schedule fixture");
@@ -62,8 +87,9 @@ async fn stop_number_returns_stop_name() {
         .await;
 
     let response = get(
-        "/twilio?Body=10619",
+        "/twilio?Body=10619&From=sender&To=textabus&MessageSid=SM1849",
         InjectableServices {
+            db: db.clone(),
             winnipeg_transit_api_address: Some(mock_winnipeg_transit_api.uri()),
         },
     )
@@ -84,6 +110,37 @@ async fn stop_number_returns_stop_name() {
     12:25p 60 UofM
     12:33p 18 Assin Park
     "});
+
+    let [incoming_message, outgoing_message]: [Message; 2] =
+        sqlx::query_as("SELECT * FROM messages ORDER BY created_at")
+            .fetch_all(&db)
+            .await
+            .expect("Failed to fetch messages")
+            .try_into()
+            .expect("Expected exactly 2 messages");
+
+    assert_eq!(incoming_message.body, "10619");
+    assert_eq!(incoming_message.origin, "sender");
+    assert_eq!(incoming_message.destination, "textabus");
+    assert_eq!(incoming_message.initial_message_id, None);
+
+    assert_eq!(
+        outgoing_message.body,
+        indoc! {"
+            10619 WB Graham@Vaughan (The Bay)
+            12:18p 16 St Vital Ctr
+            12:19p BLUE Downtown
+            12:22p BLUE Downtown
+            12:25p 60 UofM
+            12:33p 18 Assin Park
+            "}
+    );
+    assert_eq!(outgoing_message.origin, "textabus");
+    assert_eq!(outgoing_message.destination, "sender");
+    assert_eq!(
+        outgoing_message.initial_message_id,
+        Some(incoming_message.id)
+    );
 }
 
 async fn get(
@@ -101,6 +158,7 @@ async fn get(
             .await;
 
         services = InjectableServices {
+            db: services.db,
             winnipeg_transit_api_address: Some("http://localhost:1313".to_string()),
         };
     }
