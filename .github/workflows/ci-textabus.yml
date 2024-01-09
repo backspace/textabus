@@ -12,12 +12,20 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    services:
+      db:
+        image: postgres:latest
+        ports: ["5432:5432"]
+        env:
+          POSTGRES_PASSWORD: postgres
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@1.75.0
       - uses: Swatinem/rust-cache@v2
       - name: Run tests
         run: export $(cat .env.test | xargs) && cargo test
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost/postgres
 
   fmt:
     name: Rustfmt
@@ -53,6 +61,12 @@ jobs:
   coverage:
     name: Code coverage
     runs-on: ubuntu-latest
+    services:
+      db:
+        image: postgres:latest
+        ports: ["5432:5432"]
+        env:
+          POSTGRES_PASSWORD: postgres
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -64,5 +78,7 @@ jobs:
           key: sqlx-${{ env.SQLX_VERSION }}
       - name: Generate code coverage
         run: export $(cat .env.test | xargs) && cargo install cargo-tarpaulin@0.25.2 && cargo tarpaulin --verbose --workspace --out lcov --output-dir coverage
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost/postgres
       - name: Coveralls GitHub Action
         uses: coverallsapp/github-action@v2.1.2
