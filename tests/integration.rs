@@ -3,7 +3,11 @@ use select::{document::Document, predicate::Name};
 use speculoos::prelude::*;
 use sqlx::postgres::PgPool;
 use std::fs;
-use textabus::{app, models::Message, InjectableServices};
+use textabus::{
+    app,
+    models::{ApiResponse, Message},
+    InjectableServices,
+};
 use tokio::net::TcpListener;
 use wiremock::matchers::{any, method, path_regex};
 use wiremock::{Mock, MockServer, ResponseTemplate};
@@ -71,6 +75,13 @@ async fn twilio_serves_placeholder_with_unknown_body_and_stores_messages(db: PgP
         outgoing_message.initial_message_id,
         Some(incoming_message.id)
     );
+
+    let count: i64 = sqlx::query_scalar("SELECT COUNT(*) FROM api_responses")
+        .fetch_one(&db)
+        .await
+        .expect("Failed to fetch count");
+
+    assert_eq!(count, 0);
 }
 
 #[sqlx::test]
@@ -81,7 +92,9 @@ async fn stop_number_returns_stop_name(db: PgPool) {
 
     Mock::given(method("GET"))
         .and(path_regex(r"^/v3/stops/.*/schedule.json$"))
-        .respond_with(ResponseTemplate::new(200).set_body_string(mock_stop_schedule_response))
+        .respond_with(
+            ResponseTemplate::new(200).set_body_string(mock_stop_schedule_response.clone()),
+        )
         .expect(1)
         .mount(&mock_winnipeg_transit_api)
         .await;
@@ -140,6 +153,18 @@ async fn stop_number_returns_stop_name(db: PgPool) {
     assert_eq!(
         outgoing_message.initial_message_id,
         Some(incoming_message.id)
+    );
+
+    let api_response: ApiResponse = sqlx::query_as("SELECT * FROM api_responses LIMIT 1")
+        .fetch_one(&db)
+        .await
+        .expect("Failed to fetch API response");
+
+    assert_eq!(api_response.message_id, incoming_message.id);
+    assert_eq!(api_response.body, mock_stop_schedule_response);
+    assert_eq!(
+        api_response.query,
+        "/v3/stops/10619/schedule.json?usage=short"
     );
 }
 

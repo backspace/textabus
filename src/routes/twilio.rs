@@ -48,28 +48,56 @@ pub async fn get_twilio(
 
     if params.body.is_some() && stop_number_regex.is_match(&params.body.clone().unwrap()) {
         let client = reqwest::Client::new();
-        let response = client
+
+        let query = format!(
+            "/v3/stops/{}/schedule.json?usage=short",
+            params.body.clone().unwrap(),
+        );
+
+        let api_response_text = client
             .get(format!(
-                "{}/v3/stops/{}/schedule.json?usage=short&api-key={}",
+                "{}{}&api-key={}",
                 state.winnipeg_transit_api_address,
-                params.body.clone().unwrap(),
+                query.clone(),
                 api_key
             ))
             .send()
             .await
             .unwrap()
-            .json::<StopScheduleResponse>()
+            .text()
             .await
             .unwrap();
 
+        let api_response_insertion_result = sqlx::query(
+            r#"
+            INSERT INTO api_responses (id, body, query, message_id, created_at, updated_at)
+            VALUES ($1, $2, $3, $4, $5, $6)
+            "#,
+        )
+        .bind(Uuid::new_v4())
+        .bind(api_response_text.clone())
+        .bind(query)
+        .bind(maybe_incoming_message_id)
+        .bind(Utc::now().naive_utc())
+        .bind(Utc::now().naive_utc())
+        .execute(&state.db)
+        .await;
+
+        if let Err(e) = api_response_insertion_result {
+            log::error!("Failed to insert API response: {}", e);
+        }
+
+        let parsed_response =
+            serde_json::from_str::<StopScheduleResponse>(&api_response_text).unwrap();
+
         response_text = format!(
             "{} {}\n",
-            response.stop_schedule.stop.number, response.stop_schedule.stop.name
+            parsed_response.stop_schedule.stop.number, parsed_response.stop_schedule.stop.name
         );
 
         let mut schedule_lines: Vec<(NaiveDateTime, String)> = Vec::new();
 
-        for route_schedule in &response.stop_schedule.route_schedules {
+        for route_schedule in &parsed_response.stop_schedule.route_schedules {
             for scheduled_stop in &route_schedule.scheduled_stops {
                 let time = NaiveDateTime::parse_from_str(
                     &scheduled_stop.times.departure.estimated,
