@@ -10,6 +10,8 @@ use textabus::{
 
 #[tokio::main]
 async fn main() {
+    pretty_env_logger::init();
+
     let env_config_provider = EnvVarProvider::new(env::vars().collect());
     let config = &env_config_provider.get_config();
 
