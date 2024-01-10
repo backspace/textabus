@@ -5,7 +5,7 @@ use sqlx::postgres::PgPool;
 use std::fs;
 use textabus::{
     app,
-    models::{ApiResponse, Message},
+    models::{ApiResponse, Message, Number},
     InjectableServices,
 };
 use tokio::net::TcpListener;
@@ -36,9 +36,77 @@ async fn root_serves_placeholder(db: PgPool) {
 }
 
 #[sqlx::test]
-async fn twilio_serves_placeholder_with_unknown_body_and_stores_messages(db: PgPool) {
+async fn twilio_serves_welcome_to_and_registers_unknown_number(db: PgPool) {
     let response = get(
-        "/twilio?Body=wha&From=sender&To=textabus&MessageSid=SM1312",
+        "/twilio?Body=hey&From=unknown&To=textabus&MessageSid=SM1312",
+        InjectableServices {
+            db: db.clone(),
+            winnipeg_transit_api_address: None,
+        },
+    )
+    .await
+    .expect("Failed to execute request");
+
+    assert!(response.status().is_success());
+    assert_eq!(response.headers()["content-type"], "text/xml");
+
+    let document = Document::from(response.text().await.unwrap().as_str());
+
+    assert_that(&document.find(Name("body")).next().unwrap().text()).contains("welcome to textabus. we don’t recognise you, please contact a maintainer to join the alpha test.");
+
+    let [incoming_message, outgoing_message]: [Message; 2] =
+        sqlx::query_as("SELECT * FROM messages ORDER BY created_at")
+            .fetch_all(&db)
+            .await
+            .expect("Failed to fetch messages")
+            .try_into()
+            .expect("Expected exactly 2 messages");
+
+    assert_eq!(incoming_message.body, "hey");
+    assert_that(&outgoing_message.body).contains("maintainer");
+
+    let [number]: [Number; 1] = sqlx::query_as("SELECT * FROM numbers")
+        .fetch_all(&db)
+        .await
+        .expect("Failed to fetch numbers")
+        .try_into()
+        .expect("Expected exactly 1 number");
+
+    assert_eq!(number.number, "unknown");
+    assert!(!number.approved);
+    assert!(!number.admin);
+}
+#[sqlx::test(fixtures("numbers-unapproved"))]
+async fn twilio_ignores_a_known_but_not_approved_number(db: PgPool) {
+    let response = get(
+        "/twilio?Body=hey&From=unapproved&To=textabus&MessageSid=SM1312",
+        InjectableServices {
+            db: db.clone(),
+            winnipeg_transit_api_address: None,
+        },
+    )
+    .await
+    .expect("Failed to execute request");
+
+    assert_eq!(response.status(), 404);
+
+    let [incoming_message]: [Message; 1] =
+        sqlx::query_as("SELECT * FROM messages ORDER BY created_at")
+            .fetch_all(&db)
+            .await
+            .expect("Failed to fetch messages")
+            .try_into()
+            .expect("Expected exactly 1 message");
+
+    assert_eq!(incoming_message.body, "hey");
+}
+
+#[sqlx::test(fixtures("numbers-approved"))]
+async fn twilio_serves_placeholder_with_unknown_body_to_approved_number_and_stores_messages(
+    db: PgPool,
+) {
+    let response = get(
+        "/twilio?Body=wha&From=approved&To=textabus&MessageSid=SM1312",
         InjectableServices {
             db: db.clone(),
             winnipeg_transit_api_address: None,
@@ -64,13 +132,13 @@ async fn twilio_serves_placeholder_with_unknown_body_and_stores_messages(db: PgP
 
     assert_eq!(incoming_message.body, "wha");
     assert_eq!(incoming_message.message_sid, Some("SM1312".to_string()));
-    assert_eq!(incoming_message.origin, "sender");
+    assert_eq!(incoming_message.origin, "approved");
     assert_eq!(incoming_message.destination, "textabus");
     assert_eq!(incoming_message.initial_message_id, None);
 
     assert_eq!(outgoing_message.body, "textabus");
     assert_eq!(outgoing_message.origin, "textabus");
-    assert_eq!(outgoing_message.destination, "sender");
+    assert_eq!(outgoing_message.destination, "approved");
     assert_eq!(
         outgoing_message.initial_message_id,
         Some(incoming_message.id)
@@ -84,8 +152,8 @@ async fn twilio_serves_placeholder_with_unknown_body_and_stores_messages(db: PgP
     assert_eq!(count, 0);
 }
 
-#[sqlx::test]
-async fn stop_number_returns_stop_name(db: PgPool) {
+#[sqlx::test(fixtures("numbers-approved"))]
+async fn stop_number_returns_stop_name_to_approved_number(db: PgPool) {
     let mock_winnipeg_transit_api = MockServer::start().await;
     let mock_stop_schedule_response = fs::read_to_string("tests/fixtures/stop_schedule.json")
         .expect("Failed to read stop schedule fixture");
@@ -100,7 +168,7 @@ async fn stop_number_returns_stop_name(db: PgPool) {
         .await;
 
     let response = get(
-        "/twilio?Body=10619&From=sender&To=textabus&MessageSid=SM1849",
+        "/twilio?Body=10619&From=approved&To=textabus&MessageSid=SM1849",
         InjectableServices {
             db: db.clone(),
             winnipeg_transit_api_address: Some(mock_winnipeg_transit_api.uri()),
@@ -134,13 +202,13 @@ async fn stop_number_returns_stop_name(db: PgPool) {
             .expect("Expected exactly 2 messages");
 
     assert_eq!(incoming_message.body, "10619");
-    assert_eq!(incoming_message.origin, "sender");
+    assert_eq!(incoming_message.origin, "approved");
     assert_eq!(incoming_message.destination, "textabus");
     assert_eq!(incoming_message.initial_message_id, None);
 
     assert_eq!(outgoing_message.body, expected_body,);
     assert_eq!(outgoing_message.origin, "textabus");
-    assert_eq!(outgoing_message.destination, "sender");
+    assert_eq!(outgoing_message.destination, "approved");
     assert_eq!(
         outgoing_message.initial_message_id,
         Some(incoming_message.id)
