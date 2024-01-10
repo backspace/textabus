@@ -20,8 +20,6 @@ pub async fn get_twilio(
     State(state): State<AppState>,
     params: Query<TwilioParams>,
 ) -> impl IntoResponse {
-    let stop_number_regex = Regex::new(r"^\d{5}$").unwrap();
-
     let api_key = &state.config.winnipeg_transit_api_key;
 
     let incoming_message_id = Uuid::new_v4();
@@ -62,136 +60,149 @@ pub async fn get_twilio(
 
     if number.is_ok() {
         if number.unwrap().approved {
-            if params.body.is_some() && stop_number_regex.is_match(&params.body.clone().unwrap()) {
-                let client = reqwest::Client::new();
+            if params.body.is_some() {
+                let body = params.body.clone().unwrap();
+                let maybe_stop_and_routes = parse_stop_and_routes(&body);
 
-                let query = format!(
-                    "/v3/stops/{}/schedule.json?usage=short",
-                    params.body.clone().unwrap(),
-                );
+                if maybe_stop_and_routes.is_ok() {
+                    let (stop_number, routes) = maybe_stop_and_routes.unwrap();
 
-                let api_response_text = client
-                    .get(format!(
-                        "{}{}&api-key={}",
-                        state.winnipeg_transit_api_address,
-                        query.clone(),
-                        api_key
-                    ))
-                    .send()
-                    .await
-                    .unwrap()
-                    .text()
-                    .await
-                    .unwrap();
+                    let client = reqwest::Client::new();
 
-                let api_response_insertion_result = sqlx::query(
-                    r#"
-                INSERT INTO api_responses (id, body, query, message_id, created_at, updated_at)
-                VALUES ($1, $2, $3, $4, $5, $6)
-                "#,
-                )
-                .bind(Uuid::new_v4())
-                .bind(api_response_text.clone())
-                .bind(query)
-                .bind(maybe_incoming_message_id)
-                .bind(Utc::now().naive_utc())
-                .bind(Utc::now().naive_utc())
-                .execute(&state.db)
-                .await;
+                    let query = format!("/v3/stops/{}/schedule.json?usage=short", stop_number,);
 
-                if let Err(e) = api_response_insertion_result {
-                    log::error!("Failed to insert API response: {}", e);
-                }
-
-                let parsed_response =
-                    serde_json::from_str::<StopScheduleResponse>(&api_response_text).unwrap();
-
-                response_text = format!(
-                    "{} {}\n",
-                    parsed_response.stop_schedule.stop.number,
-                    parsed_response.stop_schedule.stop.name
-                );
-
-                let mut schedule_lines: Vec<(NaiveDateTime, String)> = Vec::new();
-
-                for route_schedule in &parsed_response.stop_schedule.route_schedules {
-                    for scheduled_stop in &route_schedule.scheduled_stops {
-                        let time = NaiveDateTime::parse_from_str(
-                            &scheduled_stop.times.departure.estimated,
-                            "%Y-%m-%dT%H:%M:%S",
-                        )
+                    let api_response_text = client
+                        .get(format!(
+                            "{}{}&api-key={}",
+                            state.winnipeg_transit_api_address,
+                            query.clone(),
+                            api_key
+                        ))
+                        .send()
+                        .await
+                        .unwrap()
+                        .text()
+                        .await
                         .unwrap();
 
-                        let scheduled_time = NaiveDateTime::parse_from_str(
-                            &scheduled_stop.times.departure.scheduled,
-                            "%Y-%m-%dT%H:%M:%S",
-                        )
-                        .unwrap();
+                    let api_response_insertion_result = sqlx::query(
+                        r#"
+                        INSERT INTO api_responses (id, body, query, message_id, created_at, updated_at)
+                        VALUES ($1, $2, $3, $4, $5, $6)
+                        "#,
+                    )
+                    .bind(Uuid::new_v4())
+                    .bind(api_response_text.clone())
+                    .bind(query)
+                    .bind(maybe_incoming_message_id)
+                    .bind(Utc::now().naive_utc())
+                    .bind(Utc::now().naive_utc())
+                    .execute(&state.db)
+                    .await;
 
-                        let route_number = match route_schedule.route.number.clone() {
+                    if let Err(e) = api_response_insertion_result {
+                        log::error!("Failed to insert API response: {}", e);
+                    }
+
+                    let parsed_response =
+                        serde_json::from_str::<StopScheduleResponse>(&api_response_text).unwrap();
+
+                    response_text = format!(
+                        "{} {}\n",
+                        parsed_response.stop_schedule.stop.number,
+                        parsed_response.stop_schedule.stop.name
+                    );
+
+                    let mut schedule_lines: Vec<(NaiveDateTime, String)> = Vec::new();
+
+                    for route_schedule in &parsed_response.stop_schedule.route_schedules {
+                        let number_as_string;
+                        let route_number = match &route_schedule.route.number {
                             Value::String(s) => s,
-                            Value::Number(n) => n.to_string(),
-                            _ => panic!("Unexpected type for number"),
+                            Value::Number(n) => {
+                                number_as_string = n.to_string();
+                                &number_as_string
+                            }
+                            _ => panic!("Unexpected type parsing route number"),
                         };
 
-                        let mut line = format!("{} {}", route_number, scheduled_stop.variant.name);
-
-                        println!(
-                            "thing {} {}, num minutes {}",
-                            time,
-                            route_number,
-                            time.signed_duration_since(scheduled_time).num_minutes()
-                        );
-
-                        if time.signed_duration_since(scheduled_time).num_minutes()
-                            >= DELAY_THRESHOLD
-                        {
-                            line.push_str(
-                                format!(
-                                    " ({}min delay)",
-                                    time.signed_duration_since(scheduled_time).num_minutes()
-                                )
-                                .as_str(),
-                            );
-                        } else if time.signed_duration_since(scheduled_time).num_minutes()
-                            <= -AHEAD_THRESHOLD
-                        {
-                            line.push_str(
-                                format!(
-                                    " ({}min ahead)",
-                                    time.signed_duration_since(scheduled_time)
-                                        .num_minutes()
-                                        .abs()
-                                )
-                                .as_str(),
-                            );
+                        if !routes.is_empty() && !routes.contains(&route_number.as_str()) {
+                            continue;
                         }
 
-                        schedule_lines.push((time, line));
+                        for scheduled_stop in &route_schedule.scheduled_stops {
+                            let time = NaiveDateTime::parse_from_str(
+                                &scheduled_stop.times.departure.estimated,
+                                "%Y-%m-%dT%H:%M:%S",
+                            )
+                            .unwrap();
+
+                            let scheduled_time = NaiveDateTime::parse_from_str(
+                                &scheduled_stop.times.departure.scheduled,
+                                "%Y-%m-%dT%H:%M:%S",
+                            )
+                            .unwrap();
+
+                            let mut line =
+                                format!("{} {}", route_number, scheduled_stop.variant.name);
+
+                            println!(
+                                "thing {} {}, num minutes {}",
+                                time,
+                                route_number,
+                                time.signed_duration_since(scheduled_time).num_minutes()
+                            );
+
+                            if time.signed_duration_since(scheduled_time).num_minutes()
+                                >= DELAY_THRESHOLD
+                            {
+                                line.push_str(
+                                    format!(
+                                        " ({}min delay)",
+                                        time.signed_duration_since(scheduled_time).num_minutes()
+                                    )
+                                    .as_str(),
+                                );
+                            } else if time.signed_duration_since(scheduled_time).num_minutes()
+                                <= -AHEAD_THRESHOLD
+                            {
+                                line.push_str(
+                                    format!(
+                                        " ({}min ahead)",
+                                        time.signed_duration_since(scheduled_time)
+                                            .num_minutes()
+                                            .abs()
+                                    )
+                                    .as_str(),
+                                );
+                            }
+
+                            schedule_lines.push((time, line));
+                        }
                     }
-                }
 
-                schedule_lines.sort_by(|a, b| a.0.cmp(&b.0));
+                    schedule_lines.sort_by(|a, b| a.0.cmp(&b.0));
 
-                let sorted_schedule_lines: Vec<String> = schedule_lines
-                    .iter()
-                    .map(|(time, line)| {
-                        format!(
-                            "{} {}",
-                            time.format("%-I:%M%p")
-                                .to_string()
-                                .to_lowercase()
-                                .trim_end_matches('m'),
-                            line
-                        )
-                    })
-                    .collect();
+                    let sorted_schedule_lines: Vec<String> = schedule_lines
+                        .iter()
+                        .map(|(time, line)| {
+                            format!(
+                                "{} {}",
+                                time.format("%-I:%M%p")
+                                    .to_string()
+                                    .to_lowercase()
+                                    .trim_end_matches('m'),
+                                line
+                            )
+                        })
+                        .collect();
 
-                for line in sorted_schedule_lines {
-                    if response_text.len() + line.len() < MAX_RESPONSE_LENGTH {
-                        response_text.push_str(&format!("{}\n", line));
-                    } else {
-                        break;
+                    for line in sorted_schedule_lines {
+                        if response_text.len() + line.len() < MAX_RESPONSE_LENGTH {
+                            response_text.push_str(&format!("{}\n", line));
+                        } else {
+                            break;
+                        }
                     }
                 }
             }
@@ -315,4 +326,20 @@ struct Variant {
 #[derive(Serialize)]
 pub struct MessageResponse {
     body: String,
+}
+
+fn parse_stop_and_routes(input: &str) -> Result<(&str, Vec<&str>), &'static str> {
+    let re = Regex::new(r"^(\d{5})(?:\s+(.*))?$").unwrap();
+
+    if let Some(captures) = re.captures(input) {
+        let stop_number = captures.get(1).map_or("", |m| m.as_str());
+        let routes: Vec<&str> = captures
+            .get(2)
+            .map_or("", |m| m.as_str())
+            .split_whitespace()
+            .collect();
+        Ok((stop_number, routes))
+    } else {
+        Err("Input string doesn't match the expected pattern")
+    }
 }
