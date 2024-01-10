@@ -146,13 +146,6 @@ pub async fn get_twilio(
                             let mut line =
                                 format!("{} {}", route_number, scheduled_stop.variant.name);
 
-                            println!(
-                                "thing {} {}, num minutes {}",
-                                time,
-                                route_number,
-                                time.signed_duration_since(scheduled_time).num_minutes()
-                            );
-
                             if time.signed_duration_since(scheduled_time).num_minutes()
                                 >= DELAY_THRESHOLD
                             {
