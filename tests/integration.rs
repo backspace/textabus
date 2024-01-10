@@ -153,7 +153,7 @@ async fn twilio_serves_placeholder_with_unknown_body_to_approved_number_and_stor
 }
 
 #[sqlx::test(fixtures("numbers-approved"))]
-async fn stop_number_returns_stop_name_to_approved_number(db: PgPool) {
+async fn stop_number_returns_stop_schedule_to_approved_number(db: PgPool) {
     let mock_winnipeg_transit_api = MockServer::start().await;
     let mock_stop_schedule_response = fs::read_to_string("tests/fixtures/stop_schedule.json")
         .expect("Failed to read stop schedule fixture");
