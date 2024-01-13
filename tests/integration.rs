@@ -298,8 +298,6 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
     let mock_locations_response = fs::read_to_string("tests/fixtures/stops/locations.json")
         .expect("Failed to read locations fixture");
 
-    println!("Mock locations response: {}", mock_locations_response);
-
     Mock::given(method("GET"))
         .and(path_regex(r"^/v3/locations:.*\.json$"))
         .and(query_param("usage", "short"))
@@ -362,9 +360,6 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
         },
     )
     .await;
-
-    let received_requests = mock_winnipeg_transit_api.received_requests().await;
-    dbg!(received_requests);
 
     assert!(response.is_ok(), "Failed to execute request");
 
