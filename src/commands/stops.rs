@@ -5,6 +5,7 @@ use serde_json::Value;
 use crate::config::Config;
 
 const STOPS_DISTANCE: usize = 500;
+const MAXIMUM_STOPS_TO_RETURN: usize = 10;
 
 pub async fn handle_stops_request(
     config: &Config,
@@ -76,7 +77,7 @@ pub async fn handle_stops_request(
         &locations_response.locations[0].name, location_address
     );
 
-    for stop in &stops_response.stops {
+    for stop in stops_response.stops.iter().take(MAXIMUM_STOPS_TO_RETURN) {
         let routes_url = format!(
             "{}/v3/routes.json?stop={}&api-key={}",
             winnipeg_transit_api_address, stop.number, api_key

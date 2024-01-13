@@ -325,7 +325,7 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
     let stops: serde_json::Value =
         serde_json::from_str(&mock_stops_response).expect("Failed to parse stops fixture as JSON");
 
-    for stop in stops["stops"].as_array().unwrap() {
+    for stop in stops["stops"].as_array().unwrap().iter().take(10) {
         let stop_key = stop["key"].as_u64().unwrap().to_string();
         let mock_routes_response = fs::read_to_string(format!(
             "tests/fixtures/stops/routes/stop_{}.json",
@@ -377,22 +377,6 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
         10624 NB Main@Assiniboine BLUE 14 19 47 53 54 55 57 59 68
         10830 NB Fort@Assiniboine 23
         10590 WB Broadway@Garry 23 34 65 66
-        10907 EB Forks Market@The Forks Market 38
-        10639 SB Main@St. Mary BLUE 14 19 34 47 53 54 55 57 59 68
-        10939 SB Israel Asper@William Stephenson 38
-        10589 EB Broadway@Smith 23 34 65 66
-        11051 NB Main@St. Mary 47 53
-        10651 NB Smith@Broadway 65 66
-        11024 NB Fort@St. Mary 34
-        10620 WB St Mary@Fort 14 19 54 55 57 59 68
-        10803 EB William Stephenson@Canadian Museum for Human Rights 10 38 43 49 50 56
-        10804 WB Pioneer@Canadian Museum for Human Rights 10 38 43 49 50 56
-        10591 WB Broadway@Donald 23 34
-        10158 NB Queen Elizabeth@Mayfair 14 19 53 54 55 57 59
-        10588 EB Broadway@Donald 23 34
-        10672 SB Donald@York 65 66
-        10652 NB Smith@St. Mary 65 66
-        10157 EB Mayfair@Queen Elizabeth BLUE 47 65 66 68
         "};
 
     assert_that(body).contains(expected_body);
