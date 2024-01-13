@@ -325,6 +325,8 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
     let stops: serde_json::Value =
         serde_json::from_str(&mock_stops_response).expect("Failed to parse stops fixture as JSON");
 
+    let mut mock_routes: Vec<(String, String, String)> = Vec::new();
+
     for stop in stops["stops"].as_array().unwrap().iter().take(10) {
         let stop_key = stop["key"].as_u64().unwrap().to_string();
         let mock_routes_response = fs::read_to_string(format!(
@@ -333,9 +335,16 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
         ))
         .unwrap_or_else(|_| panic!("Failed to read routes fixture for stop {}", stop_key));
 
+        let mock_route_path = format!("/v3/routes.json?stop={}", stop_key);
+        mock_routes.push((
+            mock_route_path.clone(),
+            mock_routes_response.clone(),
+            stop_key.clone(),
+        ));
+
         Mock::given(method("GET"))
             .and(path("/v3/routes.json"))
-            .and(query_param("stop", stop_key.clone()))
+            .and(query_param("stop", stop_key.as_str()))
             .respond_with(ResponseTemplate::new(200).set_body_string(mock_routes_response))
             .expect(1)
             .named(format!("routes for stop {}", stop_key))
@@ -377,7 +386,7 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
         10624 NB Main@Assiniboine BLUE 14 19 47 53 54 55 57 59 68
         10830 NB Fort@Assiniboine 23
         10590 WB Broadway@Garry 23 34 65 66
-        "};
+    "};
 
     assert_that(body).contains(expected_body);
 
@@ -393,7 +402,44 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
 
     assert_eq!(outgoing_message.body, expected_body);
 
-    // FIXME add assertions on stored API responses
+    let api_responses: Vec<ApiResponse> = sqlx::query_as("SELECT * FROM api_responses")
+        .fetch_all(&db)
+        .await
+        .expect("Failed to fetch API responses");
+
+    let locations_response = api_responses
+        .first()
+        .expect("Expected persisted locations response");
+
+    assert_eq!(locations_response.message_id, incoming_message.id);
+    assert_eq!(locations_response.body, mock_locations_response);
+    assert_eq!(
+        locations_response.query,
+        format!("/v3/locations:union station.json")
+    );
+
+    let stops_response = api_responses
+        .get(1)
+        .expect("Expected persisted stops response");
+
+    assert_eq!(stops_response.message_id, incoming_message.id);
+    assert_eq!(stops_response.body, mock_stops_response);
+    assert_eq!(
+        stops_response.query,
+        format!("/v3/stops.json?lat=49.88895&lon=-97.13424&distance=500")
+    );
+
+    let routes_responses: Vec<&ApiResponse> = api_responses.iter().skip(2).collect();
+
+    for (index, (path, data, stop)) in mock_routes.iter().enumerate() {
+        let route_response = routes_responses
+            .get(index)
+            .unwrap_or_else(|| panic!("Expected persisted route response for stop {}", stop));
+
+        assert_eq!(route_response.message_id, incoming_message.id);
+        assert_eq!(route_response.body, *data);
+        assert_eq!(route_response.query, *path);
+    }
 }
 
 async fn get(

@@ -70,6 +70,8 @@ pub async fn get_twilio(
                         &state.config,
                         state.winnipeg_transit_api_address.clone(),
                         maybe_stops_and_location.unwrap(),
+                        maybe_incoming_message_id,
+                        &state.db,
                     )
                     .await
                     .unwrap();

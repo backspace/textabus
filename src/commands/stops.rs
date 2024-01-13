@@ -1,6 +1,8 @@
+use chrono::Utc;
 use reqwest::Client;
 use serde::Deserialize;
 use serde_json::Value;
+use sqlx::{types::Uuid, PgPool};
 
 use crate::config::Config;
 
@@ -11,20 +13,44 @@ pub async fn handle_stops_request(
     config: &Config,
     winnipeg_transit_api_address: String,
     location: &str,
+    maybe_incoming_message_id: Option<Uuid>,
+    db: &PgPool,
 ) -> Result<String, Box<dyn std::error::Error>> {
     let client = Client::new();
 
     let api_key = config.winnipeg_transit_api_key.clone();
 
+    let locations_query = format!("/v3/locations:{}.json", location);
+
     let locations_url = format!(
-        "{}/v3/locations:{}.json?api-key={}",
-        winnipeg_transit_api_address, location, api_key
+        "{}{}?api-key={}",
+        winnipeg_transit_api_address, locations_query, api_key
     );
 
     log::trace!("locations URL: {}", locations_url);
 
     let locations_response = client.get(&locations_url).send().await?;
+
     let locations_response_text = locations_response.text().await?;
+
+    let locations_api_response_insertion_result = sqlx::query(
+        r#"
+        INSERT INTO api_responses (id, body, query, message_id, created_at, updated_at)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        "#,
+    )
+    .bind(Uuid::new_v4())
+    .bind(locations_response_text.clone())
+    .bind(locations_query)
+    .bind(maybe_incoming_message_id)
+    .bind(Utc::now().naive_utc())
+    .bind(Utc::now().naive_utc())
+    .execute(db)
+    .await;
+
+    if let Err(e) = locations_api_response_insertion_result {
+        log::error!("Failed to insert locations API response: {}", e);
+    }
 
     let locations_response: LocationResponse = match serde_json::from_str(&locations_response_text)
     {
@@ -54,14 +80,38 @@ pub async fn handle_stops_request(
         locations_response.locations[0].address.street.name
     );
 
+    let stops_query = format!(
+        "/v3/stops.json?lat={}&lon={}&distance={}",
+        latitude, longitude, STOPS_DISTANCE
+    );
+
     let stops_url = format!(
-        "{}/v3/stops.json?lat={}&lon={}&distance={}&api-key={}",
-        winnipeg_transit_api_address, latitude, longitude, STOPS_DISTANCE, api_key
+        "{}{}&api-key={}",
+        winnipeg_transit_api_address, stops_query, api_key
     );
 
     log::trace!("stops URL: {}", stops_url);
 
     let stops_response_text = client.get(&stops_url).send().await?.text().await?;
+
+    let stops_api_response_insertion_result = sqlx::query(
+        r#"
+        INSERT INTO api_responses (id, body, query, message_id, created_at, updated_at)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        "#,
+    )
+    .bind(Uuid::new_v4())
+    .bind(stops_response_text.clone())
+    .bind(stops_query)
+    .bind(maybe_incoming_message_id)
+    .bind(Utc::now().naive_utc())
+    .bind(Utc::now().naive_utc())
+    .execute(db)
+    .await;
+
+    if let Err(e) = stops_api_response_insertion_result {
+        log::error!("Failed to insert locations API response: {}", e);
+    }
 
     let stops_response: StopsResponse = match serde_json::from_str(&stops_response_text) {
         Ok(response) => response,
@@ -78,14 +128,39 @@ pub async fn handle_stops_request(
     );
 
     for stop in stops_response.stops.iter().take(MAXIMUM_STOPS_TO_RETURN) {
+        let routes_query = format!("/v3/routes.json?stop={}", stop.number);
+
         let routes_url = format!(
-            "{}/v3/routes.json?stop={}&api-key={}",
-            winnipeg_transit_api_address, stop.number, api_key
+            "{}{}&api-key={}",
+            winnipeg_transit_api_address, routes_query, api_key
         );
 
         log::trace!("routes URL: {}", routes_url);
 
         let routes_response_text = client.get(&routes_url).send().await?.text().await?;
+
+        let route_stops_api_response_insertion_result = sqlx::query(
+            r#"
+            INSERT INTO api_responses (id, body, query, message_id, created_at, updated_at)
+            VALUES ($1, $2, $3, $4, $5, $6)
+            "#,
+        )
+        .bind(Uuid::new_v4())
+        .bind(routes_response_text.clone())
+        .bind(routes_query)
+        .bind(maybe_incoming_message_id)
+        .bind(Utc::now().naive_utc())
+        .bind(Utc::now().naive_utc())
+        .execute(db)
+        .await;
+
+        if let Err(e) = route_stops_api_response_insertion_result {
+            log::error!(
+                "Failed to insert routes API response for stop {}: {}",
+                stop.number,
+                e
+            );
+        }
 
         let routes_response: RoutesResponse = match serde_json::from_str(&routes_response_text) {
             Ok(response) => response,
