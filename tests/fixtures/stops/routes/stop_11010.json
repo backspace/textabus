@@ -1,0 +1,20 @@
+{
+  "routes": [
+    {
+      "key": 34,
+      "number": 34,
+      "name": "Route 34 McPhillips Super Express",
+      "customer-type": "regular",
+      "coverage": "super express",
+      "badge-label": 34,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "express"] },
+        "background-color": "#eed700",
+        "border-color": "#cab700",
+        "color": "#000000"
+      },
+      "variants": [{ "key": "34-0-M" }, { "key": "34-1-D" }]
+    }
+  ],
+  "query-time": "2024-01-11T20:14:00"
+}

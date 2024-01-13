@@ -1,0 +1,31 @@
+{
+  "locations": [
+    {
+      "key": 2140,
+      "name": "Via Rail Station (Union Station)",
+      "categories": ["Transportation"],
+      "address": {
+        "key": 133533,
+        "street-number": 123,
+        "street": {
+          "key": 2265,
+          "name": "Main Street",
+          "type": "Street"
+        },
+        "centre": {
+          "utm": {
+            "zone": "14U",
+            "x": 634017,
+            "y": 5527953
+          },
+          "geographic": {
+            "latitude": "49.88895",
+            "longitude": "-97.13424"
+          }
+        }
+      },
+      "type": "monument"
+    }
+  ],
+  "query-time": "2024-01-11T19:58:07"
+}

@@ -1,0 +1,246 @@
+{
+  "routes": [
+    {
+      "key": 19,
+      "number": 19,
+      "name": "Route 19 Marion-Logan-Notre Dame",
+      "customer-type": "regular",
+      "coverage": "regular",
+      "badge-label": 19,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "regular"] },
+        "background-color": "#ffffff",
+        "border-color": "#d9d9d9",
+        "color": "#000000"
+      },
+      "variants": [
+        { "key": "19-0-N" },
+        { "key": "19-1-A" },
+        { "key": "19-0-L" },
+        { "key": "19-0-E" },
+        { "key": "19-1-D" },
+        { "key": "19-0-#" },
+        { "key": "19-1-N" }
+      ]
+    },
+    {
+      "key": 68,
+      "number": 68,
+      "name": "Route 68 Grosvenor",
+      "customer-type": "regular",
+      "coverage": "regular",
+      "badge-label": 68,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "regular"] },
+        "background-color": "#ffffff",
+        "border-color": "#d9d9d9",
+        "color": "#000000"
+      },
+      "variants": [
+        { "key": "68-1-D" },
+        { "key": "68-0-R" },
+        { "key": "68-1-#" }
+      ]
+    },
+    {
+      "key": 54,
+      "number": 54,
+      "name": "Route 54 St. Mary's Express",
+      "customer-type": "regular",
+      "coverage": "express",
+      "badge-label": 54,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "express"] },
+        "background-color": "#eed700",
+        "border-color": "#cab700",
+        "color": "#000000"
+      },
+      "variants": [
+        { "key": "54-0-A" },
+        { "key": "54-1-D" },
+        { "key": "54-0-S" }
+      ]
+    },
+    {
+      "key": 23,
+      "number": 23,
+      "name": "Route 23 Broadway - William",
+      "customer-type": "regular",
+      "coverage": "regular",
+      "badge-label": 23,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "regular"] },
+        "background-color": "#ffffff",
+        "border-color": "#d9d9d9",
+        "color": "#000000"
+      },
+      "variants": [{ "key": "23-1-C" }, { "key": "23-0-A" }]
+    },
+    {
+      "key": 47,
+      "number": 47,
+      "name": "Route 47 Transcona - Pembina",
+      "customer-type": "regular",
+      "coverage": "regular",
+      "badge-label": 47,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "regular"] },
+        "background-color": "#ffffff",
+        "border-color": "#d9d9d9",
+        "color": "#000000"
+      },
+      "variants": [
+        { "key": "47-0-K" },
+        { "key": "47-0-R" },
+        { "key": "47-1-U" },
+        { "key": "47-1-#" }
+      ]
+    },
+    {
+      "key": 57,
+      "number": 57,
+      "name": "Route 57 Southdale Express",
+      "customer-type": "regular",
+      "coverage": "express",
+      "badge-label": 57,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "express"] },
+        "background-color": "#eed700",
+        "border-color": "#cab700",
+        "color": "#000000"
+      },
+      "variants": [{ "key": "57-0-S" }, { "key": "57-1-D" }]
+    },
+    {
+      "key": 14,
+      "number": 14,
+      "name": "Route 14 Ellice-St. Mary's",
+      "customer-type": "regular",
+      "coverage": "regular",
+      "badge-label": 14,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "regular"] },
+        "background-color": "#ffffff",
+        "border-color": "#d9d9d9",
+        "color": "#000000"
+      },
+      "variants": [
+        { "key": "14-0-P" },
+        { "key": "14-0-D" },
+        { "key": "14-1-E" },
+        { "key": "14-1-##" }
+      ]
+    },
+    {
+      "key": 53,
+      "number": 53,
+      "name": "Route 53 Norwood",
+      "customer-type": "regular",
+      "coverage": "regular",
+      "badge-label": 53,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "regular"] },
+        "background-color": "#ffffff",
+        "border-color": "#d9d9d9",
+        "color": "#000000"
+      },
+      "variants": [{ "key": "53-0-N" }, { "key": "53-1-D" }]
+    },
+    {
+      "key": 59,
+      "number": 59,
+      "name": "Route 59 South St. Anne's Express",
+      "customer-type": "regular",
+      "coverage": "express",
+      "badge-label": 59,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "express"] },
+        "background-color": "#eed700",
+        "border-color": "#cab700",
+        "color": "#000000"
+      },
+      "variants": [
+        { "key": "59-0-I" },
+        { "key": "59-1-D" },
+        { "key": "59-0-A" }
+      ]
+    },
+    {
+      "key": 66,
+      "number": 66,
+      "name": "Route 66 Grant",
+      "customer-type": "regular",
+      "coverage": "regular",
+      "badge-label": 66,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "regular"] },
+        "background-color": "#ffffff",
+        "border-color": "#d9d9d9",
+        "color": "#000000"
+      },
+      "variants": [
+        { "key": "66-0-C" },
+        { "key": "66-1-K" },
+        { "key": "66-1-D" },
+        { "key": "66-0-P" },
+        { "key": "66-0-U" }
+      ]
+    },
+    {
+      "key": 55,
+      "number": 55,
+      "name": "Route 55 St. Anne's",
+      "customer-type": "regular",
+      "coverage": "regular",
+      "badge-label": 55,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "regular"] },
+        "background-color": "#ffffff",
+        "border-color": "#d9d9d9",
+        "color": "#000000"
+      },
+      "variants": [
+        { "key": "55-0-D" },
+        { "key": "55-0-M" },
+        { "key": "55-1-M" },
+        { "key": "55-1-##" },
+        { "key": "55-1-D" },
+        { "key": "55-1-*" }
+      ]
+    },
+    {
+      "key": 65,
+      "number": 65,
+      "name": "Route 65 Grant Express",
+      "customer-type": "regular",
+      "coverage": "express",
+      "badge-label": 65,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "express"] },
+        "background-color": "#eed700",
+        "border-color": "#cab700",
+        "color": "#000000"
+      },
+      "variants": [{ "key": "65-0-R" }, { "key": "65-1-D" }]
+    },
+    {
+      "key": "BLUE",
+      "number": "BLUE",
+      "customer-type": "regular",
+      "coverage": "rapid transit",
+      "badge-label": "B",
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "rapid-transit"] },
+        "background-color": "#0060a9",
+        "border-color": "#0060a9",
+        "color": "#ffffff"
+      },
+      "variants": [
+        { "key": "BLUE-0-S" },
+        { "key": "BLUE-0-U" },
+        { "key": "BLUE-1-D" }
+      ]
+    }
+  ],
+  "query-time": "2024-01-11T20:14:01"
+}

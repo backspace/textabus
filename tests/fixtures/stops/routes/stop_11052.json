@@ -1,0 +1,41 @@
+{
+  "routes": [
+    {
+      "key": 66,
+      "number": 66,
+      "name": "Route 66 Grant",
+      "customer-type": "regular",
+      "coverage": "regular",
+      "badge-label": 66,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "regular"] },
+        "background-color": "#ffffff",
+        "border-color": "#d9d9d9",
+        "color": "#000000"
+      },
+      "variants": [
+        { "key": "66-0-C" },
+        { "key": "66-1-K" },
+        { "key": "66-1-D" },
+        { "key": "66-0-P" },
+        { "key": "66-0-U" }
+      ]
+    },
+    {
+      "key": 65,
+      "number": 65,
+      "name": "Route 65 Grant Express",
+      "customer-type": "regular",
+      "coverage": "express",
+      "badge-label": 65,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "express"] },
+        "background-color": "#eed700",
+        "border-color": "#cab700",
+        "color": "#000000"
+      },
+      "variants": [{ "key": "65-0-R" }, { "key": "65-1-D" }]
+    }
+  ],
+  "query-time": "2024-01-11T20:14:00"
+}

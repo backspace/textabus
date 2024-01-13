@@ -1,0 +1,98 @@
+{
+  "routes": [
+    {
+      "key": 68,
+      "number": 68,
+      "name": "Route 68 Grosvenor",
+      "customer-type": "regular",
+      "coverage": "regular",
+      "badge-label": 68,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "regular"] },
+        "background-color": "#ffffff",
+        "border-color": "#d9d9d9",
+        "color": "#000000"
+      },
+      "variants": [
+        { "key": "68-1-D" },
+        { "key": "68-0-R" },
+        { "key": "68-1-#" }
+      ]
+    },
+    {
+      "key": 47,
+      "number": 47,
+      "name": "Route 47 Transcona - Pembina",
+      "customer-type": "regular",
+      "coverage": "regular",
+      "badge-label": 47,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "regular"] },
+        "background-color": "#ffffff",
+        "border-color": "#d9d9d9",
+        "color": "#000000"
+      },
+      "variants": [
+        { "key": "47-0-K" },
+        { "key": "47-0-R" },
+        { "key": "47-1-U" },
+        { "key": "47-1-#" }
+      ]
+    },
+    {
+      "key": 66,
+      "number": 66,
+      "name": "Route 66 Grant",
+      "customer-type": "regular",
+      "coverage": "regular",
+      "badge-label": 66,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "regular"] },
+        "background-color": "#ffffff",
+        "border-color": "#d9d9d9",
+        "color": "#000000"
+      },
+      "variants": [
+        { "key": "66-0-C" },
+        { "key": "66-1-K" },
+        { "key": "66-1-D" },
+        { "key": "66-0-P" },
+        { "key": "66-0-U" }
+      ]
+    },
+    {
+      "key": 65,
+      "number": 65,
+      "name": "Route 65 Grant Express",
+      "customer-type": "regular",
+      "coverage": "express",
+      "badge-label": 65,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "express"] },
+        "background-color": "#eed700",
+        "border-color": "#cab700",
+        "color": "#000000"
+      },
+      "variants": [{ "key": "65-0-R" }, { "key": "65-1-D" }]
+    },
+    {
+      "key": "BLUE",
+      "number": "BLUE",
+      "customer-type": "regular",
+      "coverage": "rapid transit",
+      "badge-label": "B",
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "rapid-transit"] },
+        "background-color": "#0060a9",
+        "border-color": "#0060a9",
+        "color": "#ffffff"
+      },
+      "variants": [
+        { "key": "BLUE-0-S" },
+        { "key": "BLUE-0-U" },
+        { "key": "BLUE-1-D" }
+      ]
+    }
+  ],
+  "query-time": "2024-01-11T20:14:11"
+}
