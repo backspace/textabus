@@ -175,7 +175,7 @@ pub async fn handle_stops_request(
             }
         });
 
-        response += &format!("{} {} {}\n", stop.number, stop.name, routes.join(" "));
+        response += &format!("\n{} {} {}\n", stop.number, stop.name, routes.join(" "));
     }
 
     Ok(response)

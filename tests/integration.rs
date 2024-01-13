@@ -378,15 +378,25 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
 
     let expected_body = indoc! {"
         Stops near Via Rail Station (Union Station) (123 Main Street)
+        
         10625 NB Main@Broadway (Union Station) BLUE 14 19 47 53 54 55 57 59 68
+        
         10641 SB Main@Broadway (Union Station) BLUE 14 19 34 47 53 54 55 57 59 68
+        
         11052 WB Broadway@Main 65 66
+        
         11010 NB Fort@Broadway 34
+        
         10642 SB Main@Assiniboine BLUE 14 19 23 47 53 54 55 57 59 65 66 68
+        
         10901 SB Israel Asper@Canadian Museum for Human Rights 38
+        
         10902 NB Israel Asper@Canadian Museum for Human Rights 38
+        
         10624 NB Main@Assiniboine BLUE 14 19 47 53 54 55 57 59 68
+        
         10830 NB Fort@Assiniboine 23
+        
         10590 WB Broadway@Garry 23 34 65 66
     "};
 
