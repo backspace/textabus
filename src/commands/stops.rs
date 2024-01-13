@@ -99,6 +99,10 @@ pub async fn handle_stops_request(
             }
         };
 
+        if routes_response.routes.is_empty() {
+            continue;
+        }
+
         let mut routes: Vec<String> = routes_response
             .routes
             .iter()

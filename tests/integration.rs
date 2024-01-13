@@ -385,7 +385,6 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
         10651 NB Smith@Broadway 65 66
         11024 NB Fort@St. Mary 34
         10620 WB St Mary@Fort 14 19 54 55 57 59 68
-        10675 NB Smith@Navy 
         10803 EB William Stephenson@Canadian Museum for Human Rights 10 38 43 49 50 56
         10804 WB Pioneer@Canadian Museum for Human Rights 10 38 43 49 50 56
         10591 WB Broadway@Donald 23 34
