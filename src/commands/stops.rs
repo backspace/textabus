@@ -52,33 +52,7 @@ pub async fn handle_stops_request(
         log::error!("Failed to insert locations API response: {}", e);
     }
 
-    let locations_response: LocationResponse = match serde_json::from_str(&locations_response_text)
-    {
-        Ok(response) => response,
-        Err(err) => {
-            log::error!("Error parsing locations response: {}", err);
-            log::error!("Response: {}", locations_response_text);
-            return Err(Box::new(err));
-        }
-    };
-
-    let latitude = &locations_response.locations[0]
-        .address
-        .centre
-        .geographic
-        .latitude;
-
-    let longitude = &locations_response.locations[0]
-        .address
-        .centre
-        .geographic
-        .longitude;
-
-    let location_address = format!(
-        "{} {}",
-        locations_response.locations[0].address.street_number,
-        locations_response.locations[0].address.street.name
-    );
+    let (location_name, latitude, longitude) = extract_location_details(&locations_response_text)?;
 
     let stops_query = format!(
         "/v3/stops.json?lat={}&lon={}&distance={}&usage=short",
@@ -122,10 +96,7 @@ pub async fn handle_stops_request(
         }
     };
 
-    let mut response = format!(
-        "Stops near {} ({})\n",
-        &locations_response.locations[0].name, location_address
-    );
+    let mut response = format!("Stops near {}\n", location_name);
 
     for stop in stops_response.stops.iter().take(MAXIMUM_STOPS_TO_RETURN) {
         let routes_query = format!("/v3/routes.json?stop={}", stop.number);
@@ -210,15 +181,111 @@ pub async fn handle_stops_request(
     Ok(response)
 }
 
+fn extract_location_details(
+    locations_response_text: &str,
+) -> Result<(String, String, String), Box<dyn std::error::Error>> {
+    let location_name;
+    let latitude;
+    let longitude;
+
+    let locations_response: LocationResponse = match serde_json::from_str(&locations_response_text)
+    {
+        Ok(response) => response,
+        Err(err) => {
+            log::error!("Error parsing locations response: {}", err);
+            log::error!("Response: {}", locations_response_text);
+            return Err(Box::new(err));
+        }
+    };
+
+    match &locations_response.locations[0] {
+        Location::Address(address) => {
+            location_name = format!("{} {}", address.street_number, address.street.name);
+            latitude = address.centre.geographic.latitude.clone();
+            longitude = address.centre.geographic.longitude.clone();
+        }
+        Location::Intersection(intersection) => {
+            location_name = format!(
+                "{}@{}",
+                intersection.street.name, intersection.cross_street.name
+            );
+            latitude = intersection.centre.geographic.latitude.clone();
+            longitude = intersection.centre.geographic.longitude.clone();
+        }
+        Location::Monument(monument) => {
+            let monument_address = format!(
+                "{} {}",
+                monument.address.street_number, monument.address.street.name
+            );
+            location_name = format!("{} ({})", monument.name.clone(), monument_address);
+            latitude = monument.address.centre.geographic.latitude.clone();
+            longitude = monument.address.centre.geographic.longitude.clone();
+        }
+    }
+
+    Ok((location_name, latitude, longitude))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_extract_monument_details() {
+        let locations_response_text = include_str!("../../tests/fixtures/stops/locations.json");
+
+        let result = extract_location_details(locations_response_text);
+        assert!(result.is_ok());
+
+        let (location_name, latitude, longitude) = result.unwrap();
+        assert_eq!(
+            location_name,
+            "Via Rail Station (Union Station) (123 Main Street)"
+        );
+        assert_eq!(latitude, "49.88895");
+        assert_eq!(longitude, "-97.13424");
+    }
+
+    #[test]
+    fn test_extract_address_details() {
+        let locations_response_text =
+            include_str!("../../tests/fixtures/stops/locations-address.json");
+
+        let result = extract_location_details(locations_response_text);
+        assert!(result.is_ok());
+
+        let (location_name, latitude, longitude) = result.unwrap();
+        assert_eq!(location_name, "245 SmithSt");
+        assert_eq!(latitude, "49.89218");
+        assert_eq!(longitude, "-97.14084");
+    }
+
+    #[test]
+    fn test_extract_intersection_details() {
+        let locations_response_text =
+            include_str!("../../tests/fixtures/stops/locations-intersection.json");
+
+        let result = extract_location_details(locations_response_text);
+        assert!(result.is_ok());
+
+        let (location_name, latitude, longitude) = result.unwrap();
+        assert_eq!(location_name, "PortageAve@MainSt");
+        assert_eq!(latitude, "49.89553");
+        assert_eq!(longitude, "-97.13848");
+    }
+}
+
 #[derive(Deserialize)]
 struct LocationResponse {
     locations: Vec<Location>,
 }
 
 #[derive(Deserialize)]
-struct Location {
-    name: String,
-    address: Address,
+#[serde(tag = "type", rename_all = "kebab-case")]
+enum Location {
+    Address(Address),
+    Intersection(Intersection),
+    Monument(Monument),
 }
 
 #[derive(Deserialize)]
@@ -238,6 +305,20 @@ struct Address {
     centre: Centre,
     street_number: u64,
     street: Street,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "kebab-case")]
+struct Intersection {
+    centre: Centre,
+    street: Street,
+    cross_street: Street,
+}
+
+#[derive(Deserialize)]
+struct Monument {
+    name: String,
+    address: Address,
 }
 
 #[derive(Deserialize)]

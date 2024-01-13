@@ -1,0 +1,47 @@
+{
+  "locations": [
+    {
+      "key": 230208,
+      "street-number": 245,
+      "street": {
+        "key": 3371,
+        "name": "SmithSt",
+        "type": "Street"
+      },
+      "centre": {
+        "utm": {
+          "zone": "14U",
+          "x": 633534,
+          "y": 5528300
+        },
+        "geographic": {
+          "latitude": "49.89218",
+          "longitude": "-97.14084"
+        }
+      },
+      "type": "address"
+    },
+    {
+      "key": 120615,
+      "street-number": 245,
+      "street": {
+        "key": 3372,
+        "name": "SmithfieldAve",
+        "type": "Avenue"
+      },
+      "centre": {
+        "utm": {
+          "zone": "14U",
+          "x": 634605,
+          "y": 5532745
+        },
+        "geographic": {
+          "latitude": "49.9319",
+          "longitude": "-97.12439"
+        }
+      },
+      "type": "address"
+    }
+  ],
+  "query-time": "2024-01-12T22:43:47"
+}

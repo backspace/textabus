@@ -1,0 +1,57 @@
+{
+  "locations": [
+    {
+      "key": "41039:2903@2265",
+      "street": {
+        "key": 2903,
+        "name": "PortageAve",
+        "type": "Avenue"
+      },
+      "cross-street": {
+        "key": 2265,
+        "name": "MainSt",
+        "type": "Street"
+      },
+      "centre": {
+        "utm": {
+          "zone": "14U",
+          "x": "633694.71",
+          "y": "5528676.7"
+        },
+        "geographic": {
+          "latitude": "49.89553",
+          "longitude": "-97.13848"
+        }
+      },
+      "type": "intersection"
+    },
+    {
+      "key": "41039:2904@2265",
+      "street": {
+        "key": 2904,
+        "name": "PortageAveE",
+        "type": "Avenue",
+        "leg": "East"
+      },
+      "cross-street": {
+        "key": 2265,
+        "name": "MainSt",
+        "type": "Street"
+      },
+      "centre": {
+        "utm": {
+          "zone": "14U",
+          "x": "633694.71",
+          "y": "5528676.7"
+        },
+        "geographic": {
+          "latitude": "49.89553",
+          "longitude": "-97.13848"
+        }
+      },
+      "type": "intersection"
+    }
+  ],
+
+  "query-time": "2024-01-12T22:49:03"
+}
