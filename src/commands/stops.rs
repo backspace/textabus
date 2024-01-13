@@ -200,8 +200,7 @@ fn extract_location_details(
     let latitude;
     let longitude;
 
-    let locations_response: LocationResponse = match serde_json::from_str(&locations_response_text)
-    {
+    let locations_response: LocationResponse = match serde_json::from_str(locations_response_text) {
         Ok(response) => response,
         Err(err) => {
             log::error!("Error parsing locations response: {}", err);
