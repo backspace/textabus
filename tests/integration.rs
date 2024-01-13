@@ -367,33 +367,33 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
 
     let expected_body = indoc! {"
         Stops near Via Rail Station (Union Station) (123 Main Street)
-        10625 NB Main@Broadway (Union Station) 19 68 54 47 57 14 53 59 55 BLUE
-        10641 SB Main@Broadway (Union Station) 19 68 54 47 57 14 53 59 34 55 BLUE
-        11052 WB Broadway@Main 66 65
+        10625 NB Main@Broadway (Union Station) BLUE 14 19 47 53 54 55 57 59 68
+        10641 SB Main@Broadway (Union Station) BLUE 14 19 34 47 53 54 55 57 59 68
+        11052 WB Broadway@Main 65 66
         11010 NB Fort@Broadway 34
-        10642 SB Main@Assiniboine 19 68 54 23 47 57 14 53 59 66 55 65 BLUE
+        10642 SB Main@Assiniboine BLUE 14 19 23 47 53 54 55 57 59 65 66 68
         10901 SB Israel Asper@Canadian Museum for Human Rights 38
         10902 NB Israel Asper@Canadian Museum for Human Rights 38
-        10624 NB Main@Assiniboine 19 68 54 47 57 14 53 59 55 BLUE
+        10624 NB Main@Assiniboine BLUE 14 19 47 53 54 55 57 59 68
         10830 NB Fort@Assiniboine 23
-        10590 WB Broadway@Garry 23 66 34 65
+        10590 WB Broadway@Garry 23 34 65 66
         10907 EB Forks Market@The Forks Market 38
-        10639 SB Main@St. Mary 19 68 54 47 57 14 53 59 34 55 BLUE
+        10639 SB Main@St. Mary BLUE 14 19 34 47 53 54 55 57 59 68
         10939 SB Israel Asper@William Stephenson 38
-        10589 EB Broadway@Smith 23 66 34 65
+        10589 EB Broadway@Smith 23 34 65 66
         11051 NB Main@St. Mary 47 53
-        10651 NB Smith@Broadway 66 65
+        10651 NB Smith@Broadway 65 66
         11024 NB Fort@St. Mary 34
-        10620 WB St Mary@Fort 19 68 54 57 14 59 55
+        10620 WB St Mary@Fort 14 19 54 55 57 59 68
         10675 NB Smith@Navy 
-        10803 EB William Stephenson@Canadian Museum for Human Rights 50 43 10 38 49 56
-        10804 WB Pioneer@Canadian Museum for Human Rights 50 43 10 38 49 56
+        10803 EB William Stephenson@Canadian Museum for Human Rights 10 38 43 49 50 56
+        10804 WB Pioneer@Canadian Museum for Human Rights 10 38 43 49 50 56
         10591 WB Broadway@Donald 23 34
-        10158 NB Queen Elizabeth@Mayfair 19 54 57 14 53 59 55
+        10158 NB Queen Elizabeth@Mayfair 14 19 53 54 55 57 59
         10588 EB Broadway@Donald 23 34
-        10672 SB Donald@York 66 65
-        10652 NB Smith@St. Mary 66 65
-        10157 EB Mayfair@Queen Elizabeth 68 47 66 65 BLUE
+        10672 SB Donald@York 65 66
+        10652 NB Smith@St. Mary 65 66
+        10157 EB Mayfair@Queen Elizabeth BLUE 47 65 66 68
         "};
 
     assert_that(body).contains(expected_body);

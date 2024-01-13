@@ -99,7 +99,7 @@ pub async fn handle_stops_request(
             }
         };
 
-        let routes: Vec<String> = routes_response
+        let mut routes: Vec<String> = routes_response
             .routes
             .iter()
             .map(|route| match &route.number {
@@ -108,6 +108,21 @@ pub async fn handle_stops_request(
                 _ => panic!("Unexpected type parsing route number"),
             })
             .collect();
+
+        routes.sort_by(|a, b| {
+            let a_is_numeric = a.chars().all(char::is_numeric);
+            let b_is_numeric = b.chars().all(char::is_numeric);
+
+            if a_is_numeric && b_is_numeric {
+                a.parse::<u64>().unwrap().cmp(&b.parse::<u64>().unwrap())
+            } else if a_is_numeric {
+                std::cmp::Ordering::Greater
+            } else if b_is_numeric {
+                std::cmp::Ordering::Less
+            } else {
+                a.cmp(b)
+            }
+        });
 
         response += &format!("{} {} {}\n", stop.number, stop.name, routes.join(" "));
     }
