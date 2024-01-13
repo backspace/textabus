@@ -20,10 +20,10 @@ pub async fn handle_stops_request(
 
     let api_key = config.winnipeg_transit_api_key.clone();
 
-    let locations_query = format!("/v3/locations:{}.json", location);
+    let locations_query = format!("/v3/locations:{}.json?usage=short", location);
 
     let locations_url = format!(
-        "{}{}?api-key={}",
+        "{}{}&api-key={}",
         winnipeg_transit_api_address, locations_query, api_key
     );
 
@@ -81,7 +81,7 @@ pub async fn handle_stops_request(
     );
 
     let stops_query = format!(
-        "/v3/stops.json?lat={}&lon={}&distance={}",
+        "/v3/stops.json?lat={}&lon={}&distance={}&usage=short",
         latitude, longitude, STOPS_DISTANCE
     );
 

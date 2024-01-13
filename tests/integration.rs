@@ -302,6 +302,7 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
 
     Mock::given(method("GET"))
         .and(path_regex(r"^/v3/locations:.*\.json$"))
+        .and(query_param("usage", "short"))
         .respond_with(ResponseTemplate::new(200).set_body_string(mock_locations_response.clone()))
         .expect(1)
         .named("locations")
@@ -316,6 +317,7 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
         .and(query_param("lat", "49.88895"))
         .and(query_param("lon", "-97.13424"))
         .and(query_param("distance", "500"))
+        .and(query_param("usage", "short"))
         .respond_with(ResponseTemplate::new(200).set_body_string(mock_stops_response.clone()))
         .expect(1)
         .named("stops")
@@ -415,7 +417,7 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
     assert_eq!(locations_response.body, mock_locations_response);
     assert_eq!(
         locations_response.query,
-        format!("/v3/locations:union station.json")
+        format!("/v3/locations:union station.json?usage=short")
     );
 
     let stops_response = api_responses
@@ -426,7 +428,7 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
     assert_eq!(stops_response.body, mock_stops_response);
     assert_eq!(
         stops_response.query,
-        format!("/v3/stops.json?lat=49.88895&lon=-97.13424&distance=500")
+        format!("/v3/stops.json?lat=49.88895&lon=-97.13424&distance=500&usage=short")
     );
 
     let routes_responses: Vec<&ApiResponse> = api_responses.iter().skip(2).collect();
