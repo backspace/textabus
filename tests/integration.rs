@@ -454,6 +454,56 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
     }
 }
 
+#[sqlx::test(fixtures("numbers-approved"))]
+async fn stops_handles_an_empty_locations_response(db: PgPool) {
+    let mock_winnipeg_transit_api: MockServer = MockServer::start().await;
+
+    let mock_locations_response = fs::read_to_string("tests/fixtures/stops/locations-none.json")
+        .expect("Failed to read locations fixture");
+
+    Mock::given(method("GET"))
+        .and(path_regex(r"^/v3/locations:.*\.json$"))
+        .and(query_param("usage", "short"))
+        .respond_with(ResponseTemplate::new(200).set_body_string(mock_locations_response.clone()))
+        .expect(1)
+        .named("locations")
+        .mount(&mock_winnipeg_transit_api)
+        .await;
+
+    let response = get(
+        "/twilio?Body=stops acab&From=approved&To=textabus&MessageSid=SM1849",
+        InjectableServices {
+            db: db.clone(),
+            winnipeg_transit_api_address: Some(mock_winnipeg_transit_api.uri()),
+        },
+    )
+    .await;
+
+    assert!(response.is_ok(), "Failed to execute request");
+
+    let response = response.unwrap();
+
+    assert!(response.status().is_success());
+    assert_eq!(response.headers()["content-type"], "text/xml");
+
+    let document = Document::from(response.text().await.unwrap().as_str());
+    let body = &document.find(Name("body")).next().unwrap().text();
+
+    let expected_body = indoc! {"
+        No locations found for acab
+    "};
+
+    assert_that(body).contains(expected_body);
+
+    let api_response: ApiResponse = sqlx::query_as("SELECT * FROM api_responses LIMIT 1")
+        .fetch_one(&db)
+        .await
+        .expect("Failed to fetch API response");
+
+    assert_eq!(api_response.body, mock_locations_response);
+    assert_eq!(api_response.query, "/v3/locations:acab.json?usage=short");
+}
+
 async fn get(
     path: &str,
     mut services: InjectableServices,

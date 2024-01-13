@@ -52,7 +52,11 @@ pub async fn handle_stops_request(
         log::error!("Failed to insert locations API response: {}", e);
     }
 
-    let (location_name, latitude, longitude) = extract_location_details(&locations_response_text)?;
+    let (location_name, latitude, longitude) =
+        match extract_location_details(&locations_response_text) {
+            Ok(details) => details,
+            Err(_) => return Ok(format!("No locations found for {}", location).to_string()),
+        };
 
     let stops_query = format!(
         "/v3/stops.json?lat={}&lon={}&distance={}&usage=short",
@@ -197,6 +201,13 @@ fn extract_location_details(
             return Err(Box::new(err));
         }
     };
+
+    if locations_response.locations.is_empty() {
+        return Err(Box::new(std::io::Error::new(
+            std::io::ErrorKind::NotFound,
+            "No locations found",
+        )));
+    }
 
     match &locations_response.locations[0] {
         Location::Address(address) => {
