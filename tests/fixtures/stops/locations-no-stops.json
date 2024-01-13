@@ -1,0 +1,34 @@
+{
+  "locations": [
+    {
+      "key": 11556,
+      "name": "Assiniboine Downs",
+      "categories": [
+        "Entertainment: Tourist Attractions",
+        "Sports and Recreation: Race Tracks"
+      ],
+      "address": {
+        "key": 78758,
+        "street-number": 3975,
+        "street": {
+          "key": 2903,
+          "name": "PortageAve",
+          "type": "Avenue"
+        },
+        "centre": {
+          "utm": {
+            "zone": "14U",
+            "x": 620070,
+            "y": 5527870
+          },
+          "geographic": {
+            "latitude": "49.89117",
+            "longitude": "-97.32834"
+          }
+        }
+      },
+      "type": "monument"
+    }
+  ],
+  "query-time": "2024-01-13T10:27:40"
+}

@@ -504,6 +504,67 @@ async fn stops_handles_an_empty_locations_response(db: PgPool) {
     assert_eq!(api_response.query, "/v3/locations:acab.json?usage=short");
 }
 
+#[sqlx::test(fixtures("numbers-approved"))]
+async fn stops_handles_an_empty_stops_response(db: PgPool) {
+    let mock_winnipeg_transit_api: MockServer = MockServer::start().await;
+
+    let mock_locations_response =
+        fs::read_to_string("tests/fixtures/stops/locations-no-stops.json")
+            .expect("Failed to read locations fixture");
+
+    Mock::given(method("GET"))
+        .and(path_regex(r"^/v3/locations:.*\.json$"))
+        .and(query_param("usage", "short"))
+        .respond_with(ResponseTemplate::new(200).set_body_string(mock_locations_response.clone()))
+        .expect(1)
+        .named("locations")
+        .mount(&mock_winnipeg_transit_api)
+        .await;
+
+    let mock_stops_response = fs::read_to_string("tests/fixtures/stops/stops-none.json")
+        .expect("Failed to read stops fixture");
+
+    Mock::given(method("GET"))
+        .and(path_regex(r"^/v3/stops.json$"))
+        .respond_with(ResponseTemplate::new(200).set_body_string(mock_stops_response.clone()))
+        .expect(1)
+        .named("stops")
+        .mount(&mock_winnipeg_transit_api)
+        .await;
+
+    let response = get(
+        "/twilio?Body=stops assiniboia downs&From=approved&To=textabus&MessageSid=SM1849",
+        InjectableServices {
+            db: db.clone(),
+            winnipeg_transit_api_address: Some(mock_winnipeg_transit_api.uri()),
+        },
+    )
+    .await;
+
+    assert!(response.is_ok(), "Failed to execute request");
+
+    let response = response.unwrap();
+
+    assert!(response.status().is_success());
+    assert_eq!(response.headers()["content-type"], "text/xml");
+
+    let document = Document::from(response.text().await.unwrap().as_str());
+    let body = &document.find(Name("body")).next().unwrap().text();
+
+    let expected_body = indoc! {"
+        No stops found within 500m of Assiniboine Downs (3975 PortageAve)
+    "};
+
+    assert_that(body).contains(expected_body);
+
+    let api_responses_record_count: i64 = sqlx::query_scalar("SELECT COUNT(*) FROM api_responses")
+        .fetch_one(&db)
+        .await
+        .expect("Failed to fetch api_responses count");
+
+    assert_eq!(api_responses_record_count, 2);
+}
+
 async fn get(
     path: &str,
     mut services: InjectableServices,

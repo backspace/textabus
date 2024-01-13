@@ -100,6 +100,14 @@ pub async fn handle_stops_request(
         }
     };
 
+    if stops_response.stops.is_empty() {
+        return Ok(format!(
+            "No stops found within {}m of {}",
+            STOPS_DISTANCE, location_name
+        )
+        .to_string());
+    }
+
     let mut response = format!("Stops near {}\n", location_name);
 
     for stop in stops_response.stops.iter().take(MAXIMUM_STOPS_TO_RETURN) {
