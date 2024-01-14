@@ -43,9 +43,14 @@ async fn spawn_app(services: InjectableServices) -> TestApp {
     let address = format!("http://127.0.0.1:{}", port);
 
     tokio::spawn(async move {
-        axum::serve(listener, app(services).await.into_make_service())
-            .await
-            .unwrap();
+        axum::serve(
+            listener,
+            app(services)
+                .await
+                .into_make_service_with_connect_info::<std::net::SocketAddr>(),
+        )
+        .await
+        .unwrap();
     });
 
     TestApp { address }

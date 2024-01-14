@@ -12,6 +12,7 @@ use axum_template::engine::Engine;
 use handlebars::{DirectorySourceOptions, Handlebars};
 use sqlx::postgres::PgPool;
 use std::env;
+use tower_http::services::ServeDir;
 
 type AppEngine = Engine<Handlebars<'static>>;
 
@@ -44,8 +45,10 @@ pub async fn app(services: InjectableServices) -> Router {
     let config = env_config_provider.get_config();
 
     Router::new()
+        .nest_service("/assets", ServeDir::new("assets"))
         .route("/", get(get_root))
         .route("/twilio", get(get_twilio))
+        .route("/raw", get(get_raw))
         .with_state(AppState {
             config: config.clone(),
             db: services.db,

@@ -11,7 +11,7 @@ path = "src/main.rs"
 name = "textabus"
 
 [dependencies]
-axum = { version = "0.7.3", features = ["macros", "query"] }
+axum = { version = "0.7.3", features = ["macros", "query", "tokio"] }
 axum-macros = "0.4.0"
 axum-template = { version = "2.1.0", features = ["handlebars"] }
 chrono = "0.4"
@@ -33,6 +33,7 @@ sqlx = { version = "0.7", features = [
     "uuid",
 ] }
 tokio = { version = "1.35.1", features = ["macros", "rt-multi-thread"] }
+tower-http = { version = "0.5", features = ["fs"] }
 uuid = { version = "1", features = ["serde", "v4"] }
 url = { version = "2", features = ["serde"] }
 

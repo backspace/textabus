@@ -37,7 +37,7 @@ async fn main() {
             winnipeg_transit_api_address: Some("https://api.winnipegtransit.com".to_string()),
         })
         .await
-        .into_make_service(),
+        .into_make_service_with_connect_info::<std::net::SocketAddr>(),
     )
     .await
     .unwrap();

@@ -1,7 +1,21 @@
-<h1>
-  textabus
-</h1>
+<html>
+  <head>
+    <title>
+      textabus
+    </title>
+  </head>
+  <script src="/assets/repl.js"></script>
+  <body>
+    <h1>
+      textabus
+    </h1>
 
-<p>
-  more to come
-</p>
+    <p>
+      <form action="/result" method="get" data-form>
+        <input type="text" name="body" autofocus />
+        <input type="submit" data-submit />
+      </form>
+      <textarea id="repl" rows="20" cols="80"></textarea>
+    </p>
+  </body>
+</html>

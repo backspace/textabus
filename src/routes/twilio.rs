@@ -6,13 +6,14 @@ use crate::{
 };
 
 use axum::{
-    extract::{Query, State},
+    extract::{ConnectInfo, Query, State},
     response::IntoResponse,
 };
 use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use serde_with::{serde_as, NoneAsEmptyString};
 use sqlx::types::Uuid;
+use std::net::SocketAddr;
 
 #[axum_macros::debug_handler]
 pub async fn get_twilio(
@@ -137,6 +138,94 @@ pub async fn get_twilio(
     .into_response()
 }
 
+#[axum_macros::debug_handler]
+pub async fn get_raw(
+    ConnectInfo(addr): ConnectInfo<SocketAddr>,
+    State(state): State<AppState>,
+    params: Query<RawParams>,
+) -> impl IntoResponse {
+    let incoming_message_id = Uuid::new_v4();
+    let incoming_message_insertion_result = sqlx::query(
+        r#"
+        INSERT INTO messages (id, message_sid, origin, destination, body, created_at, updated_at)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        "#,
+    )
+    .bind(incoming_message_id)
+    .bind("repl")
+    .bind(addr.to_string())
+    .bind("repl")
+    .bind(params.body.clone())
+    .bind(Utc::now().naive_utc())
+    .bind(Utc::now().naive_utc())
+    .execute(&state.db)
+    .await;
+
+    let mut maybe_incoming_message_id = Some(incoming_message_id);
+
+    if let Err(e) = incoming_message_insertion_result {
+        maybe_incoming_message_id = None;
+        log::error!("Failed to insert incoming message: {}", e);
+    }
+
+    let response_text =
+        process_command(Some(params.body.clone()), &state, maybe_incoming_message_id).await;
+
+    let outgoing_message_insertion_result = sqlx::query(
+        r#"
+        INSERT INTO messages (id, origin, destination, body, initial_message_id, created_at, updated_at)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        "#,
+    )
+    .bind(Uuid::new_v4())
+    .bind("repl")
+    .bind(addr.to_string())
+    .bind(response_text.clone())
+    .bind(maybe_incoming_message_id)
+    .bind(Utc::now().naive_utc())
+    .bind(Utc::now().naive_utc())
+    .execute(&state.db)
+    .await;
+
+    if let Err(e) = outgoing_message_insertion_result {
+        log::error!("Failed to insert outgoing message: {}", e);
+    }
+
+    response_text
+}
+
+async fn process_command(
+    body: Option<String>,
+    state: &AppState,
+    maybe_incoming_message_id: Option<Uuid>,
+) -> String {
+    let body = body.unwrap_or("unknown".to_string());
+
+    let command = parse_command(&body);
+
+    match command {
+        Command::Stops(stops_command) => handle_stops_request(
+            stops_command,
+            &state.config,
+            state.winnipeg_transit_api_address.clone(),
+            maybe_incoming_message_id,
+            &state.db,
+        )
+        .await
+        .unwrap(),
+        Command::Times(times_command) => handle_times_request(
+            times_command,
+            &state.config,
+            state.winnipeg_transit_api_address.clone(),
+            maybe_incoming_message_id,
+            &state.db,
+        )
+        .await
+        .unwrap(),
+        Command::Unknown(_unknown_command) => "textabus".to_string(),
+    }
+}
+
 #[serde_as]
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "PascalCase")]
@@ -151,4 +240,9 @@ pub struct TwilioParams {
 #[derive(Serialize)]
 pub struct MessageResponse {
     body: String,
+}
+
+#[derive(Deserialize)]
+pub struct RawParams {
+    pub body: String,
 }
