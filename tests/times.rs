@@ -105,7 +105,7 @@ async fn stop_number_returns_single_route_stop_schedule_to_approved_number(db: P
         .await;
 
     let response = get(
-        "/twilio?Body=10619 16 18 60&From=approved&To=textabus&MessageSid=SM1849",
+        "/twilio?Body= 10619 16 18 60&From=approved&To=textabus&MessageSid=SM1849",
         InjectableServices {
             db: db.clone(),
             winnipeg_transit_api_address: Some(mock_winnipeg_transit_api.uri()),
@@ -138,7 +138,7 @@ async fn stop_number_returns_single_route_stop_schedule_to_approved_number(db: P
             .try_into()
             .expect("Expected exactly 2 messages");
 
-    assert_eq!(incoming_message.body, "10619 16 18 60");
+    assert_eq!(incoming_message.body, " 10619 16 18 60");
 
     let api_response: ApiResponse = sqlx::query_as("SELECT * FROM api_responses LIMIT 1")
         .fetch_one(&db)

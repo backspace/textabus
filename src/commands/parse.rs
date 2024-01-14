@@ -1,11 +1,13 @@
 use regex::Regex;
 
 pub fn parse_command(input: &str) -> Command {
-    if let Ok(command) = parse_stop_and_routes(input) {
+    let trimmed_input = input.trim();
+
+    if let Ok(command) = parse_stop_and_routes(trimmed_input) {
         return Command::Times(command);
     }
 
-    if let Ok(command) = parse_stops_and_location(input) {
+    if let Ok(command) = parse_stops_and_location(trimmed_input) {
         return Command::Stops(command);
     }
 
@@ -59,3 +61,49 @@ pub struct StopsCommand {
 }
 
 pub struct UnknownCommand;
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_parse_times_command() {
+        let command = parse_command("10619 16 18");
+        match command {
+            Command::Times(times_command) => {
+                assert_eq!(times_command.stop_number, "10619");
+                assert_eq!(times_command.routes, vec!["16", "18"]);
+            }
+            _ => panic!("Expected TimesCommand"),
+        }
+
+        let command_with_whitespace = parse_command(" 10064 ");
+        match command_with_whitespace {
+            Command::Times(times_command) => {
+                assert_eq!(times_command.stop_number, "10064");
+                assert_eq!(times_command.routes, Vec::<String>::new());
+            }
+            _ => panic!("Expected TimesCommand"),
+        }
+    }
+
+    #[test]
+    fn test_parse_stops_command() {
+        let command = parse_command("stops 245 smith");
+        match command {
+            Command::Stops(stops_command) => {
+                assert_eq!(stops_command.location, "245 smith");
+            }
+            _ => panic!("Expected StopsCommand"),
+        }
+    }
+
+    #[test]
+    fn test_parse_unknown_command() {
+        let command = parse_command("unknown command");
+        match command {
+            Command::Unknown(_) => (),
+            _ => panic!("Expected UnknownCommand"),
+        }
+    }
+}
