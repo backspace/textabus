@@ -1,4 +1,4 @@
 INSERT INTO
-    numbers (number, approved, created_at, updated_at)
+    numbers (number, name, approved, created_at, updated_at)
 VALUES
-    ('approved', true, NOW(), NOW());
+    ('approved', 'an approved', true, NOW(), NOW());

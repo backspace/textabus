@@ -4,6 +4,7 @@ use url::Url;
 
 #[derive(Clone, Debug)]
 pub struct Config {
+    pub auth: String,
     pub database_url: Url,
     pub winnipeg_transit_api_key: String,
 }
@@ -17,6 +18,7 @@ pub struct EnvVarProvider(Config);
 impl EnvVarProvider {
     pub fn new(args: HashMap<String, String>) -> Self {
         let config = Config {
+            auth: args.get("AUTH").expect("Missing auth").to_string(),
             database_url: Url::parse(args.get("DATABASE_URL").expect("Missing DATABASE_URL"))
                 .expect("Unable to parse DATABASE_URL as a URL"),
             winnipeg_transit_api_key: args

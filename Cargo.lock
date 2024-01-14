@@ -318,6 +318,7 @@ dependencies = [
  "iana-time-zone",
  "js-sys",
  "num-traits",
+ "serde",
  "wasm-bindgen",
  "windows-targets 0.48.5",
 ]
@@ -2592,6 +2593,7 @@ dependencies = [
  "axum",
  "axum-macros",
  "axum-template",
+ "base64 0.21.5",
  "chrono",
  "handlebars",
  "http 1.0.0",

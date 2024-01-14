@@ -1,4 +1,5 @@
 use chrono::NaiveDateTime;
+use serde::Serialize;
 use sqlx::types::uuid::Uuid;
 
 #[derive(Debug, sqlx::FromRow)]
@@ -11,7 +12,7 @@ pub struct ApiResponse {
     pub updated_at: NaiveDateTime,
 }
 
-#[derive(Debug, sqlx::FromRow)]
+#[derive(Clone, Debug, sqlx::FromRow, Serialize)]
 pub struct Message {
     pub id: Uuid,
     pub message_sid: Option<String>,

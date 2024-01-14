@@ -1,3 +1,4 @@
+pub mod auth;
 pub mod commands;
 pub mod config;
 pub mod models;
@@ -49,6 +50,7 @@ pub async fn app(services: InjectableServices) -> Router {
         .route("/", get(get_root))
         .route("/twilio", get(get_twilio))
         .route("/raw", get(get_raw))
+        .route("/admin", get(get_admin))
         .with_state(AppState {
             config: config.clone(),
             db: services.db,

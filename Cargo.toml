@@ -14,7 +14,8 @@ name = "textabus"
 axum = { version = "0.7.3", features = ["macros", "query", "tokio"] }
 axum-macros = "0.4.0"
 axum-template = { version = "2.1.0", features = ["handlebars"] }
-chrono = "0.4"
+base64 = "0.21"
+chrono = { version = "0.4", features = ["serde"] }
 handlebars = { version = "5.0.0", features = ["dir_source"] }
 http = "1"
 log = "0.4"

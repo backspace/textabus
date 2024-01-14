@@ -1,0 +1,6 @@
+<div class="message {{direction}}" data-id={{message.id}}>
+    {{#if incoming}}
+        <div class="from" title={{message.origin}}>{{#if message.origin_name}}{{message.origin_name}}{{else}}{{message.origin}}{{/if}}</div>
+    {{/if}}
+    <div class="body">{{message.body}}</div>
+</div>

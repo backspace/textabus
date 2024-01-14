@@ -1,7 +1,12 @@
+use base64::{engine::general_purpose, Engine as _};
+use reqwest::Client;
+use std::env;
 use textabus::{app, InjectableServices};
 use tokio::net::TcpListener;
 use wiremock::matchers::any;
 use wiremock::{Mock, MockServer, ResponseTemplate};
+
+use textabus::config::{ConfigProvider, EnvVarProvider};
 
 struct TestApp {
     pub address: String,
@@ -11,6 +16,45 @@ pub async fn get(
     path: &str,
     mut services: InjectableServices,
 ) -> Result<reqwest::Response, reqwest::Error> {
+    services = set_up_services(services).await;
+
+    let app_address = spawn_app(services).await.address;
+
+    let client = Client::new();
+    let url = format!("{}{}", app_address, path);
+
+    client.get(&url).send().await
+}
+
+#[allow(dead_code)]
+pub async fn get_with_auth(
+    path: &str,
+    mut services: InjectableServices,
+) -> Result<reqwest::Response, reqwest::Error> {
+    let env_config_provider = EnvVarProvider::new(env::vars().collect());
+    let config = &env_config_provider.get_config();
+
+    services = set_up_services(services).await;
+
+    let app_address = spawn_app(services).await.address;
+
+    let client = Client::new();
+    let url = format!("{}{}", app_address, path);
+
+    client
+        .get(&url)
+        .header(
+            "Authorization",
+            format!(
+                "Basic {}",
+                general_purpose::STANDARD.encode(config.auth.clone())
+            ),
+        )
+        .send()
+        .await
+}
+
+async fn set_up_services(mut services: InjectableServices) -> InjectableServices {
     if services.winnipeg_transit_api_address.is_none() {
         let mock_winnipeg_transit_api = MockServer::start().await;
 
@@ -27,12 +71,7 @@ pub async fn get(
         };
     }
 
-    let app_address = spawn_app(services).await.address;
-
-    let client = reqwest::Client::new();
-    let url = format!("{}{}", app_address, path);
-
-    client.get(&url).send().await
+    services
 }
 
 async fn spawn_app(services: InjectableServices) -> TestApp {
