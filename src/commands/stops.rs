@@ -4,15 +4,15 @@ use serde::Deserialize;
 use serde_json::Value;
 use sqlx::{types::Uuid, PgPool};
 
-use crate::config::Config;
+use crate::{commands::StopsCommand, config::Config};
 
 const STOPS_DISTANCE: usize = 500;
 const MAXIMUM_STOPS_TO_RETURN: usize = 10;
 
 pub async fn handle_stops_request(
+    command: StopsCommand,
     config: &Config,
     winnipeg_transit_api_address: String,
-    location: &str,
     maybe_incoming_message_id: Option<Uuid>,
     db: &PgPool,
 ) -> Result<String, Box<dyn std::error::Error>> {
@@ -20,7 +20,7 @@ pub async fn handle_stops_request(
 
     let api_key = config.winnipeg_transit_api_key.clone();
 
-    let locations_query = format!("/v3/locations:{}.json?usage=short", location);
+    let locations_query = format!("/v3/locations:{}.json?usage=short", command.location);
 
     let locations_url = format!(
         "{}{}&api-key={}",
@@ -55,7 +55,7 @@ pub async fn handle_stops_request(
     let (location_name, latitude, longitude) =
         match extract_location_details(&locations_response_text) {
             Ok(details) => details,
-            Err(_) => return Ok(format!("No locations found for {}", location).to_string()),
+            Err(_) => return Ok(format!("No locations found for {}", command.location).to_string()),
         };
 
     let stops_query = format!(

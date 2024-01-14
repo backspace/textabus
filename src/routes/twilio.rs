@@ -1,5 +1,5 @@
 use crate::{
-    commands::{handle_stops_request, handle_times_request},
+    commands::{handle_stops_request, handle_times_request, parse_command, Command},
     models::Number,
     render_xml::RenderXml,
     AppState,
@@ -10,7 +10,6 @@ use axum::{
     response::IntoResponse,
 };
 use chrono::Utc;
-use regex::Regex;
 use serde::{Deserialize, Serialize};
 use serde_with::{serde_as, NoneAsEmptyString};
 use sqlx::types::Uuid;
@@ -61,36 +60,29 @@ pub async fn get_twilio(
             if params.body.is_some() {
                 let body = params.body.clone().unwrap();
 
-                let maybe_stops_and_location = parse_stops_and_location(&body);
+                let command = parse_command(&body);
 
-                if maybe_stops_and_location.is_ok() {
-                    response_text = handle_stops_request(
+                response_text = match command {
+                    Command::Stops(stops_command) => handle_stops_request(
+                        stops_command,
                         &state.config,
                         state.winnipeg_transit_api_address.clone(),
-                        maybe_stops_and_location.unwrap(),
                         maybe_incoming_message_id,
                         &state.db,
                     )
                     .await
-                    .unwrap();
-                } else {
-                    let maybe_stop_and_routes = parse_stop_and_routes(&body);
-
-                    if maybe_stop_and_routes.is_ok() {
-                        let (stop_number, routes) = maybe_stop_and_routes.unwrap();
-
-                        response_text = handle_times_request(
-                            &state.config,
-                            state.winnipeg_transit_api_address.clone(),
-                            stop_number,
-                            routes,
-                            maybe_incoming_message_id,
-                            &state.db,
-                        )
-                        .await
-                        .unwrap();
-                    }
-                }
+                    .unwrap(),
+                    Command::Times(times_command) => handle_times_request(
+                        times_command,
+                        &state.config,
+                        state.winnipeg_transit_api_address.clone(),
+                        maybe_incoming_message_id,
+                        &state.db,
+                    )
+                    .await
+                    .unwrap(),
+                    Command::Unknown(_unknown_command) => "textabus".to_string(),
+                };
             }
         } else {
             return (axum::http::StatusCode::NOT_FOUND, "not found").into_response();
@@ -159,31 +151,4 @@ pub struct TwilioParams {
 #[derive(Serialize)]
 pub struct MessageResponse {
     body: String,
-}
-
-fn parse_stop_and_routes(input: &str) -> Result<(&str, Vec<&str>), &'static str> {
-    let re = Regex::new(r"^(\d{5})(?:\s+(.*))?$").unwrap();
-
-    if let Some(captures) = re.captures(input) {
-        let stop_number = captures.get(1).map_or("", |m| m.as_str());
-        let routes: Vec<&str> = captures
-            .get(2)
-            .map_or("", |m| m.as_str())
-            .split_whitespace()
-            .collect();
-        Ok((stop_number, routes))
-    } else {
-        Err("Input string doesn't match the expected pattern")
-    }
-}
-
-fn parse_stops_and_location(input: &str) -> Result<&str, &'static str> {
-    let re = Regex::new(r"^stops\s+(.*)$").unwrap();
-
-    if let Some(captures) = re.captures(input) {
-        let location = captures.get(1).map_or("", |m| m.as_str());
-        Ok(location)
-    } else {
-        Err("Input string does not match a stops request")
-    }
 }

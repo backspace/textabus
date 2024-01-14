@@ -4,24 +4,26 @@ use serde::Deserialize;
 use serde_json::Value;
 use sqlx::{types::Uuid, PgPool};
 
-use crate::config::Config;
+use crate::{commands::TimesCommand, config::Config};
 
 const MAX_RESPONSE_LENGTH: usize = 140;
 const DELAY_THRESHOLD: i64 = 3;
 const AHEAD_THRESHOLD: i64 = 1;
 
 pub async fn handle_times_request(
+    command: TimesCommand,
     config: &Config,
     winnipeg_transit_api_address: String,
-    stop_number: &str,
-    routes: Vec<&str>,
     maybe_incoming_message_id: Option<Uuid>,
     db: &PgPool,
 ) -> Result<String, Box<dyn std::error::Error>> {
     let client = Client::new();
     let api_key = config.winnipeg_transit_api_key.clone();
 
-    let query = format!("/v3/stops/{}/schedule.json?usage=short", stop_number,);
+    let query = format!(
+        "/v3/stops/{}/schedule.json?usage=short",
+        command.stop_number,
+    );
 
     let api_response_text = client
         .get(format!(
@@ -76,7 +78,7 @@ pub async fn handle_times_request(
             _ => panic!("Unexpected type parsing route number"),
         };
 
-        if !routes.is_empty() && !routes.contains(&route_number.as_str()) {
+        if !command.routes.is_empty() && !command.routes.contains(route_number) {
             continue;
         }
 
