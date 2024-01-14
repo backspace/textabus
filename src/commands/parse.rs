@@ -1,7 +1,7 @@
 use regex::Regex;
 
 pub fn parse_command(input: &str) -> Command {
-    let trimmed_input = input.trim();
+    let trimmed_input = &input.trim().to_lowercase();
 
     if let Ok(command) = parse_stop_and_routes(trimmed_input) {
         return Command::Times(command);
@@ -89,7 +89,7 @@ mod tests {
 
     #[test]
     fn test_parse_stops_command() {
-        let command = parse_command("stops 245 smith");
+        let command = parse_command("Stops 245 Smith");
         match command {
             Command::Stops(stops_command) => {
                 assert_eq!(stops_command.location, "245 smith");

@@ -76,7 +76,7 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
     }
 
     let response = get(
-        "/twilio?Body=stops union station&From=approved&To=textabus&MessageSid=SM1849",
+        "/twilio?Body=Stops Union Station&From=approved&To=textabus&MessageSid=SM1849",
         InjectableServices {
             db: db.clone(),
             winnipeg_transit_api_address: Some(mock_winnipeg_transit_api.uri()),
@@ -128,7 +128,7 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
             .try_into()
             .expect("Expected exactly 2 messages");
 
-    assert_eq!(incoming_message.body, "stops union station");
+    assert_eq!(incoming_message.body, "Stops Union Station");
 
     assert_eq!(outgoing_message.body, expected_body);
 
