@@ -1,10 +1,9 @@
-use chrono::{NaiveDateTime, Utc};
-use reqwest::Client;
+use chrono::NaiveDateTime;
 use serde::Deserialize;
 use serde_json::Value;
 use sqlx::{types::Uuid, PgPool};
 
-use crate::{commands::TimesCommand, config::Config};
+use crate::{commands::TimesCommand, config::Config, odws::fetch_from_odws};
 
 const MAX_RESPONSE_LENGTH: usize = 140;
 const DELAY_THRESHOLD: i64 = 3;
@@ -17,49 +16,21 @@ pub async fn handle_times_request(
     maybe_incoming_message_id: Option<Uuid>,
     db: &PgPool,
 ) -> Result<String, Box<dyn std::error::Error>> {
-    let client = Client::new();
-    let api_key = config.winnipeg_transit_api_key.clone();
-
     let query = format!(
         "/v3/stops/{}/schedule.json?usage=short",
         command.stop_number,
     );
 
-    let api_response = client
-        .get(format!(
-            "{}{}&api-key={}",
-            winnipeg_transit_api_address,
-            query.clone(),
-            api_key
-        ))
-        .send()
-        .await
-        .unwrap();
-
-    let success = api_response.status().is_success();
-
-    let api_response_text = api_response.text().await.unwrap();
-
-    let api_response_insertion_result = sqlx::query(
-        r#"
-        INSERT INTO api_responses (id, body, query, message_id, created_at, updated_at)
-        VALUES ($1, $2, $3, $4, $5, $6)
-        "#,
+    let (api_response_status, api_response_text) = fetch_from_odws(
+        query,
+        config,
+        winnipeg_transit_api_address,
+        maybe_incoming_message_id,
+        db,
     )
-    .bind(Uuid::new_v4())
-    .bind(api_response_text.clone())
-    .bind(query)
-    .bind(maybe_incoming_message_id)
-    .bind(Utc::now().naive_utc())
-    .bind(Utc::now().naive_utc())
-    .execute(db)
     .await;
 
-    if let Err(e) = api_response_insertion_result {
-        log::error!("Failed to insert API response: {}", e);
-    }
-
-    if !success {
+    if !api_response_status.is_success() {
         return Ok(format!(
             "No schedule found for stop {}, does it exist?",
             command.stop_number

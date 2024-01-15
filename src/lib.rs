@@ -2,6 +2,7 @@ pub mod auth;
 pub mod commands;
 pub mod config;
 pub mod models;
+pub mod odws;
 pub mod render_xml;
 pub mod routes;
 
