@@ -7,6 +7,7 @@ use speculoos::prelude::*;
 use sqlx::postgres::PgPool;
 use textabus::{
     models::{Message, Number},
+    routes::HELP_MESSAGE,
     InjectableServices,
 };
 
@@ -112,7 +113,7 @@ async fn twilio_serves_placeholder_with_unknown_body_to_approved_number_and_stor
     assert_eq!(incoming_message.destination, "textabus");
     assert_eq!(incoming_message.initial_message_id, None);
 
-    assert_eq!(outgoing_message.body, "textabus");
+    assert_eq!(outgoing_message.body, HELP_MESSAGE);
     assert_eq!(outgoing_message.origin, "textabus");
     assert_eq!(outgoing_message.destination, "approved");
     assert_eq!(

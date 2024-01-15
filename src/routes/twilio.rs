@@ -10,10 +10,25 @@ use axum::{
     response::IntoResponse,
 };
 use chrono::Utc;
+use indoc::indoc;
 use serde::{Deserialize, Serialize};
 use serde_with::{serde_as, NoneAsEmptyString};
 use sqlx::types::Uuid;
 use std::net::SocketAddr;
+
+pub const HELP_MESSAGE: &str = indoc!(
+    r#"
+    textabus commands:
+
+    bus times:
+    [stop number]
+    [stop number] [route] [route]…
+    times [stop number]
+
+    find stops:
+    stops [location: address, intersection, landmark]
+    "#
+);
 
 #[axum_macros::debug_handler]
 pub async fn get_twilio(
@@ -59,31 +74,8 @@ pub async fn get_twilio(
     if number.is_ok() {
         if number.unwrap().approved {
             if params.body.is_some() {
-                let body = params.body.clone().unwrap();
-
-                let command = parse_command(&body);
-
-                response_text = match command {
-                    Command::Stops(stops_command) => handle_stops_request(
-                        stops_command,
-                        &state.config,
-                        state.winnipeg_transit_api_address.clone(),
-                        maybe_incoming_message_id,
-                        &state.db,
-                    )
-                    .await
-                    .unwrap(),
-                    Command::Times(times_command) => handle_times_request(
-                        times_command,
-                        &state.config,
-                        state.winnipeg_transit_api_address.clone(),
-                        maybe_incoming_message_id,
-                        &state.db,
-                    )
-                    .await
-                    .unwrap(),
-                    Command::Unknown(_unknown_command) => "textabus".to_string(),
-                };
+                response_text =
+                    process_command(params.body.clone(), &state, maybe_incoming_message_id).await;
             }
         } else {
             return (axum::http::StatusCode::NOT_FOUND, "not found").into_response();
@@ -222,7 +214,8 @@ async fn process_command(
         )
         .await
         .unwrap(),
-        Command::Unknown(_unknown_command) => "textabus".to_string(),
+        Command::Help(_help_command) => HELP_MESSAGE.to_string(),
+        Command::Unknown(_unknown_command) => HELP_MESSAGE.to_string(),
     }
 }
 

@@ -11,6 +11,10 @@ pub fn parse_command(input: &str) -> Command {
         return Command::Stops(command);
     }
 
+    if let Ok(command) = parse_help(trimmed_input) {
+        return Command::Help(command);
+    }
+
     Command::Unknown(UnknownCommand {})
 }
 
@@ -45,9 +49,20 @@ fn parse_stops_and_location(input: &str) -> Result<StopsCommand, &'static str> {
     }
 }
 
+fn parse_help(input: &str) -> Result<HelpCommand, &'static str> {
+    let re = Regex::new(r"^help").unwrap();
+
+    if let Some(_captures) = re.captures(input) {
+        Ok(HelpCommand {})
+    } else {
+        Err("Input string does not match a help request")
+    }
+}
+
 pub enum Command {
     Times(TimesCommand),
     Stops(StopsCommand),
+    Help(HelpCommand),
     Unknown(UnknownCommand),
 }
 
@@ -59,6 +74,8 @@ pub struct TimesCommand {
 pub struct StopsCommand {
     pub location: String,
 }
+
+pub struct HelpCommand;
 
 pub struct UnknownCommand;
 
