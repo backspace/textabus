@@ -25,7 +25,7 @@ pub async fn handle_times_request(
         command.stop_number,
     );
 
-    let api_response_text = client
+    let api_response = client
         .get(format!(
             "{}{}&api-key={}",
             winnipeg_transit_api_address,
@@ -34,10 +34,11 @@ pub async fn handle_times_request(
         ))
         .send()
         .await
-        .unwrap()
-        .text()
-        .await
         .unwrap();
+
+    let success = api_response.status().is_success();
+
+    let api_response_text = api_response.text().await.unwrap();
 
     let api_response_insertion_result = sqlx::query(
         r#"
@@ -56,6 +57,13 @@ pub async fn handle_times_request(
 
     if let Err(e) = api_response_insertion_result {
         log::error!("Failed to insert API response: {}", e);
+    }
+
+    if !success {
+        return Ok(format!(
+            "No schedule found for stop {}, does it exist?",
+            command.stop_number
+        ));
     }
 
     let parsed_response = serde_json::from_str::<StopScheduleResponse>(&api_response_text).unwrap();

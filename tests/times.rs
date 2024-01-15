@@ -154,6 +154,60 @@ async fn stop_number_returns_single_route_stop_schedule_to_approved_number(db: P
 }
 
 #[sqlx::test(fixtures("numbers-approved"))]
+async fn incorrect_stop_number_returns_error(db: PgPool) {
+    let mock_winnipeg_transit_api = MockServer::start().await;
+
+    Mock::given(method("GET"))
+        .and(path_regex(r"^/v3/stops/.*/schedule.json$"))
+        .respond_with(ResponseTemplate::new(400).set_body_string("Not found"))
+        .expect(1)
+        .mount(&mock_winnipeg_transit_api)
+        .await;
+
+    let response = get(
+        "/twilio?Body= 10619 16 18 60&From=approved&To=textabus&MessageSid=SM1849",
+        InjectableServices {
+            db: db.clone(),
+            winnipeg_transit_api_address: Some(mock_winnipeg_transit_api.uri()),
+        },
+    )
+    .await
+    .expect("Failed to execute request");
+
+    assert!(response.status().is_success());
+    assert_eq!(response.headers()["content-type"], "text/xml");
+
+    let document = Document::from(response.text().await.unwrap().as_str());
+    let body = &document.find(Name("body")).next().unwrap().text();
+
+    let expected_body = "No schedule found for stop 10619, does it exist?";
+
+    assert_that(body).contains(expected_body);
+
+    let [incoming_message, _]: [Message; 2] =
+        sqlx::query_as("SELECT * FROM messages ORDER BY created_at")
+            .fetch_all(&db)
+            .await
+            .expect("Failed to fetch messages")
+            .try_into()
+            .expect("Expected exactly 2 messages");
+
+    assert_eq!(incoming_message.body, " 10619 16 18 60");
+
+    let api_response: ApiResponse = sqlx::query_as("SELECT * FROM api_responses LIMIT 1")
+        .fetch_one(&db)
+        .await
+        .expect("Failed to fetch API response");
+
+    assert_eq!(api_response.message_id, incoming_message.id);
+    assert_eq!(api_response.body, "Not found");
+    assert_eq!(
+        api_response.query,
+        "/v3/stops/10619/schedule.json?usage=short"
+    );
+}
+
+#[sqlx::test(fixtures("numbers-approved"))]
 async fn stop_number_returns_stop_schedule_via_raw_endpoint(db: PgPool) {
     let mock_winnipeg_transit_api = MockServer::start().await;
     let mock_stop_schedule_response = fs::read_to_string("tests/fixtures/times/stop_schedule.json")
