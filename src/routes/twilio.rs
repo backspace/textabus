@@ -214,8 +214,10 @@ async fn process_command(
         )
         .await
         .unwrap(),
-        Command::Help(_help_command) => HELP_MESSAGE.to_string(),
-        Command::Unknown(_unknown_command) => HELP_MESSAGE.to_string(),
+        Command::Help(_help_command) => format!("{}\n{}", HELP_MESSAGE, state.config.root_url),
+        Command::Unknown(_unknown_command) => {
+            format!("{}\n{}", HELP_MESSAGE, state.config.root_url)
+        }
     }
 }
 

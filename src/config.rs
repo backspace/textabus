@@ -6,6 +6,7 @@ use url::Url;
 pub struct Config {
     pub auth: String,
     pub database_url: Url,
+    pub root_url: Url,
     pub winnipeg_transit_api_key: String,
 }
 
@@ -21,6 +22,8 @@ impl EnvVarProvider {
             auth: args.get("AUTH").expect("Missing auth").to_string(),
             database_url: Url::parse(args.get("DATABASE_URL").expect("Missing DATABASE_URL"))
                 .expect("Unable to parse DATABASE_URL as a URL"),
+            root_url: Url::parse(args.get("ROOT_URL").expect("Missing ROOT_URL"))
+                .expect("Unable to parse ROOT_URL as a URL"),
             winnipeg_transit_api_key: args
                 .get("WINNIPEG_TRANSIT_API_KEY")
                 .expect("Missing WINNIPEG_TRANSIT_API_KEY")

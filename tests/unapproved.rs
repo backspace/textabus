@@ -5,7 +5,9 @@ use helpers::get;
 use select::{document::Document, predicate::Name};
 use speculoos::prelude::*;
 use sqlx::postgres::PgPool;
+use std::env;
 use textabus::{
+    config::{ConfigProvider, EnvVarProvider},
     models::{Message, Number},
     routes::HELP_MESSAGE,
     InjectableServices,
@@ -82,6 +84,9 @@ async fn twilio_ignores_a_known_but_not_approved_number(db: PgPool) {
 async fn twilio_serves_placeholder_with_unknown_body_to_approved_number_and_stores_messages(
     db: PgPool,
 ) {
+    let env_config_provider = EnvVarProvider::new(env::vars().collect());
+    let config = &env_config_provider.get_config();
+
     let response = get(
         "/twilio?Body=wha&From=approved&To=textabus&MessageSid=SM1312",
         InjectableServices {
@@ -113,7 +118,9 @@ async fn twilio_serves_placeholder_with_unknown_body_to_approved_number_and_stor
     assert_eq!(incoming_message.destination, "textabus");
     assert_eq!(incoming_message.initial_message_id, None);
 
-    assert_eq!(outgoing_message.body, HELP_MESSAGE);
+    assert_that(&outgoing_message.body).contains(HELP_MESSAGE);
+    assert_that(&outgoing_message.body).contains(&config.root_url);
+
     assert_eq!(outgoing_message.origin, "textabus");
     assert_eq!(outgoing_message.destination, "approved");
     assert_eq!(
