@@ -12,10 +12,75 @@
 
     <p>
       <form action="/result" method="get" data-form>
-        <input type="text" name="body" autofocus />
+        <input type="text" name="body" autofocus data-body />
         <input type="submit" data-submit />
       </form>
       <textarea id="repl" rows="20" cols="80"></textarea>
+    </p>
+
+    <h2>
+      usage
+    </h2>
+
+    <h3>
+      <code>
+        times
+      </code>
+    </h3>
+    <p>
+      <em>
+        This is the default command so
+        <code>
+          times
+        </code>
+        is optional.
+      </em>
+    </p>
+    <p>
+      Returns the next buses for a stop, optionally narrowed to particular routes.  Examples:
+      <ul data-commands>
+        <li>
+          <code>
+            10619
+          </code>
+        </li>
+        <li>
+          <code>
+            10619 BLUE 16
+          </code>
+        </li>
+        <li>
+          <code>
+            times 10619
+          </code>
+        </li>
+      </ul>
+    </p>
+
+    <h3>
+      <code>
+        stops
+      </code>
+    </h3>
+    <p>
+      Returns stops and routes within 500m of a location. Examples:
+      <ul data-commands>
+        <li>
+          <code>
+            stops 245 smith
+          </code>
+        </li>
+        <li>
+          <code>
+            stops mcp@lei
+          </code>
+        </li>
+        <li>
+          <code>
+            stops union station
+          </code>
+        </li>
+      </ul>
     </p>
 
     <h2>
