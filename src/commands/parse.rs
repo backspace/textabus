@@ -1,21 +1,31 @@
 use regex::Regex;
 
 pub fn parse_command(input: &str) -> Command {
-    let trimmed_input = &input.trim().to_lowercase();
+    let cleaned_input = clean_input(input);
 
-    if let Ok(command) = parse_stop_and_routes(trimmed_input) {
+    if let Ok(command) = parse_stop_and_routes(&cleaned_input) {
         return Command::Times(command);
     }
 
-    if let Ok(command) = parse_stops_and_location(trimmed_input) {
+    if let Ok(command) = parse_stops_and_location(&cleaned_input) {
         return Command::Stops(command);
     }
 
-    if let Ok(command) = parse_help(trimmed_input) {
+    if let Ok(command) = parse_help(&cleaned_input) {
         return Command::Help(command);
     }
 
     Command::Unknown(UnknownCommand {})
+}
+
+fn clean_input(input: &str) -> String {
+    // Only downcase the command
+    let mut parts = input.trim().splitn(2, char::is_whitespace);
+    let trimmed_input =
+        parts.next().unwrap_or("").to_lowercase() + " " + parts.next().unwrap_or("");
+
+    let cleaned_input = trimmed_input.trim().to_string();
+    cleaned_input
 }
 
 fn parse_stop_and_routes(input: &str) -> Result<TimesCommand, &'static str> {
@@ -85,11 +95,11 @@ mod tests {
 
     #[test]
     fn test_parse_times_command() {
-        let command = parse_command("10619 16 18");
+        let command = parse_command("10619 16 18 BLUE");
         match command {
             Command::Times(times_command) => {
                 assert_eq!(times_command.stop_number, "10619");
-                assert_eq!(times_command.routes, vec!["16", "18"]);
+                assert_eq!(times_command.routes, vec!["16", "18", "BLUE"]);
             }
             _ => panic!("Expected TimesCommand"),
         }
@@ -118,7 +128,7 @@ mod tests {
         let command = parse_command("Stops 245 Smith");
         match command {
             Command::Stops(stops_command) => {
-                assert_eq!(stops_command.location, "245 smith");
+                assert_eq!(stops_command.location, "245 Smith");
             }
             _ => panic!("Expected StopsCommand"),
         }

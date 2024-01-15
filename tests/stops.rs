@@ -145,7 +145,7 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
     assert_eq!(locations_response.body, mock_locations_response);
     assert_eq!(
         locations_response.query,
-        format!("/v3/locations:union station.json?usage=short")
+        format!("/v3/locations:Union Station.json?usage=short")
     );
 
     let stops_response = api_responses
