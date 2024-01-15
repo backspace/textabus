@@ -15,12 +15,12 @@ pub fn parse_command(input: &str) -> Command {
 }
 
 fn parse_stop_and_routes(input: &str) -> Result<TimesCommand, &'static str> {
-    let re = Regex::new(r"^(\d{5})(?:\s+(.*))?$").unwrap();
+    let re = Regex::new(r"^(times )?(\d{5})(?:\s+(.*))?$").unwrap();
 
     if let Some(captures) = re.captures(input) {
-        let stop_number = captures.get(1).map_or("", |m| m.as_str()).to_string();
+        let stop_number = captures.get(2).map_or("", |m| m.as_str()).to_string();
         let routes: Vec<String> = captures
-            .get(2)
+            .get(3)
             .map_or("", |m| m.as_str())
             .split_whitespace()
             .map(|s| s.to_string())
@@ -79,6 +79,15 @@ mod tests {
 
         let command_with_whitespace = parse_command(" 10064 ");
         match command_with_whitespace {
+            Command::Times(times_command) => {
+                assert_eq!(times_command.stop_number, "10064");
+                assert_eq!(times_command.routes, Vec::<String>::new());
+            }
+            _ => panic!("Expected TimesCommand"),
+        }
+
+        let command_with_optional_prefix = parse_command("times 10064");
+        match command_with_optional_prefix {
             Command::Times(times_command) => {
                 assert_eq!(times_command.stop_number, "10064");
                 assert_eq!(times_command.routes, Vec::<String>::new());
