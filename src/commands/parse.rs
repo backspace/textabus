@@ -19,12 +19,14 @@ pub fn parse_command(input: &str) -> Command {
 }
 
 fn clean_input(input: &str) -> String {
-    // Only downcase the command
-    let mut parts = input.trim().splitn(2, char::is_whitespace);
-    let trimmed_input =
+    let string_of_whitespace = regex::Regex::new(r"\s+").unwrap();
+    let normalised_input = string_of_whitespace.replace_all(&input, " ").to_string();
+
+    let mut parts = normalised_input.trim().splitn(2, char::is_whitespace);
+    let input_with_downcased_command =
         parts.next().unwrap_or("").to_lowercase() + " " + parts.next().unwrap_or("");
 
-    let cleaned_input = trimmed_input.trim().to_string();
+    let cleaned_input = input_with_downcased_command.trim().to_string();
     cleaned_input
 }
 
@@ -129,6 +131,22 @@ mod tests {
         match command {
             Command::Stops(stops_command) => {
                 assert_eq!(stops_command.location, "245 Smith");
+            }
+            _ => panic!("Expected StopsCommand"),
+        }
+
+        let command_with_line_breaks = parse_command("Stops\n245\nSmith");
+        match command_with_line_breaks {
+            Command::Stops(stops_command) => {
+                assert_eq!(stops_command.location, "245 Smith");
+            }
+            _ => panic!("Expected StopsCommand"),
+        }
+
+        let command_with_extra_spaces = parse_command("stops  245   smith");
+        match command_with_extra_spaces {
+            Command::Stops(stops_command) => {
+                assert_eq!(stops_command.location, "245 smith");
             }
             _ => panic!("Expected StopsCommand"),
         }
