@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
 async function submitForm() {
   let submitButton = document.querySelector("[data-submit]");
   submitButton.disabled = true;
+  document.querySelector("input[name=body]").select();
 
   let formData = new FormData(form);
 
