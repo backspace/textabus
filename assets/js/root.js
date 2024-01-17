@@ -15,6 +15,10 @@ document.addEventListener("DOMContentLoaded", function () {
 async function submitForm() {
   let submitButton = document.querySelector("[data-submit]");
   submitButton.disabled = true;
+
+  let submitButtonValue = submitButton.value;
+  submitButton.value = "…";
+
   document.querySelector("input[name=body]").select();
 
   let formData = new FormData(form);
@@ -26,6 +30,7 @@ async function submitForm() {
   let text = await result.text();
 
   document.querySelector("#repl").value = text;
+  submitButton.value = submitButtonValue;
 
   submitButton.disabled = false;
 }
