@@ -24,7 +24,7 @@ async function submitForm() {
 
   let text = await result.text();
 
-  document.querySelector("textarea").value = text;
+  document.querySelector("#repl").value = text;
 
   submitButton.disabled = false;
 }

@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <title>
+      textabus
+    </title>
+
+    <link rel="stylesheet" href="/assets/css/font.css">
+    <link rel="stylesheet" href="/assets/css/layout.css">
+    <script src="/assets/js/layout.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {{#if css}}
+      <link rel="stylesheet" href="/assets/css/{{ css }}.css">
+    {{/if}}
+
+    {{#if js}}
+      <script src="/assets/js/{{ js }}.js"></script>
+    {{/if}}
+  </head>
+  <body>
+    <h1>
+      <a href="/">textabus</a>
+    </h1>
+
+    {{> nav}}
+    {{> @partial-block }}
+  </body>
+</html>

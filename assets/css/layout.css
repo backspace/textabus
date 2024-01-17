@@ -1,0 +1,26 @@
+html {
+    font-family: nokia;
+}
+
+h1 a {
+    text-decoration: none;
+    color: inherit;
+}
+
+h1, h2, h3, h4 {
+    font-weight: normal;
+}
+
+nav ul {
+    margin-bottom: 1rem;
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    gap: 1rem;
+  }
+  
+nav a.active {
+    text-decoration: none;
+    color: inherit;
+}
+  

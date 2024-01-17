@@ -1,0 +1,17 @@
+form {
+    display: flex;
+    gap: 0.5rem;
+}
+
+form #body {
+    flex: 1;
+}
+
+form * {
+    font: inherit;
+}
+
+output {
+    width: 100%;
+    white-space: pre-wrap;
+}

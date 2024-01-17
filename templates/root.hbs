@@ -1,166 +1,74 @@
-<html>
-  <head>
-    <title>
-      textabus
-    </title>
-  </head>
-  <script src="/assets/repl.js"></script>
-  <body>
-    <h1>
-      textabus
-    </h1>
+{{#> layout css="root" js="root" }}
+  <p>
+    <form action="/result" method="get" data-form>
+      <input id="body" type="text" name="body" autofocus data-body />
+      <input type="submit" value="text" data-submit />
+    </form>
+    <output for="body" id="repl" rows="20"></output>
+  </p>
 
-    <p>
-      <form action="/result" method="get" data-form>
-        <input type="text" name="body" autofocus data-body />
-        <input type="submit" data-submit />
-      </form>
-      <textarea id="repl" rows="20" cols="80"></textarea>
-    </p>
+  <h2>
+    usage
+  </h2>
 
-    <h2>
-      usage
-    </h2>
-
-    <h3>
+  <h3>
+    <code>
+      times
+    </code>
+  </h3>
+  <p>
+    <em>
+      This is the default command so
       <code>
         times
       </code>
-    </h3>
-    <p>
-      <em>
-        This is the default command so
+      is optional.
+    </em>
+  </p>
+  <p>
+    Returns the next buses for a stop, optionally narrowed to particular routes.  Examples:
+    <ul data-commands>
+      <li>
         <code>
-          times
+          10619
         </code>
-        is optional.
-      </em>
-    </p>
-    <p>
-      Returns the next buses for a stop, optionally narrowed to particular routes.  Examples:
-      <ul data-commands>
-        <li>
-          <code>
-            10619
-          </code>
-        </li>
-        <li>
-          <code>
-            10619 BLUE 16
-          </code>
-        </li>
-        <li>
-          <code>
-            times 10619
-          </code>
-        </li>
-      </ul>
-    </p>
+      </li>
+      <li>
+        <code>
+          10619 BLUE 16
+        </code>
+      </li>
+      <li>
+        <code>
+          times 10619
+        </code>
+      </li>
+    </ul>
+  </p>
 
-    <h3>
-      <code>
-        stops
-      </code>
-    </h3>
-    <p>
-      Returns stops and routes within 500m of a location. Examples:
-      <ul data-commands>
-        <li>
-          <code>
-            stops 245 smith
-          </code>
-        </li>
-        <li>
-          <code>
-            stops mcp@lei
-          </code>
-        </li>
-        <li>
-          <code>
-            stops union station
-          </code>
-        </li>
-      </ul>
-    </p>
-
-    <h2>
-      changelog
-    </h2>
-    <h3>
-      stops: 2024-01-15
-    </h3>
-    <h4>
-      fixes
-    </h4>
-    <ul>
+  <h3>
+    <code>
+      stops
+    </code>
+  </h3>
+  <p>
+    Returns stops and routes within 500m of a location. Examples:
+    <ul data-commands>
       <li>
-        added normalisation of strings of whitespace to a single space
-      </li>
-    </ul>
-    <h3>
-      stops: 2024-01-14
-    </h3>
-    <h4>
-      enhancements
-    </h4>
-    <ul>
-      <li>
-        added optional prefix for
         <code>
-          times
+          stops 245 smith
         </code>
-        command
       </li>
       <li>
-        added
         <code>
-          help
+          stops mcp@lei
         </code>
-        command
-      </li>
-    </ul>
-    <h4>
-      fixes
-    </h4>
-    <ul>
-      <li>
-        commands are downcased before processing (so phone autocaps is ignored)
       </li>
       <li>
-        404s from the stop schedules API are handled
-      </li>
-    </ul>
-    <h3>
-      stops: 2024-01-13
-    </h3>
-    <h4>
-      enhancements
-    </h4>
-    <ul>
-      <li>
-        added
         <code>
-          stops [location]
+          stops union station
         </code>
-        command
-      </li>
-      <li>
-        rudimentary web interface to test commands
       </li>
     </ul>
-    <h4>
-      fixes
-    </h4>
-    <ul>
-      <li>
-        whitespace around commands is trimmed so
-        “
-        <code>
-          10064
-        </code>
-        ”
-        now works
-      </li>
-    </ul>
-  </body>
-</html>
+  </p>
+{{/layout}}
