@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <title>
+      textabus
+    </title>
+
+    <link rel="stylesheet" href="/assets/css/admin/layout.css">
+    <script src="/assets/js/layout.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {{#if css}}
+      <link rel="stylesheet" href="/assets/css/admin/{{ css }}.css">
+    {{/if}}
+
+    {{#if js}}
+      <script src="/assets/js/admin/{{ js }}.js"></script>
+    {{/if}}
+  </head>
+  <body>
+    {{> admin/nav}}
+    {{> @partial-block }}
+  </body>
+</html>

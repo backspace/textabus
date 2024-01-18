@@ -1,0 +1,46 @@
+{{#> admin/layout }}
+    <h2>
+        unapproved
+    </h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    number
+                </th>
+                <th>
+                    name
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each unapproved as |number|}}
+                {{> admin/_number number=number}}
+            {{/each}}
+        </tbody>
+    </table>
+
+    <h2>
+        approved
+    </h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    number
+                </th>
+                <th>
+                    name
+                </th>
+        
+            </tr>
+        </thead>
+        <tbody>
+            {{#each approved as |number|}}
+                {{> admin/_number number=number}}
+            {{/each}}
+        </tbody>
+    </table>
+{{/admin/layout}}

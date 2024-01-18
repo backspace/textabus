@@ -1,0 +1,11 @@
+nav ul {
+  margin-bottom: 1rem;
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  gap: 1rem;
+}
+
+nav a.active {
+  font-weight: bold;
+}

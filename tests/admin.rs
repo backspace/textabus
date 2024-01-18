@@ -4,7 +4,7 @@ use helpers::{get, get_with_auth};
 
 use select::{
     document::Document,
-    predicate::{Class, Name, Predicate},
+    predicate::{Attr, Class, Descendant, Name, Predicate},
 };
 use speculoos::prelude::*;
 use sqlx::postgres::PgPool;
@@ -13,7 +13,7 @@ use textabus::InjectableServices;
 #[sqlx::test(fixtures("numbers-approved", "messages"))]
 async fn admin_serves_message_history(db: PgPool) {
     let response = get_with_auth(
-        "/admin",
+        "/admin/messages",
         InjectableServices {
             db: db.clone(),
             winnipeg_transit_api_address: None,
@@ -89,10 +89,10 @@ async fn admin_serves_message_history(db: PgPool) {
     assert_that(&oldest_last_message.text()).contains("?");
 }
 
-#[sqlx::test]
-async fn admin_rejects_without_auth(db: PgPool) {
-    let response = get(
-        "/admin",
+#[sqlx::test(fixtures("numbers-approved", "numbers-unapproved"))]
+async fn admin_serves_number_listings(db: PgPool) {
+    let response = get_with_auth(
+        "/admin/numbers",
         InjectableServices {
             db: db.clone(),
             winnipeg_transit_api_address: None,
@@ -101,5 +101,55 @@ async fn admin_rejects_without_auth(db: PgPool) {
     .await
     .expect("Failed to execute request");
 
-    assert_eq!(response.status(), 401);
+    assert!(response.status().is_success());
+    assert_eq!(
+        response.headers()["content-type"],
+        "text/html; charset=utf-8"
+    );
+
+    let document = Document::from(response.text().await.unwrap().as_str());
+    let row_count = document.find(Descendant(Name("tbody"), Name("tr"))).count();
+
+    assert_eq!(row_count, 2);
+
+    let unapproved_row = document
+        .find(Name("tr").and(Attr("data-test-unapproved", "")))
+        .next()
+        .unwrap();
+    assert_that(&unapproved_row.text()).contains("unapproved");
+    assert_that(&unapproved_row.text()).contains("an unapproved");
+
+    let approved_row = document
+        .find(Name("tr").and(Attr("data-test-approved", "")))
+        .next()
+        .unwrap();
+    assert_that(&approved_row.text()).contains("approved");
+    assert_that(&approved_row.text()).contains("an approved");
+}
+
+#[sqlx::test]
+async fn admin_rejects_without_auth(db: PgPool) {
+    let messages_response = get(
+        "/admin/messages",
+        InjectableServices {
+            db: db.clone(),
+            winnipeg_transit_api_address: None,
+        },
+    )
+    .await
+    .expect("Failed to execute request");
+
+    assert_eq!(messages_response.status(), 401);
+
+    let numbers_response = get(
+        "/admin/numbers",
+        InjectableServices {
+            db: db.clone(),
+            winnipeg_transit_api_address: None,
+        },
+    )
+    .await
+    .expect("Failed to execute request");
+
+    assert_eq!(numbers_response.status(), 401);
 }

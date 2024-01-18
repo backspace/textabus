@@ -1,63 +1,4 @@
-<html>
-  <head>
-    <title>
-      textabus admin
-    </title>
-  </head>
-  <style>
-    .exchanges {
-      display: flex;
-      flex-direction: column;
-      margin: auto;
-      max-width: 20rem;
-    }
-
-    .exchange {
-      display: flex;
-      flex-direction: column;
-      border-bottom: 1px solid #ccc;
-    }
-
-    time {
-      font-size: 0.6rem;
-      color: #999;
-      text-align: center;
-      margin-bottom: 0.5rem;
-    }
-
-    .from {
-      font-size: 0.6rem;
-      color: #999;
-      margin-bottom: 0.1rem;
-    }
-
-    .body {
-      white-space: pre-wrap;
-      margin-top: 0.25rem;
-      margin-bottom: 0.25rem;
-      border-radius: 10px;
-      padding: 0.5rem;
-    }
-
-    .message.incoming {
-      align-self: flex-start;
-      margin-right: 5rem;
-    }
-
-    .incoming .body {
-      background-color: #ddd;
-    }
-
-    .message.outgoing {
-      align-self: flex-end;
-      margin-left: 5rem;
-    }
-
-    .outgoing .body {
-      background-color: #eee;
-    }
-  </style>
-  <body>
+{{#> admin/layout css="messages" }}
     <section class="exchanges">
       {{#each exchanges as |exchange|}}
         <section class="exchange">
@@ -70,5 +11,4 @@
         </section>
       {{/each}}
     </section>
-  </body>
-</html>
+{{/admin/layout}}

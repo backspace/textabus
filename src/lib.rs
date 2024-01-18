@@ -52,7 +52,8 @@ pub async fn app(services: InjectableServices) -> Router {
         .route("/changelog", get(get_changelog))
         .route("/twilio", get(get_twilio))
         .route("/raw", get(get_raw))
-        .route("/admin", get(get_admin))
+        .route("/admin/messages", get(get_messages))
+        .route("/admin/numbers", get(get_numbers))
         .with_state(AppState {
             config: config.clone(),
             db: services.db,

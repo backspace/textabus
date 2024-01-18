@@ -1,4 +1,4 @@
-use crate::{auth::User, AppState};
+use crate::{auth::User, models::Number, AppState};
 
 use axum::{extract::State, response::IntoResponse};
 use axum_template::RenderHtml;
@@ -7,7 +7,7 @@ use serde::Serialize;
 use sqlx::types::uuid::Uuid;
 use std::collections::HashMap;
 
-pub async fn get_admin(State(state): State<AppState>, _user: User) -> impl IntoResponse {
+pub async fn get_messages(State(state): State<AppState>, _user: User) -> impl IntoResponse {
     let messages = sqlx::query_as::<_, ExtendedMessage>(
         r#"
             SELECT messages.*, to_char(messages.created_at, 'Mon DD, YYYY HH24:MI') AS formatted_created_at, numbers.name AS origin_name
@@ -51,6 +51,31 @@ pub async fn get_admin(State(state): State<AppState>, _user: User) -> impl IntoR
     )
 }
 
+pub async fn get_numbers(State(state): State<AppState>, _user: User) -> impl IntoResponse {
+    let numbers = sqlx::query_as::<_, Number>(
+        r#"
+            SELECT *
+            FROM numbers
+            ORDER BY created_at desc
+        "#,
+    )
+    .fetch_all(&state.db)
+    .await
+    .expect("Failed to fetch messages");
+
+    let (approved, unapproved): (Vec<Number>, Vec<Number>) =
+        numbers.into_iter().partition(|number| number.approved);
+
+    RenderHtml(
+        "admin/numbers",
+        state.engine,
+        NumbersTemplate {
+            unapproved,
+            approved,
+        },
+    )
+}
+
 #[derive(Serialize)]
 struct MessagesTemplate {
     exchanges: Vec<Exchange>,
@@ -74,4 +99,10 @@ pub struct ExtendedMessage {
     pub created_at: NaiveDateTime,
     pub formatted_created_at: String,
     pub updated_at: NaiveDateTime,
+}
+
+#[derive(Serialize)]
+struct NumbersTemplate {
+    unapproved: Vec<Number>,
+    approved: Vec<Number>,
 }
