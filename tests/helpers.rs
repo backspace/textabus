@@ -54,6 +54,36 @@ pub async fn get_with_auth(
         .await
 }
 
+#[allow(dead_code)]
+pub async fn post_with_auth(
+    path: &str,
+    body: &str,
+    mut services: InjectableServices,
+) -> Result<reqwest::Response, reqwest::Error> {
+    let env_config_provider = EnvVarProvider::new(env::vars().collect());
+    let config = &env_config_provider.get_config();
+
+    services = set_up_services(services).await;
+
+    let app_address = spawn_app(services).await.address;
+
+    let client = Client::new();
+    let url = format!("{}{}", app_address, path);
+
+    client
+        .post(&url)
+        .header(
+            "Authorization",
+            format!(
+                "Basic {}",
+                general_purpose::STANDARD.encode(config.auth.clone())
+            ),
+        )
+        .body(body.to_string())
+        .send()
+        .await
+}
+
 async fn set_up_services(mut services: InjectableServices) -> InjectableServices {
     if services.winnipeg_transit_api_address.is_none() {
         let mock_winnipeg_transit_api = MockServer::start().await;

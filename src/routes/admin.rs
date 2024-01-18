@@ -1,8 +1,12 @@
 use crate::{auth::User, models::Number, AppState};
 
-use axum::{extract::State, response::IntoResponse};
+use axum::{
+    extract::{Path, State},
+    response::{IntoResponse, Response},
+};
 use axum_template::RenderHtml;
 use chrono::NaiveDateTime;
+use http::StatusCode;
 use serde::Serialize;
 use sqlx::types::uuid::Uuid;
 use std::collections::HashMap;
@@ -74,6 +78,46 @@ pub async fn get_numbers(State(state): State<AppState>, _user: User) -> impl Int
             approved,
         },
     )
+}
+
+#[axum_macros::debug_handler]
+pub async fn post_approve_number(
+    State(state): State<AppState>,
+    Path(id): Path<String>,
+) -> Response {
+    sqlx::query(
+        r#"
+            UPDATE numbers
+            SET approved = TRUE
+            WHERE number = $1
+        "#,
+    )
+    .bind(id)
+    .execute(&state.db)
+    .await
+    .expect("Failed to update number");
+
+    StatusCode::NO_CONTENT.into_response()
+}
+
+#[axum_macros::debug_handler]
+pub async fn post_unapprove_number(
+    State(state): State<AppState>,
+    Path(id): Path<String>,
+) -> Response {
+    sqlx::query(
+        r#"
+            UPDATE numbers
+            SET approved = FALSE
+            WHERE number = $1
+        "#,
+    )
+    .bind(id)
+    .execute(&state.db)
+    .await
+    .expect("Failed to update number");
+
+    StatusCode::NO_CONTENT.into_response()
 }
 
 #[derive(Serialize)]

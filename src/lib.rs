@@ -9,7 +9,10 @@ pub mod routes;
 use crate::config::{Config, ConfigProvider, EnvVarProvider};
 use crate::routes::*;
 
-use axum::{routing::get, Router};
+use axum::{
+    routing::{get, post},
+    Router,
+};
 use axum_template::engine::Engine;
 use handlebars::{DirectorySourceOptions, Handlebars};
 use sqlx::postgres::PgPool;
@@ -54,6 +57,11 @@ pub async fn app(services: InjectableServices) -> Router {
         .route("/raw", get(get_raw))
         .route("/admin/messages", get(get_messages))
         .route("/admin/numbers", get(get_numbers))
+        .route("/admin/numbers/:number/approve", post(post_approve_number))
+        .route(
+            "/admin/numbers/:number/unapprove",
+            post(post_unapprove_number),
+        )
         .with_state(AppState {
             config: config.clone(),
             db: services.db,

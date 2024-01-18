@@ -1,4 +1,4 @@
-<tr {{#if number.approved}}data-test-approved{{else}}data-test-unapproved{{/if}}>
+<tr data-number={{number.number}} {{#if number.approved}}data-approved{{else}}data-unapproved{{/if}}>
   <td>
     {{number.number}}
   </td>

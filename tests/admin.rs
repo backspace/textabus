@@ -1,6 +1,6 @@
 mod helpers;
 
-use helpers::{get, get_with_auth};
+use helpers::{get, get_with_auth, post_with_auth};
 
 use select::{
     document::Document,
@@ -113,18 +113,66 @@ async fn admin_serves_number_listings(db: PgPool) {
     assert_eq!(row_count, 2);
 
     let unapproved_row = document
-        .find(Name("tr").and(Attr("data-test-unapproved", "")))
+        .find(Name("tr").and(Attr("data-unapproved", "")))
         .next()
         .unwrap();
     assert_that(&unapproved_row.text()).contains("unapproved");
     assert_that(&unapproved_row.text()).contains("an unapproved");
 
     let approved_row = document
-        .find(Name("tr").and(Attr("data-test-approved", "")))
+        .find(Name("tr").and(Attr("data-approved", "")))
         .next()
         .unwrap();
     assert_that(&approved_row.text()).contains("approved");
     assert_that(&approved_row.text()).contains("an approved");
+}
+
+#[sqlx::test(fixtures("numbers-unapproved"))]
+async fn test_approve_unapproved_number(db: PgPool) {
+    let response = post_with_auth(
+        "/admin/numbers/unapproved/approve",
+        "",
+        InjectableServices {
+            db: db.clone(),
+            winnipeg_transit_api_address: None,
+        },
+    )
+    .await
+    .expect("Failed to execute request");
+
+    assert!(response.status().is_success());
+
+    let unapproved_count: i64 =
+        sqlx::query_scalar("SELECT COUNT(*) FROM numbers WHERE approved = FALSE")
+            .fetch_one(&db)
+            .await
+            .expect("Failed to fetch unapproved count");
+
+    assert_eq!(unapproved_count, 0);
+}
+
+#[sqlx::test(fixtures("numbers-approved"))]
+async fn test_unapprove_approved_number(db: PgPool) {
+    let response = post_with_auth(
+        "/admin/numbers/approved/unapprove",
+        "",
+        InjectableServices {
+            db: db.clone(),
+            winnipeg_transit_api_address: None,
+        },
+    )
+    .await
+    .expect("Failed to execute request");
+
+    assert!(response.status().is_success());
+
+    let approved_count: i64 =
+        sqlx::query_scalar("SELECT COUNT(*) FROM numbers WHERE approved = TRUE")
+            .fetch_one(&db)
+            .await
+            .expect("Failed to fetch approved count");
+
+    assert_eq!(approved_count, 0);
 }
 
 #[sqlx::test]
