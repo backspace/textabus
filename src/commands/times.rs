@@ -79,7 +79,7 @@ pub async fn handle_times_request(
             if time.signed_duration_since(scheduled_time).num_minutes() >= DELAY_THRESHOLD {
                 line.push_str(
                     format!(
-                        " ({}min delay)",
+                        " ({}min late)",
                         time.signed_duration_since(scheduled_time).num_minutes()
                     )
                     .as_str(),

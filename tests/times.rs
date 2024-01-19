@@ -48,7 +48,7 @@ async fn stop_number_returns_stop_schedule(db: PgPool) {
     let expected_body = indoc! {"
         10619 WB Graham@Vaughan (The Bay)
         12:16p 16 St Vital Ctr (1min ahead)
-        12:19p BLUE Downtown (8min delay)
+        12:19p BLUE Downtown (8min late)
         12:22p BLUE Downtown
         12:25p 60 UofM
         "};
@@ -243,7 +243,7 @@ async fn stop_number_returns_stop_schedule_via_raw_endpoint(db: PgPool) {
     let expected_body = indoc! {"
         10619 WB Graham@Vaughan (The Bay)
         12:16p 16 St Vital Ctr (1min ahead)
-        12:19p BLUE Downtown (8min delay)
+        12:19p BLUE Downtown (8min late)
         12:22p BLUE Downtown
         12:25p 60 UofM
         "};
