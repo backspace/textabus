@@ -7,6 +7,10 @@ pub async fn get_root(State(state): State<AppState>) -> impl IntoResponse {
     RenderHtml("root", state.engine, ())
 }
 
+pub async fn get_about(State(state): State<AppState>) -> impl IntoResponse {
+    RenderHtml("about", state.engine, ())
+}
+
 pub async fn get_changelog(State(state): State<AppState>) -> impl IntoResponse {
     RenderHtml("changelog", state.engine, ())
 }

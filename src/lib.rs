@@ -52,6 +52,7 @@ pub async fn app(services: InjectableServices) -> Router {
     Router::new()
         .nest_service("/assets", ServeDir::new("assets"))
         .route("/", get(get_root))
+        .route("/about", get(get_about))
         .route("/changelog", get(get_changelog))
         .route("/twilio", get(get_twilio))
         .route("/raw", get(get_raw))
