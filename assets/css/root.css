@@ -15,3 +15,11 @@ output {
     width: 100%;
     white-space: pre-wrap;
 }
+
+progress {
+    width: 100%;
+}
+
+.hidden {
+    display: none;
+}

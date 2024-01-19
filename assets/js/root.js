@@ -13,8 +13,14 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 async function submitForm() {
+  let progressBar = document.querySelector("progress");
+  let output = document.querySelector("output");
+
   let submitButton = document.querySelector("[data-submit]");
   submitButton.disabled = true;
+
+  progressBar.classList.remove("hidden");
+  output.classList.add("hidden");
 
   let submitButtonValue = submitButton.value;
   submitButton.value = "…";
@@ -29,7 +35,9 @@ async function submitForm() {
 
   let text = await result.text();
 
-  document.querySelector("#repl").value = text;
+  output.value = text;
+  output.classList.remove("hidden");
+  progressBar.classList.add("hidden");
   submitButton.value = submitButtonValue;
 
   submitButton.disabled = false;
