@@ -23,4 +23,7 @@ nav a.active {
     text-decoration: none;
     color: inherit;
 }
-  
+
+nav a.secret {
+    opacity: 0;
+}
