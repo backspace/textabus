@@ -6,9 +6,20 @@ use select::{
     document::Document,
     predicate::{Attr, Class, Descendant, Name, Predicate},
 };
+use serde_json::json;
 use speculoos::prelude::*;
 use sqlx::postgres::PgPool;
-use textabus::InjectableServices;
+use std::env;
+use textabus::{
+    config::{ConfigProvider, EnvVarProvider},
+    models::Message,
+    routes::get_composed_approval_message,
+    InjectableServices,
+};
+use wiremock::{
+    matchers::{body_string, method, path_regex},
+    Mock, MockServer, ResponseTemplate,
+};
 
 #[sqlx::test(fixtures("numbers-approved", "messages"))]
 async fn admin_serves_message_history(db: PgPool) {
@@ -131,12 +142,35 @@ async fn admin_serves_number_listings(db: PgPool) {
 
 #[sqlx::test(fixtures("numbers-unapproved"))]
 async fn test_approve_unapproved_number(db: PgPool) {
+    let env_config_provider = EnvVarProvider::new(env::vars().collect());
+    let config = &env_config_provider.get_config();
+
+    let mock_twilio: MockServer = MockServer::start().await;
+
+    let approval_body = get_composed_approval_message();
+
+    let twilio_create_message_body = serde_urlencoded::to_string([
+        ("Body", &approval_body),
+        ("To", &"unapproved".to_string()),
+        ("From", &config.textabus_number),
+    ])
+    .expect("Could not encode message creation body");
+
+    Mock::given(method("POST"))
+        .and(path_regex(r"^/2010-04-01/Accounts/.*/Messages.json$"))
+        .and(body_string(twilio_create_message_body.to_string()))
+        .respond_with(ResponseTemplate::new(201).set_body_json(json!({})))
+        .expect(1)
+        .named("create message")
+        .mount(&mock_twilio)
+        .await;
+
     let response = post_with_auth(
         "/admin/numbers/unapproved/approve",
         "",
         InjectableServices {
             db: db.clone(),
-            twilio_address: None,
+            twilio_address: Some(mock_twilio.uri()),
             winnipeg_transit_api_address: None,
         },
     )
@@ -152,6 +186,19 @@ async fn test_approve_unapproved_number(db: PgPool) {
             .expect("Failed to fetch unapproved count");
 
     assert_eq!(unapproved_count, 0);
+
+    let [approval_message]: [Message; 1] =
+        sqlx::query_as("SELECT * FROM messages ORDER BY created_at")
+            .fetch_all(&db)
+            .await
+            .expect("Failed to fetch messages")
+            .try_into()
+            .expect("Expected exactly 1 message");
+
+    assert_eq!(approval_message.body, approval_body);
+    assert_eq!(approval_message.origin, config.textabus_number);
+    assert_eq!(approval_message.destination, "unapproved");
+    assert_eq!(approval_message.initial_message_id, None,);
 }
 
 #[sqlx::test(fixtures("numbers-approved"))]

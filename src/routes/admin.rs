@@ -1,15 +1,22 @@
-use crate::{auth::User, models::Number, AppState};
+use crate::{auth::User, models::Number, routes::HELP_MESSAGE, AppState};
 
 use axum::{
     extract::{Path, State},
     response::{IntoResponse, Response},
 };
 use axum_template::RenderHtml;
-use chrono::NaiveDateTime;
+use base64::{engine::general_purpose, Engine as _};
+use chrono::{NaiveDateTime, Utc};
 use http::StatusCode;
 use serde::Serialize;
 use sqlx::types::uuid::Uuid;
 use std::collections::HashMap;
+
+pub const APPROVAL_MESSAGE: &str = "you have been approved to beta test textabus!\n\nmessages are stored for debugging. please let admin know if you find a bug or have suggestions for improvement";
+
+pub fn get_composed_approval_message() -> String {
+    format!("{}\n\n{}", APPROVAL_MESSAGE, HELP_MESSAGE)
+}
 
 pub async fn get_messages(State(state): State<AppState>, _user: User) -> impl IntoResponse {
     let messages = sqlx::query_as::<_, ExtendedMessage>(
@@ -85,6 +92,22 @@ pub async fn post_approve_number(
     State(state): State<AppState>,
     Path(id): Path<String>,
 ) -> Response {
+    let config = state.config;
+
+    let account_sid = config.twilio_account_sid.to_string();
+    let api_sid = config.twilio_api_key_sid.to_string();
+    let api_secret = config.twilio_api_key_secret.to_string();
+
+    let client = reqwest::Client::new();
+
+    let basic_auth = format!("{}:{}", api_sid, api_secret);
+    let auth_header_value = format!(
+        "Basic {}",
+        general_purpose::STANDARD_NO_PAD.encode(basic_auth)
+    );
+
+    let approved_notification_body = get_composed_approval_message();
+
     sqlx::query(
         r#"
             UPDATE numbers
@@ -92,10 +115,48 @@ pub async fn post_approve_number(
             WHERE number = $1
         "#,
     )
-    .bind(id)
+    .bind(id.clone())
     .execute(&state.db)
     .await
     .expect("Failed to update number");
+
+    let create_message_body = serde_urlencoded::to_string([
+        ("Body", approved_notification_body.clone()),
+        ("To", id.clone()),
+        ("From", config.textabus_number.clone()),
+    ])
+    .expect("Could not encode meeting message creation body");
+
+    client
+        .post(format!(
+            "{}/2010-04-01/Accounts/{}/Messages.json",
+            state.twilio_address, account_sid
+        ))
+        .header("Authorization", auth_header_value.clone())
+        .header("Content-Type", "application/x-www-form-urlencoded")
+        .body(create_message_body.clone())
+        .send()
+        .await
+        .ok();
+
+    let admin_message_insertion_result = sqlx::query(
+        r#"
+        INSERT INTO messages (id, origin, destination, body, created_at, updated_at)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        "#,
+    )
+    .bind(Uuid::new_v4())
+    .bind(config.textabus_number)
+    .bind(id)
+    .bind(approved_notification_body)
+    .bind(Utc::now().naive_utc())
+    .bind(Utc::now().naive_utc())
+    .execute(&state.db)
+    .await;
+
+    if let Err(e) = admin_message_insertion_result {
+        log::error!("Failed to insert approval message: {}", e);
+    }
 
     StatusCode::NO_CONTENT.into_response()
 }
