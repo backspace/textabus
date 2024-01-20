@@ -20,7 +20,7 @@ pub fn parse_command(input: &str) -> Command {
 
 fn clean_input(input: &str) -> String {
     let string_of_whitespace = regex::Regex::new(r"\s+").unwrap();
-    let normalised_input = string_of_whitespace.replace_all(&input, " ").to_string();
+    let normalised_input = string_of_whitespace.replace_all(input, " ").to_string();
 
     let mut parts = normalised_input.trim().splitn(2, char::is_whitespace);
     let input_with_downcased_command =
