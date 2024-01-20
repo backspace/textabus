@@ -1,14 +1,12 @@
 mod helpers;
 
-use helpers::get;
+use helpers::{get, get_config};
 
 use select::{document::Document, predicate::Name};
 use serde_json::json;
 use speculoos::prelude::*;
 use sqlx::postgres::PgPool;
-use std::env;
 use textabus::{
-    config::{ConfigProvider, EnvVarProvider},
     models::{Message, Number},
     routes::HELP_MESSAGE,
     InjectableServices,
@@ -20,8 +18,7 @@ use wiremock::{
 
 #[sqlx::test]
 async fn twilio_serves_welcome_to_and_registers_unknown_number_and_notifies_admin(db: PgPool) {
-    let env_config_provider = EnvVarProvider::new(env::vars().collect());
-    let config = &env_config_provider.get_config();
+    let config = get_config();
 
     let mock_twilio: MockServer = MockServer::start().await;
 
@@ -117,8 +114,7 @@ async fn twilio_ignores_a_known_but_not_approved_number(db: PgPool) {
 async fn twilio_serves_placeholder_with_unknown_body_to_approved_number_and_stores_messages(
     db: PgPool,
 ) {
-    let env_config_provider = EnvVarProvider::new(env::vars().collect());
-    let config = &env_config_provider.get_config();
+    let config = get_config();
 
     let response = get(
         "/twilio?Body=wha&From=approved&To=textabus&MessageSid=SM1312",

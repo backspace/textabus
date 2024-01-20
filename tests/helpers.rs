@@ -12,6 +12,12 @@ struct TestApp {
     pub address: String,
 }
 
+#[allow(dead_code)]
+pub fn get_config() -> textabus::config::Config {
+    let env_config_provider = EnvVarProvider::new(env::vars().collect());
+    env_config_provider.get_config().clone()
+}
+
 pub async fn get(
     path: &str,
     mut services: InjectableServices,

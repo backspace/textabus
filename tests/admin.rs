@@ -1,6 +1,6 @@
 mod helpers;
 
-use helpers::{get, get_with_auth, post_with_auth};
+use helpers::{get, get_config, get_with_auth, post_with_auth};
 
 use select::{
     document::Document,
@@ -9,13 +9,7 @@ use select::{
 use serde_json::json;
 use speculoos::prelude::*;
 use sqlx::postgres::PgPool;
-use std::env;
-use textabus::{
-    config::{ConfigProvider, EnvVarProvider},
-    models::Message,
-    routes::get_composed_approval_message,
-    InjectableServices,
-};
+use textabus::{models::Message, routes::get_composed_approval_message, InjectableServices};
 use wiremock::{
     matchers::{body_string, method, path_regex},
     Mock, MockServer, ResponseTemplate,
@@ -142,8 +136,7 @@ async fn admin_serves_number_listings(db: PgPool) {
 
 #[sqlx::test(fixtures("numbers-unapproved"))]
 async fn test_approve_unapproved_number(db: PgPool) {
-    let env_config_provider = EnvVarProvider::new(env::vars().collect());
-    let config = &env_config_provider.get_config();
+    let config = get_config();
 
     let mock_twilio: MockServer = MockServer::start().await;
 
