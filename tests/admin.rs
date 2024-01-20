@@ -16,6 +16,7 @@ async fn admin_serves_message_history(db: PgPool) {
         "/admin/messages",
         InjectableServices {
             db: db.clone(),
+            twilio_address: None,
             winnipeg_transit_api_address: None,
         },
     )
@@ -95,6 +96,7 @@ async fn admin_serves_number_listings(db: PgPool) {
         "/admin/numbers",
         InjectableServices {
             db: db.clone(),
+            twilio_address: None,
             winnipeg_transit_api_address: None,
         },
     )
@@ -134,6 +136,7 @@ async fn test_approve_unapproved_number(db: PgPool) {
         "",
         InjectableServices {
             db: db.clone(),
+            twilio_address: None,
             winnipeg_transit_api_address: None,
         },
     )
@@ -158,6 +161,7 @@ async fn test_unapprove_approved_number(db: PgPool) {
         "",
         InjectableServices {
             db: db.clone(),
+            twilio_address: None,
             winnipeg_transit_api_address: None,
         },
     )
@@ -181,6 +185,7 @@ async fn admin_rejects_without_auth(db: PgPool) {
         "/admin/messages",
         InjectableServices {
             db: db.clone(),
+            twilio_address: None,
             winnipeg_transit_api_address: None,
         },
     )
@@ -193,6 +198,7 @@ async fn admin_rejects_without_auth(db: PgPool) {
         "/admin/numbers",
         InjectableServices {
             db: db.clone(),
+            twilio_address: None,
             winnipeg_transit_api_address: None,
         },
     )

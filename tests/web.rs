@@ -13,6 +13,7 @@ async fn root_serves_placeholder(db: PgPool) {
         "/",
         InjectableServices {
             db: db.clone(),
+            twilio_address: None,
             winnipeg_transit_api_address: None,
         },
     )

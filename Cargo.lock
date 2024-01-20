@@ -2606,6 +2606,7 @@ dependencies = [
  "select",
  "serde",
  "serde_json",
+ "serde_urlencoded",
  "serde_with",
  "speculoos",
  "sqlx",

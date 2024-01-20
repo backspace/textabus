@@ -97,8 +97,26 @@ async fn set_up_services(mut services: InjectableServices) -> InjectableServices
 
         services = InjectableServices {
             db: services.db,
+            twilio_address: services.twilio_address,
             winnipeg_transit_api_address: Some("http://localhost:1313".to_string()),
         };
+    }
+
+    if services.twilio_address.is_none() {
+        let mock_twilio = MockServer::start().await;
+
+        Mock::given(any())
+            .respond_with(ResponseTemplate::new(500))
+            .expect(0)
+            .named("Mock Twilio API")
+            .mount(&mock_twilio)
+            .await;
+
+        services = InjectableServices {
+            db: services.db,
+            twilio_address: Some(mock_twilio.uri()),
+            winnipeg_transit_api_address: services.winnipeg_transit_api_address,
+        }
     }
 
     services

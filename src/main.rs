@@ -34,6 +34,7 @@ async fn main() {
         listener,
         app(InjectableServices {
             db,
+            twilio_address: Some("https://api.twilio.com".to_string()),
             winnipeg_transit_api_address: Some("https://api.winnipegtransit.com".to_string()),
         })
         .await

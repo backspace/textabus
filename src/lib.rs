@@ -26,11 +26,13 @@ pub struct AppState {
     config: Config,
     db: PgPool,
     engine: AppEngine,
+    twilio_address: String,
     winnipeg_transit_api_address: String,
 }
 
 pub struct InjectableServices {
     pub db: PgPool,
+    pub twilio_address: Option<String>,
     pub winnipeg_transit_api_address: Option<String>,
 }
 
@@ -67,6 +69,7 @@ pub async fn app(services: InjectableServices) -> Router {
             config: config.clone(),
             db: services.db,
             engine: Engine::from(hbs),
+            twilio_address: services.twilio_address.unwrap(),
             winnipeg_transit_api_address: services.winnipeg_transit_api_address.unwrap(),
         })
 }

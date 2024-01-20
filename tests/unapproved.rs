@@ -3,6 +3,7 @@ mod helpers;
 use helpers::get;
 
 use select::{document::Document, predicate::Name};
+use serde_json::json;
 use speculoos::prelude::*;
 use sqlx::postgres::PgPool;
 use std::env;
@@ -12,13 +13,39 @@ use textabus::{
     routes::HELP_MESSAGE,
     InjectableServices,
 };
+use wiremock::{
+    matchers::{body_string, method, path_regex},
+    Mock, MockServer, ResponseTemplate,
+};
 
 #[sqlx::test]
-async fn twilio_serves_welcome_to_and_registers_unknown_number(db: PgPool) {
+async fn twilio_serves_welcome_to_and_registers_unknown_number_and_notifies_admin(db: PgPool) {
+    let env_config_provider = EnvVarProvider::new(env::vars().collect());
+    let config = &env_config_provider.get_config();
+
+    let mock_twilio: MockServer = MockServer::start().await;
+
+    let twilio_create_message_body = serde_urlencoded::to_string([
+        ("Body", &"New number: unknown".to_string()),
+        ("To", &config.admin_number),
+        ("From", &config.textabus_number),
+    ])
+    .expect("Could not encode message creation body");
+
+    Mock::given(method("POST"))
+        .and(path_regex(r"^/2010-04-01/Accounts/.*/Messages.json$"))
+        .and(body_string(twilio_create_message_body.to_string()))
+        .respond_with(ResponseTemplate::new(201).set_body_json(json!({})))
+        .expect(1)
+        .named("create message")
+        .mount(&mock_twilio)
+        .await;
+
     let response = get(
         "/twilio?Body=hey&From=unknown&To=textabus&MessageSid=SM1312",
         InjectableServices {
             db: db.clone(),
+            twilio_address: Some(mock_twilio.uri()),
             winnipeg_transit_api_address: None,
         },
     )
@@ -32,13 +59,18 @@ async fn twilio_serves_welcome_to_and_registers_unknown_number(db: PgPool) {
 
     assert_that(&document.find(Name("body")).next().unwrap().text()).contains("welcome to textabus. we don’t recognise you, please contact a maintainer to join the alpha test.");
 
-    let [incoming_message, outgoing_message]: [Message; 2] =
+    let [incoming_message, admin_message, outgoing_message]: [Message; 3] =
         sqlx::query_as("SELECT * FROM messages ORDER BY created_at")
             .fetch_all(&db)
             .await
             .expect("Failed to fetch messages")
             .try_into()
-            .expect("Expected exactly 2 messages");
+            .expect("Expected exactly 3 messages");
+
+    assert_eq!(admin_message.body, "New number: unknown");
+    assert_eq!(admin_message.origin, config.textabus_number);
+    assert_eq!(admin_message.destination, config.admin_number);
+    assert_eq!(admin_message.initial_message_id, Some(incoming_message.id));
 
     assert_eq!(incoming_message.body, "hey");
     assert_that(&outgoing_message.body).contains("maintainer");
@@ -61,6 +93,7 @@ async fn twilio_ignores_a_known_but_not_approved_number(db: PgPool) {
         "/twilio?Body=hey&From=unapproved&To=textabus&MessageSid=SM1312",
         InjectableServices {
             db: db.clone(),
+            twilio_address: None,
             winnipeg_transit_api_address: None,
         },
     )
@@ -91,6 +124,7 @@ async fn twilio_serves_placeholder_with_unknown_body_to_approved_number_and_stor
         "/twilio?Body=wha&From=approved&To=textabus&MessageSid=SM1312",
         InjectableServices {
             db: db.clone(),
+            twilio_address: None,
             winnipeg_transit_api_address: None,
         },
     )

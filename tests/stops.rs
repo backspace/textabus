@@ -79,6 +79,7 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
         "/twilio?Body=Stops Union Station&From=approved&To=textabus&MessageSid=SM1849",
         InjectableServices {
             db: db.clone(),
+            twilio_address: None,
             winnipeg_transit_api_address: Some(mock_winnipeg_transit_api.uri()),
         },
     )
@@ -192,6 +193,7 @@ async fn stops_handles_an_empty_locations_response(db: PgPool) {
         "/twilio?Body=stops acab&From=approved&To=textabus&MessageSid=SM1849",
         InjectableServices {
             db: db.clone(),
+            twilio_address: None,
             winnipeg_transit_api_address: Some(mock_winnipeg_transit_api.uri()),
         },
     )
@@ -254,6 +256,7 @@ async fn stops_handles_an_empty_stops_response(db: PgPool) {
         "/twilio?Body=stops assiniboia downs&From=approved&To=textabus&MessageSid=SM1849",
         InjectableServices {
             db: db.clone(),
+            twilio_address: None,
             winnipeg_transit_api_address: Some(mock_winnipeg_transit_api.uri()),
         },
     )

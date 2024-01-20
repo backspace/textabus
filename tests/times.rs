@@ -33,6 +33,7 @@ async fn stop_number_returns_stop_schedule(db: PgPool) {
         "/twilio?Body=10619&From=approved&To=textabus&MessageSid=SM1849",
         InjectableServices {
             db: db.clone(),
+            twilio_address: None,
             winnipeg_transit_api_address: Some(mock_winnipeg_transit_api.uri()),
         },
     )
@@ -108,6 +109,7 @@ async fn stop_number_returns_single_route_stop_schedule_to_approved_number(db: P
         "/twilio?Body= 10619 16 18 60&From=approved&To=textabus&MessageSid=SM1849",
         InjectableServices {
             db: db.clone(),
+            twilio_address: None,
             winnipeg_transit_api_address: Some(mock_winnipeg_transit_api.uri()),
         },
     )
@@ -168,6 +170,7 @@ async fn incorrect_stop_number_returns_error(db: PgPool) {
         "/twilio?Body= 10619 16 18 60&From=approved&To=textabus&MessageSid=SM1849",
         InjectableServices {
             db: db.clone(),
+            twilio_address: None,
             winnipeg_transit_api_address: Some(mock_winnipeg_transit_api.uri()),
         },
     )
@@ -226,6 +229,7 @@ async fn stop_number_returns_stop_schedule_via_raw_endpoint(db: PgPool) {
         "/raw?body=10619",
         InjectableServices {
             db: db.clone(),
+            twilio_address: None,
             winnipeg_transit_api_address: Some(mock_winnipeg_transit_api.uri()),
         },
     )

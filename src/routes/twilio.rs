@@ -9,6 +9,7 @@ use axum::{
     extract::{ConnectInfo, Query, State},
     response::IntoResponse,
 };
+use base64::{engine::general_purpose, Engine as _};
 use chrono::Utc;
 use indoc::indoc;
 use serde::{Deserialize, Serialize};
@@ -81,6 +82,61 @@ pub async fn get_twilio(
             return (axum::http::StatusCode::NOT_FOUND, "not found").into_response();
         }
     } else {
+        let config = state.config;
+
+        let account_sid = config.twilio_account_sid.to_string();
+        let api_sid = config.twilio_api_key_sid.to_string();
+        let api_secret = config.twilio_api_key_secret.to_string();
+
+        let client = reqwest::Client::new();
+
+        let basic_auth = format!("{}:{}", api_sid, api_secret);
+        let auth_header_value = format!(
+            "Basic {}",
+            general_purpose::STANDARD_NO_PAD.encode(basic_auth)
+        );
+
+        let admin_notification_body = format!("New number: {}", params.from.clone());
+
+        let create_message_body = serde_urlencoded::to_string([
+            ("Body", admin_notification_body.clone()),
+            ("To", config.admin_number.clone()),
+            ("From", config.textabus_number.clone()),
+        ])
+        .expect("Could not encode meeting message creation body");
+
+        client
+            .post(format!(
+                "{}/2010-04-01/Accounts/{}/Messages.json",
+                state.twilio_address, account_sid
+            ))
+            .header("Authorization", auth_header_value.clone())
+            .header("Content-Type", "application/x-www-form-urlencoded")
+            .body(create_message_body)
+            .send()
+            .await
+            .ok();
+
+        let admin_message_insertion_result = sqlx::query(
+            r#"
+            INSERT INTO messages (id, origin, destination, body, initial_message_id, created_at, updated_at)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            "#,
+        )
+        .bind(Uuid::new_v4())
+        .bind(config.textabus_number)
+        .bind(config.admin_number)
+        .bind(admin_notification_body)
+        .bind(maybe_incoming_message_id)
+        .bind(Utc::now().naive_utc())
+        .bind(Utc::now().naive_utc())
+        .execute(&state.db)
+        .await;
+
+        if let Err(e) = admin_message_insertion_result {
+            log::error!("Failed to insert admin message: {}", e);
+        }
+
         response_text = "welcome to textabus. we don’t recognise you, please contact a maintainer to join the alpha test.".to_string();
 
         let number_insertion_result = sqlx::query(
