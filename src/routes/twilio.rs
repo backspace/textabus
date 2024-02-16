@@ -1,5 +1,8 @@
 use crate::{
-    commands::{handle_stops_request, handle_times_request, parse_command, Command},
+    commands::{
+        handle_settings_clock_request, handle_stops_request, handle_times_request, parse_command,
+        Command,
+    },
     models::Number,
     render_xml::RenderXml,
     AppState,
@@ -28,6 +31,9 @@ pub const HELP_MESSAGE: &str = indoc!(
 
     find stops:
     stops [location: address, intersection, landmark]
+
+    toggle 12h/24h clock in times response:
+    settings clock
     "#
 );
 
@@ -62,7 +68,7 @@ pub async fn get_twilio(
 
     let mut response_text = "textabus".to_string();
 
-    let number = sqlx::query_as::<_, Number>(
+    let maybe_number = sqlx::query_as::<_, Number>(
         r#"
         SELECT * FROM numbers
         WHERE number = $1
@@ -72,11 +78,18 @@ pub async fn get_twilio(
     .fetch_one(&state.db)
     .await;
 
-    if number.is_ok() {
-        if number.unwrap().approved {
+    if maybe_number.is_ok() {
+        let number = maybe_number.unwrap();
+        if number.approved {
             if params.body.is_some() {
-                response_text =
-                    process_command(params.body.clone(), &state, maybe_incoming_message_id).await;
+                let cloned_number = number.clone();
+                response_text = process_command(
+                    params.body.clone(),
+                    &state,
+                    &Some(cloned_number),
+                    maybe_incoming_message_id,
+                )
+                .await;
             }
         } else {
             return (axum::http::StatusCode::NOT_FOUND, "not found").into_response();
@@ -216,8 +229,13 @@ pub async fn get_raw(
         log::error!("Failed to insert incoming message: {}", e);
     }
 
-    let response_text =
-        process_command(Some(params.body.clone()), &state, maybe_incoming_message_id).await;
+    let response_text = process_command(
+        Some(params.body.clone()),
+        &state,
+        &None,
+        maybe_incoming_message_id,
+    )
+    .await;
 
     let outgoing_message_insertion_result = sqlx::query(
         r#"
@@ -245,6 +263,7 @@ pub async fn get_raw(
 async fn process_command(
     body: Option<String>,
     state: &AppState,
+    number: &Option<Number>,
     maybe_incoming_message_id: Option<Uuid>,
 ) -> String {
     let body = body.unwrap_or("unknown".to_string());
@@ -267,9 +286,15 @@ async fn process_command(
             state.winnipeg_transit_api_address.clone(),
             maybe_incoming_message_id,
             &state.db,
+            number,
         )
         .await
         .unwrap(),
+        Command::SettingsClock(_settings_clock_command) => {
+            handle_settings_clock_request(&state.db, number)
+                .await
+                .unwrap()
+        }
         Command::Help(_help_command) => format!("{}\n{}", HELP_MESSAGE, state.config.root_url),
         Command::Unknown(_unknown_command) => {
             format!("{}\n{}", HELP_MESSAGE, state.config.root_url)

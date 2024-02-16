@@ -90,6 +90,49 @@ async fn stop_number_returns_stop_schedule(db: PgPool) {
     );
 }
 
+#[sqlx::test(fixtures("numbers-approved", "numbers-24h"))]
+async fn stop_number_returns_stop_schedule_in_24h_clock_when_number_prefers(db: PgPool) {
+    let mock_winnipeg_transit_api = MockServer::start().await;
+    let mock_stop_schedule_response = fs::read_to_string("tests/fixtures/times/stop_schedule.json")
+        .expect("Failed to read stop schedule fixture");
+
+    Mock::given(method("GET"))
+        .and(path_regex(r"^/v3/stops/.*/schedule.json$"))
+        .respond_with(
+            ResponseTemplate::new(200).set_body_string(mock_stop_schedule_response.clone()),
+        )
+        .expect(1)
+        .mount(&mock_winnipeg_transit_api)
+        .await;
+
+    let response = get(
+        "/twilio?Body=10619&From=approved&To=textabus&MessageSid=SM1849",
+        InjectableServices {
+            db: db.clone(),
+            twilio_address: None,
+            winnipeg_transit_api_address: Some(mock_winnipeg_transit_api.uri()),
+        },
+    )
+    .await
+    .expect("Failed to execute request");
+
+    assert!(response.status().is_success());
+    assert_eq!(response.headers()["content-type"], "text/xml");
+
+    let document = Document::from(response.text().await.unwrap().as_str());
+    let body = &document.find(Name("body")).next().unwrap().text();
+
+    let expected_body = indoc! {"
+        10619 WB Graham@Vaughan (The Bay)
+        12:16 16 St Vital Ctr (1min ahead)
+        12:19 BLUE Downtown (8min late)
+        12:22 BLUE Downtown
+        12:25 60 UofM
+        "};
+
+    assert_that(body).contains(expected_body);
+}
+
 #[sqlx::test(fixtures("numbers-approved"))]
 async fn stop_number_returns_single_route_stop_schedule_to_approved_number(db: PgPool) {
     let mock_winnipeg_transit_api = MockServer::start().await;

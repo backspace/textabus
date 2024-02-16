@@ -24,10 +24,11 @@ pub struct Message {
     pub updated_at: NaiveDateTime,
 }
 
-#[derive(Debug, sqlx::FromRow, Serialize)]
+#[derive(Clone, Debug, sqlx::FromRow, Serialize)]
 pub struct Number {
     pub number: String,
     pub name: Option<String>,
     pub approved: bool,
     pub admin: bool,
+    pub twelve_hour: bool,
 }

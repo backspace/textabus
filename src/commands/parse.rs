@@ -11,6 +11,10 @@ pub fn parse_command(input: &str) -> Command {
         return Command::Stops(command);
     }
 
+    if let Ok(command) = parse_settings_clock(&cleaned_input) {
+        return Command::SettingsClock(command);
+    }
+
     if let Ok(command) = parse_help(&cleaned_input) {
         return Command::Help(command);
     }
@@ -61,6 +65,16 @@ fn parse_stops_and_location(input: &str) -> Result<StopsCommand, &'static str> {
     }
 }
 
+fn parse_settings_clock(input: &str) -> Result<SettingsClockCommand, &'static str> {
+    let re = Regex::new(r"(?i)^settings clock$").unwrap();
+
+    if let Some(_captures) = re.captures(input) {
+        Ok(SettingsClockCommand {})
+    } else {
+        Err("Input string does not match a settings clock request")
+    }
+}
+
 fn parse_help(input: &str) -> Result<HelpCommand, &'static str> {
     let re = Regex::new(r"^help").unwrap();
 
@@ -74,6 +88,7 @@ fn parse_help(input: &str) -> Result<HelpCommand, &'static str> {
 pub enum Command {
     Times(TimesCommand),
     Stops(StopsCommand),
+    SettingsClock(SettingsClockCommand),
     Help(HelpCommand),
     Unknown(UnknownCommand),
 }
@@ -86,6 +101,8 @@ pub struct TimesCommand {
 pub struct StopsCommand {
     pub location: String,
 }
+
+pub struct SettingsClockCommand;
 
 pub struct HelpCommand;
 
@@ -149,6 +166,27 @@ mod tests {
                 assert_eq!(stops_command.location, "245 smith");
             }
             _ => panic!("Expected StopsCommand"),
+        }
+    }
+
+    #[test]
+    fn test_parse_settings_clock_command() {
+        let command = parse_command("settings clock");
+        match command {
+            Command::SettingsClock(_) => (),
+            _ => panic!("Expected SettingsClockCommand"),
+        }
+
+        let command_with_extra_spaces = parse_command("settings   clock");
+        match command_with_extra_spaces {
+            Command::SettingsClock(_) => (),
+            _ => panic!("Expected SettingsClockCommand from command with extra spaces"),
+        }
+
+        let command_with_caps = parse_command("SETTINGS CLOCK");
+        match command_with_caps {
+            Command::SettingsClock(_) => (),
+            _ => panic!("Expected SettingsClockCommand from command with caps"),
         }
     }
 

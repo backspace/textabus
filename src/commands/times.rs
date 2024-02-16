@@ -3,7 +3,7 @@ use serde::Deserialize;
 use serde_json::Value;
 use sqlx::{types::Uuid, PgPool};
 
-use crate::{commands::TimesCommand, config::Config, odws::fetch_from_odws};
+use crate::{commands::TimesCommand, config::Config, models::Number, odws::fetch_from_odws};
 
 const MAX_RESPONSE_LENGTH: usize = 140;
 const DELAY_THRESHOLD: i64 = 3;
@@ -15,6 +15,7 @@ pub async fn handle_times_request(
     winnipeg_transit_api_address: String,
     maybe_incoming_message_id: Option<Uuid>,
     db: &PgPool,
+    number: &Option<Number>,
 ) -> Result<String, Box<dyn std::error::Error>> {
     let query = format!(
         "/v3/stops/{}/schedule.json?usage=short",
@@ -102,12 +103,18 @@ pub async fn handle_times_request(
 
     schedule_lines.sort_by(|a, b| a.0.cmp(&b.0));
 
+    let time_format_string = if number.is_some() && !number.as_ref().unwrap().twelve_hour {
+        "%H:%M"
+    } else {
+        "%-I:%M%p"
+    };
+
     let sorted_schedule_lines: Vec<String> = schedule_lines
         .iter()
         .map(|(time, line)| {
             format!(
                 "{} {}",
-                time.format("%-I:%M%p")
+                time.format(time_format_string)
                     .to_string()
                     .to_lowercase()
                     .trim_end_matches('m'),
