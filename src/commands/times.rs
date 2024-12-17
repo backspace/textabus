@@ -40,10 +40,15 @@ pub async fn handle_times_request(
 
     let parsed_response = serde_json::from_str::<StopScheduleResponse>(&api_response_text).unwrap();
 
-    let mut response_text = format!(
-        "{} {}\n",
-        parsed_response.stop_schedule.stop.number, parsed_response.stop_schedule.stop.name
-    );
+    let mut response_text = match &parsed_response.stop_schedule.stop_data {
+        StopData::Single { stop } => {
+            format!("{} {}\n", stop.number, stop.name)
+        }
+        StopData::Multiple { stop } => {
+            let stop = &stop[0];
+            format!("{} {}\n", stop.number, stop.name)
+        }
+    };
 
     let mut schedule_lines: Vec<(NaiveDateTime, String)> = Vec::new();
 
@@ -143,8 +148,17 @@ struct StopScheduleResponse {
 #[derive(Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub struct StopSchedule {
-    stop: Stop,
+    #[serde(flatten)]
+    stop_data: StopData,
     route_schedules: Vec<RouteSchedule>,
+}
+
+// Issue #10, the API doesn’t say this request can return multiple stops, but it did.
+#[derive(Deserialize)]
+#[serde(untagged)]
+enum StopData {
+    Single { stop: Stop },
+    Multiple { stop: Vec<Stop> },
 }
 
 #[derive(Deserialize)]

@@ -1,0 +1,286 @@
+{
+  "stop-schedule": {
+    "stop": [
+      {
+        "key": 10620,
+        "name": "WB St Mary@Fort",
+        "number": 10620,
+        "direction": "Westbound",
+        "side": "Nearside",
+        "street": {
+          "key": 3452,
+          "name": "St MaryAve",
+          "type": "Avenue"
+        },
+        "cross-street": {
+          "key": 1365,
+          "name": "FortSt",
+          "type": "Street"
+        },
+        "centre": {
+          "utm": {
+            "zone": "14U",
+            "x": 633773,
+            "y": 5528255
+          },
+          "geographic": {
+            "latitude": "49.89172",
+            "longitude": "-97.13753"
+          }
+        }
+      },
+      {
+        "key": 10620,
+        "name": "WB St Mary@Fort",
+        "number": 10620,
+        "direction": "Westbound",
+        "side": "Nearside",
+        "street": {
+          "key": 3452,
+          "name": "St MaryAve",
+          "type": "Avenue"
+        },
+        "cross-street": {
+          "key": 1365,
+          "name": "FortSt",
+          "type": "Street"
+        },
+        "centre": {
+          "utm": {
+            "zone": "14U",
+            "x": 633773,
+            "y": 5528255
+          },
+          "geographic": {
+            "latitude": "49.89172",
+            "longitude": "-97.13753"
+          }
+        }
+      }
+    ],
+    "route-schedules": [
+      {
+        "route": {
+          "key": 55,
+          "number": 55,
+          "name": "St. Anne's",
+          "customer-type": "regular",
+          "coverage": "regular",
+          "badge-label": 55,
+          "badge-style": {
+            "class-names": {
+              "class-name": ["badge-label", "regular"]
+            },
+            "background-color": "#ffffff",
+            "border-color": "#d9d9d9",
+            "color": "#000000"
+          }
+        },
+        "scheduled-stops": [
+          {
+            "key": "27998793-43",
+            "cancelled": "false",
+            "times": {
+              "arrival": {
+                "scheduled": "2024-12-15T00:54:22",
+                "estimated": "2024-12-15T00:58:31"
+              },
+              "departure": {
+                "scheduled": "2024-12-15T00:54:22",
+                "estimated": "2024-12-15T00:58:31"
+              }
+            },
+            "variant": {
+              "key": "55-1-D",
+              "name": "UofW via Dakota"
+            },
+            "bus": {
+              "key": 331,
+              "bike-rack": "false",
+              "wifi": "false"
+            }
+          },
+          {
+            "key": "27998768-54",
+            "cancelled": "false",
+            "times": {
+              "arrival": {
+                "scheduled": "2024-12-15T01:19:22",
+                "estimated": "2024-12-15T01:19:22"
+              },
+              "departure": {
+                "scheduled": "2024-12-15T01:19:22",
+                "estimated": "2024-12-15T01:19:22"
+              }
+            },
+            "variant": {
+              "key": "55-1-M",
+              "name": "UofW via Meadow'd"
+            },
+            "bus": {
+              "key": 811,
+              "bike-rack": "false",
+              "wifi": "false"
+            }
+          }
+        ]
+      },
+      {
+        "route": {
+          "key": 14,
+          "number": 14,
+          "name": "Ellice-St. Mary's",
+          "customer-type": "regular",
+          "coverage": "regular",
+          "badge-label": 14,
+          "badge-style": {
+            "class-names": {
+              "class-name": ["badge-label", "regular"]
+            },
+            "background-color": "#ffffff",
+            "border-color": "#d9d9d9",
+            "color": "#000000"
+          }
+        },
+        "scheduled-stops": [
+          {
+            "key": "27997493-58",
+            "cancelled": "false",
+            "times": {
+              "arrival": {
+                "scheduled": "2024-12-15T00:47:05",
+                "estimated": "2024-12-15T00:50:25"
+              },
+              "departure": {
+                "scheduled": "2024-12-15T00:47:05",
+                "estimated": "2024-12-15T00:50:25"
+              }
+            },
+            "variant": {
+              "key": "14-1-E",
+              "name": "Ferry Rd"
+            },
+            "bus": {
+              "key": 343,
+              "bike-rack": "false",
+              "wifi": "false"
+            }
+          },
+          {
+            "key": "27997494-59",
+            "cancelled": "false",
+            "times": {
+              "arrival": {
+                "scheduled": "2024-12-15T01:11:05",
+                "estimated": "2024-12-15T01:11:05"
+              },
+              "departure": {
+                "scheduled": "2024-12-15T01:11:05",
+                "estimated": "2024-12-15T01:11:05"
+              }
+            },
+            "variant": {
+              "key": "14-1-E",
+              "name": "Ferry Rd"
+            },
+            "bus": {
+              "key": 420,
+              "bike-rack": "false",
+              "wifi": "false"
+            }
+          },
+          {
+            "key": "27997495-58",
+            "cancelled": "false",
+            "times": {
+              "arrival": {
+                "scheduled": "2024-12-15T01:36:05",
+                "estimated": "2024-12-15T01:36:05"
+              },
+              "departure": {
+                "scheduled": "2024-12-15T01:36:05",
+                "estimated": "2024-12-15T01:36:05"
+              }
+            },
+            "variant": {
+              "key": "14-1-E",
+              "name": "Ferry Rd"
+            },
+            "bus": {
+              "key": 808,
+              "bike-rack": "false",
+              "wifi": "false"
+            }
+          }
+        ]
+      },
+      {
+        "route": {
+          "key": 19,
+          "number": 19,
+          "name": "Marion-Logan-Notre Dame",
+          "customer-type": "regular",
+          "coverage": "regular",
+          "badge-label": 19,
+          "badge-style": {
+            "class-names": {
+              "class-name": ["badge-label", "regular"]
+            },
+            "background-color": "#ffffff",
+            "border-color": "#d9d9d9",
+            "color": "#000000"
+          }
+        },
+        "scheduled-stops": [
+          {
+            "key": "27998030-33",
+            "cancelled": "false",
+            "times": {
+              "arrival": {
+                "scheduled": "2024-12-15T01:10:09",
+                "estimated": "2024-12-15T01:10:09"
+              },
+              "departure": {
+                "scheduled": "2024-12-15T01:10:09",
+                "estimated": "2024-12-15T01:10:09"
+              }
+            },
+            "variant": {
+              "key": "19-0-L",
+              "name": "Via Logan"
+            },
+            "bus": {
+              "key": 452,
+              "bike-rack": "false",
+              "wifi": "false"
+            }
+          },
+          {
+            "key": "27998028-40",
+            "cancelled": "false",
+            "times": {
+              "arrival": {
+                "scheduled": "2024-12-15T01:36:09",
+                "estimated": "2024-12-15T01:36:09"
+              },
+              "departure": {
+                "scheduled": "2024-12-15T01:36:09",
+                "estimated": "2024-12-15T01:36:09"
+              }
+            },
+            "variant": {
+              "key": "19-0-N",
+              "name": "Via Notre Dame"
+            },
+            "bus": {
+              "key": 455,
+              "bike-rack": "false",
+              "wifi": "false"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "query-time": "2024-12-15T00:46:41"
+}
