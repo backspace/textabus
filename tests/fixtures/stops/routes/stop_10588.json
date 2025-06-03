@@ -1,24 +1,11 @@
 {
   "routes": [
     {
-      "key": 23,
-      "number": 23,
-      "name": "Route 23 Broadway - William",
-      "customer-type": "regular",
-      "coverage": "regular",
-      "badge-label": 23,
-      "badge-style": {
-        "class-names": { "class-name": ["badge-label", "regular"] },
-        "background-color": "#ffffff",
-        "border-color": "#d9d9d9",
-        "color": "#000000"
-      },
-      "variants": [{ "key": "23-1-C" }, { "key": "23-0-A" }]
-    },
-    {
       "key": 34,
       "number": 34,
       "name": "Route 34 McPhillips Super Express",
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
       "coverage": "super express",
       "badge-label": 34,
@@ -29,7 +16,24 @@
         "color": "#000000"
       },
       "variants": [{ "key": "34-0-M" }, { "key": "34-1-D" }]
+    },
+    {
+      "key": 23,
+      "number": 23,
+      "name": "Route 23 Broadway - William",
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
+      "customer-type": "regular",
+      "coverage": "regular",
+      "badge-label": 23,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "regular"] },
+        "background-color": "#ffffff",
+        "border-color": "#d9d9d9",
+        "color": "#000000"
+      },
+      "variants": [{ "key": "23-1-C" }, { "key": "23-0-A" }]
     }
   ],
-  "query-time": "2024-01-11T20:14:09"
+  "query-time": "2025-06-03T18:51:00"
 }

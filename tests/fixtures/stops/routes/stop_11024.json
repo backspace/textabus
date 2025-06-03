@@ -4,6 +4,8 @@
       "key": 34,
       "number": 34,
       "name": "Route 34 McPhillips Super Express",
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
       "coverage": "super express",
       "badge-label": 34,
@@ -16,5 +18,5 @@
       "variants": [{ "key": "34-0-M" }, { "key": "34-1-D" }]
     }
   ],
-  "query-time": "2024-01-11T20:14:06"
+  "query-time": "2025-06-03T18:50:55"
 }

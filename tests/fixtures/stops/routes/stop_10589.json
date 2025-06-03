@@ -1,45 +1,11 @@
 {
   "routes": [
     {
-      "key": 23,
-      "number": 23,
-      "name": "Route 23 Broadway - William",
-      "customer-type": "regular",
-      "coverage": "regular",
-      "badge-label": 23,
-      "badge-style": {
-        "class-names": { "class-name": ["badge-label", "regular"] },
-        "background-color": "#ffffff",
-        "border-color": "#d9d9d9",
-        "color": "#000000"
-      },
-      "variants": [{ "key": "23-1-C" }, { "key": "23-0-A" }]
-    },
-    {
-      "key": 66,
-      "number": 66,
-      "name": "Route 66 Grant",
-      "customer-type": "regular",
-      "coverage": "regular",
-      "badge-label": 66,
-      "badge-style": {
-        "class-names": { "class-name": ["badge-label", "regular"] },
-        "background-color": "#ffffff",
-        "border-color": "#d9d9d9",
-        "color": "#000000"
-      },
-      "variants": [
-        { "key": "66-0-C" },
-        { "key": "66-1-K" },
-        { "key": "66-1-D" },
-        { "key": "66-0-P" },
-        { "key": "66-0-U" }
-      ]
-    },
-    {
       "key": 34,
       "number": 34,
       "name": "Route 34 McPhillips Super Express",
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
       "coverage": "super express",
       "badge-label": 34,
@@ -52,9 +18,28 @@
       "variants": [{ "key": "34-0-M" }, { "key": "34-1-D" }]
     },
     {
+      "key": 23,
+      "number": 23,
+      "name": "Route 23 Broadway - William",
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
+      "customer-type": "regular",
+      "coverage": "regular",
+      "badge-label": 23,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "regular"] },
+        "background-color": "#ffffff",
+        "border-color": "#d9d9d9",
+        "color": "#000000"
+      },
+      "variants": [{ "key": "23-1-C" }, { "key": "23-0-A" }]
+    },
+    {
       "key": 65,
       "number": 65,
       "name": "Route 65 Grant Express",
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
       "coverage": "express",
       "badge-label": 65,
@@ -64,8 +49,31 @@
         "border-color": "#cab700",
         "color": "#000000"
       },
-      "variants": [{ "key": "65-0-R" }, { "key": "65-1-D" }]
+      "variants": [{ "key": "65-1-D" }, { "key": "65-0-R" }]
+    },
+    {
+      "key": 66,
+      "number": 66,
+      "name": "Route 66 Grant",
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
+      "customer-type": "regular",
+      "coverage": "regular",
+      "badge-label": 66,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "regular"] },
+        "background-color": "#ffffff",
+        "border-color": "#d9d9d9",
+        "color": "#000000"
+      },
+      "variants": [
+        { "key": "66-1-D" },
+        { "key": "66-0-P" },
+        { "key": "66-1-K" },
+        { "key": "66-0-U" },
+        { "key": "66-0-C" }
+      ]
     }
   ],
-  "query-time": "2024-01-11T20:14:05"
+  "query-time": "2025-06-03T18:50:54"
 }

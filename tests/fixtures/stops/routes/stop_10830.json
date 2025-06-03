@@ -4,6 +4,8 @@
       "key": 23,
       "number": 23,
       "name": "Route 23 Broadway - William",
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
       "coverage": "regular",
       "badge-label": 23,
@@ -16,5 +18,5 @@
       "variants": [{ "key": "23-1-C" }, { "key": "23-0-A" }]
     }
   ],
-  "query-time": "2024-01-11T20:14:03"
+  "query-time": "2025-06-03T18:50:51"
 }

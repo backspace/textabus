@@ -1,66 +1,11 @@
 {
   "routes": [
     {
-      "key": 50,
-      "number": 50,
-      "name": "Route 50 Archibald",
-      "customer-type": "regular",
-      "coverage": "regular",
-      "badge-label": 50,
-      "badge-style": {
-        "class-names": { "class-name": ["badge-label", "regular"] },
-        "background-color": "#ffffff",
-        "border-color": "#d9d9d9",
-        "color": "#000000"
-      },
-      "variants": [
-        { "key": "50-1-D" },
-        { "key": "50-0-S" },
-        { "key": "50-1-*" },
-        { "key": "50-1-W" }
-      ]
-    },
-    {
-      "key": 43,
-      "number": 43,
-      "name": "Route 43 Munroe",
-      "customer-type": "regular",
-      "coverage": "regular",
-      "badge-label": 43,
-      "badge-style": {
-        "class-names": { "class-name": ["badge-label", "regular"] },
-        "background-color": "#ffffff",
-        "border-color": "#d9d9d9",
-        "color": "#000000"
-      },
-      "variants": [{ "key": "43-1-D" }, { "key": "43-0-K" }]
-    },
-    {
-      "key": 10,
-      "number": 10,
-      "name": "Route 10 St. Boniface-West Broadway",
-      "customer-type": "regular",
-      "coverage": "regular",
-      "badge-label": 10,
-      "badge-style": {
-        "class-names": { "class-name": ["badge-label", "regular"] },
-        "background-color": "#ffffff",
-        "border-color": "#d9d9d9",
-        "color": "#000000"
-      },
-      "variants": [
-        { "key": "10-1-WT" },
-        { "key": "10-0-SP" },
-        { "key": "10-1-WP" },
-        { "key": "10-0-ST" },
-        { "key": "10-1-W" },
-        { "key": "10-1-#" }
-      ]
-    },
-    {
       "key": 38,
       "number": 38,
       "name": "Route 38 Salter",
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
       "coverage": "regular",
       "badge-label": 38,
@@ -73,9 +18,28 @@
       "variants": [{ "key": "38-1-F" }, { "key": "38-0-T" }]
     },
     {
+      "key": 43,
+      "number": 43,
+      "name": "Route 43 Munroe",
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
+      "customer-type": "regular",
+      "coverage": "regular",
+      "badge-label": 43,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "regular"] },
+        "background-color": "#ffffff",
+        "border-color": "#d9d9d9",
+        "color": "#000000"
+      },
+      "variants": [{ "key": "43-0-K" }, { "key": "43-1-D" }]
+    },
+    {
       "key": 49,
       "number": 49,
       "name": "Route 49 Dugald",
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
       "coverage": "regular",
       "badge-label": 49,
@@ -86,15 +50,63 @@
         "color": "#000000"
       },
       "variants": [
-        { "key": "49-0-T" },
         { "key": "49-0-S" },
-        { "key": "49-1-D" }
+        { "key": "49-1-D" },
+        { "key": "49-0-T" }
+      ]
+    },
+    {
+      "key": 50,
+      "number": 50,
+      "name": "Route 50 Archibald",
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
+      "customer-type": "regular",
+      "coverage": "regular",
+      "badge-label": 50,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "regular"] },
+        "background-color": "#ffffff",
+        "border-color": "#d9d9d9",
+        "color": "#000000"
+      },
+      "variants": [
+        { "key": "50-1-D" },
+        { "key": "50-1-W" },
+        { "key": "50-0-S" },
+        { "key": "50-1-*" }
+      ]
+    },
+    {
+      "key": 10,
+      "number": 10,
+      "name": "Route 10 St. Boniface-West Broadway",
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
+      "customer-type": "regular",
+      "coverage": "regular",
+      "badge-label": 10,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "regular"] },
+        "background-color": "#ffffff",
+        "border-color": "#d9d9d9",
+        "color": "#000000"
+      },
+      "variants": [
+        { "key": "10-0-SP" },
+        { "key": "10-0-ST" },
+        { "key": "10-1-WT" },
+        { "key": "10-1-#" },
+        { "key": "10-1-WP" },
+        { "key": "10-1-W" }
       ]
     },
     {
       "key": 56,
       "number": 56,
       "name": "Route 56 St. Boniface",
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
       "coverage": "regular",
       "badge-label": 56,
@@ -107,5 +119,5 @@
       "variants": [{ "key": "56-0-S" }, { "key": "56-1-D" }]
     }
   ],
-  "query-time": "2024-01-11T20:14:07"
+  "query-time": "2025-06-03T18:50:57"
 }

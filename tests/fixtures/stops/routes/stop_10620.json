@@ -1,51 +1,11 @@
 {
   "routes": [
     {
-      "key": 19,
-      "number": 19,
-      "name": "Route 19 Marion-Logan-Notre Dame",
-      "customer-type": "regular",
-      "coverage": "regular",
-      "badge-label": 19,
-      "badge-style": {
-        "class-names": { "class-name": ["badge-label", "regular"] },
-        "background-color": "#ffffff",
-        "border-color": "#d9d9d9",
-        "color": "#000000"
-      },
-      "variants": [
-        { "key": "19-0-N" },
-        { "key": "19-1-A" },
-        { "key": "19-0-L" },
-        { "key": "19-0-E" },
-        { "key": "19-1-D" },
-        { "key": "19-0-#" },
-        { "key": "19-1-N" }
-      ]
-    },
-    {
-      "key": 68,
-      "number": 68,
-      "name": "Route 68 Grosvenor",
-      "customer-type": "regular",
-      "coverage": "regular",
-      "badge-label": 68,
-      "badge-style": {
-        "class-names": { "class-name": ["badge-label", "regular"] },
-        "background-color": "#ffffff",
-        "border-color": "#d9d9d9",
-        "color": "#000000"
-      },
-      "variants": [
-        { "key": "68-1-D" },
-        { "key": "68-0-R" },
-        { "key": "68-1-#" }
-      ]
-    },
-    {
       "key": 54,
       "number": 54,
       "name": "Route 54 St. Mary's Express",
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
       "coverage": "express",
       "badge-label": 54,
@@ -56,33 +16,20 @@
         "color": "#000000"
       },
       "variants": [
-        { "key": "54-0-A" },
         { "key": "54-1-D" },
+        { "key": "54-0-A" },
         { "key": "54-0-S" }
       ]
     },
     {
-      "key": 57,
-      "number": 57,
-      "name": "Route 57 Southdale Express",
-      "customer-type": "regular",
-      "coverage": "express",
-      "badge-label": 57,
-      "badge-style": {
-        "class-names": { "class-name": ["badge-label", "express"] },
-        "background-color": "#eed700",
-        "border-color": "#cab700",
-        "color": "#000000"
-      },
-      "variants": [{ "key": "57-0-S" }, { "key": "57-1-D" }]
-    },
-    {
-      "key": 14,
-      "number": 14,
-      "name": "Route 14 Ellice-St. Mary's",
+      "key": 55,
+      "number": 55,
+      "name": "Route 55 St. Anne's",
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
       "coverage": "regular",
-      "badge-label": 14,
+      "badge-label": 55,
       "badge-style": {
         "class-names": { "class-name": ["badge-label", "regular"] },
         "background-color": "#ffffff",
@@ -90,16 +37,20 @@
         "color": "#000000"
       },
       "variants": [
-        { "key": "14-0-P" },
-        { "key": "14-0-D" },
-        { "key": "14-1-E" },
-        { "key": "14-1-##" }
+        { "key": "55-1-D" },
+        { "key": "55-0-M" },
+        { "key": "55-1-M" },
+        { "key": "55-1-##" },
+        { "key": "55-1-*" },
+        { "key": "55-0-D" }
       ]
     },
     {
       "key": 59,
       "number": 59,
       "name": "Route 59 South St. Anne's Express",
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
       "coverage": "express",
       "badge-label": 59,
@@ -111,17 +62,19 @@
       },
       "variants": [
         { "key": "59-0-I" },
-        { "key": "59-1-D" },
-        { "key": "59-0-A" }
+        { "key": "59-0-A" },
+        { "key": "59-1-D" }
       ]
     },
     {
-      "key": 55,
-      "number": 55,
-      "name": "Route 55 St. Anne's",
+      "key": 14,
+      "number": 14,
+      "name": "Route 14 Ellice-St. Mary's",
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
       "coverage": "regular",
-      "badge-label": 55,
+      "badge-label": 14,
       "badge-style": {
         "class-names": { "class-name": ["badge-label", "regular"] },
         "background-color": "#ffffff",
@@ -129,14 +82,76 @@
         "color": "#000000"
       },
       "variants": [
-        { "key": "55-0-D" },
-        { "key": "55-0-M" },
-        { "key": "55-1-M" },
-        { "key": "55-1-##" },
-        { "key": "55-1-D" },
-        { "key": "55-1-*" }
+        { "key": "14-0-D" },
+        { "key": "14-1-E" },
+        { "key": "14-1-##" },
+        { "key": "14-0-P" }
+      ]
+    },
+    {
+      "key": 57,
+      "number": 57,
+      "name": "Route 57 Southdale Express",
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
+      "customer-type": "regular",
+      "coverage": "express",
+      "badge-label": 57,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "express"] },
+        "background-color": "#eed700",
+        "border-color": "#cab700",
+        "color": "#000000"
+      },
+      "variants": [{ "key": "57-1-D" }, { "key": "57-0-S" }]
+    },
+    {
+      "key": 68,
+      "number": 68,
+      "name": "Route 68 Grosvenor",
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
+      "customer-type": "regular",
+      "coverage": "regular",
+      "badge-label": 68,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "regular"] },
+        "background-color": "#ffffff",
+        "border-color": "#d9d9d9",
+        "color": "#000000"
+      },
+      "variants": [
+        { "key": "68-0-R" },
+        { "key": "68-1-#" },
+        { "key": "68-1-D" }
+      ]
+    },
+    {
+      "key": 19,
+      "number": 19,
+      "name": "Route 19 Marion-Logan-Notre Dame",
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
+      "customer-type": "regular",
+      "coverage": "regular",
+      "badge-label": 19,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "regular"] },
+        "background-color": "#ffffff",
+        "border-color": "#d9d9d9",
+        "color": "#000000"
+      },
+      "variants": [
+        { "key": "19-1-A" },
+        { "key": "19-0-L" },
+        { "key": "19-0-E" },
+        { "key": "19-1-D" },
+        { "key": "19-1-N" },
+        { "key": "19-0-N" },
+        { "key": "19-0-#" },
+        { "key": "19-1-#" }
       ]
     }
   ],
-  "query-time": "2024-01-11T20:14:06"
+  "query-time": "2025-06-03T18:50:56"
 }

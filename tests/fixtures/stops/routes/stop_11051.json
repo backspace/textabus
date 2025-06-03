@@ -1,9 +1,28 @@
 {
   "routes": [
     {
+      "key": 53,
+      "number": 53,
+      "name": "Route 53 Norwood",
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
+      "customer-type": "regular",
+      "coverage": "regular",
+      "badge-label": 53,
+      "badge-style": {
+        "class-names": { "class-name": ["badge-label", "regular"] },
+        "background-color": "#ffffff",
+        "border-color": "#d9d9d9",
+        "color": "#000000"
+      },
+      "variants": [{ "key": "53-1-D" }, { "key": "53-0-N" }]
+    },
+    {
       "key": 47,
       "number": 47,
       "name": "Route 47 Transcona - Pembina",
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
       "coverage": "regular",
       "badge-label": 47,
@@ -14,27 +33,12 @@
         "color": "#000000"
       },
       "variants": [
+        { "key": "47-1-#" },
         { "key": "47-0-K" },
-        { "key": "47-0-R" },
         { "key": "47-1-U" },
-        { "key": "47-1-#" }
+        { "key": "47-0-R" }
       ]
-    },
-    {
-      "key": 53,
-      "number": 53,
-      "name": "Route 53 Norwood",
-      "customer-type": "regular",
-      "coverage": "regular",
-      "badge-label": 53,
-      "badge-style": {
-        "class-names": { "class-name": ["badge-label", "regular"] },
-        "background-color": "#ffffff",
-        "border-color": "#d9d9d9",
-        "color": "#000000"
-      },
-      "variants": [{ "key": "53-0-N" }, { "key": "53-1-D" }]
     }
   ],
-  "query-time": "2024-01-11T20:14:05"
+  "query-time": "2025-06-03T18:50:54"
 }
