@@ -18,7 +18,7 @@ pub async fn handle_times_request(
     number: &Option<Number>,
 ) -> Result<String, Box<dyn std::error::Error>> {
     let query = format!(
-        "/v3/stops/{}/schedule.json?usage=short",
+        "/v4/stops/{}/schedule.json?usage=short",
         command.stop_number,
     );
 

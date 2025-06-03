@@ -21,7 +21,7 @@ async fn stop_number_returns_stop_schedule(db: PgPool) {
         .expect("Failed to read stop schedule fixture");
 
     Mock::given(method("GET"))
-        .and(path_regex(r"^/v3/stops/.*/schedule.json$"))
+        .and(path_regex(r"^/v4/stops/.*/schedule.json$"))
         .respond_with(
             ResponseTemplate::new(200).set_body_string(mock_stop_schedule_response.clone()),
         )
@@ -86,7 +86,7 @@ async fn stop_number_returns_stop_schedule(db: PgPool) {
     assert_eq!(api_response.body, mock_stop_schedule_response);
     assert_eq!(
         api_response.query,
-        "/v3/stops/10619/schedule.json?usage=short"
+        "/v4/stops/10619/schedule.json?usage=short"
     );
 }
 
@@ -97,7 +97,7 @@ async fn stop_number_returns_stop_schedule_in_24h_clock_when_number_prefers(db: 
         .expect("Failed to read stop schedule fixture");
 
     Mock::given(method("GET"))
-        .and(path_regex(r"^/v3/stops/.*/schedule.json$"))
+        .and(path_regex(r"^/v4/stops/.*/schedule.json$"))
         .respond_with(
             ResponseTemplate::new(200).set_body_string(mock_stop_schedule_response.clone()),
         )
@@ -140,7 +140,7 @@ async fn stop_number_returns_single_route_stop_schedule_to_approved_number(db: P
         .expect("Failed to read stop schedule fixture");
 
     Mock::given(method("GET"))
-        .and(path_regex(r"^/v3/stops/.*/schedule.json$"))
+        .and(path_regex(r"^/v4/stops/.*/schedule.json$"))
         .respond_with(
             ResponseTemplate::new(200).set_body_string(mock_stop_schedule_response.clone()),
         )
@@ -194,7 +194,7 @@ async fn stop_number_returns_single_route_stop_schedule_to_approved_number(db: P
     assert_eq!(api_response.body, mock_stop_schedule_response);
     assert_eq!(
         api_response.query,
-        "/v3/stops/10619/schedule.json?usage=short"
+        "/v4/stops/10619/schedule.json?usage=short"
     );
 }
 
@@ -203,7 +203,7 @@ async fn incorrect_stop_number_returns_error(db: PgPool) {
     let mock_winnipeg_transit_api = MockServer::start().await;
 
     Mock::given(method("GET"))
-        .and(path_regex(r"^/v3/stops/.*/schedule.json$"))
+        .and(path_regex(r"^/v4/stops/.*/schedule.json$"))
         .respond_with(ResponseTemplate::new(400).set_body_string("Not found"))
         .expect(1)
         .mount(&mock_winnipeg_transit_api)
@@ -249,7 +249,7 @@ async fn incorrect_stop_number_returns_error(db: PgPool) {
     assert_eq!(api_response.body, "Not found");
     assert_eq!(
         api_response.query,
-        "/v3/stops/10619/schedule.json?usage=short"
+        "/v4/stops/10619/schedule.json?usage=short"
     );
 }
 
@@ -260,7 +260,7 @@ async fn stop_number_returns_stop_schedule_via_raw_endpoint(db: PgPool) {
         .expect("Failed to read stop schedule fixture");
 
     Mock::given(method("GET"))
-        .and(path_regex(r"^/v3/stops/.*/schedule.json$"))
+        .and(path_regex(r"^/v4/stops/.*/schedule.json$"))
         .respond_with(
             ResponseTemplate::new(200).set_body_string(mock_stop_schedule_response.clone()),
         )
@@ -327,7 +327,7 @@ async fn stop_number_returns_stop_schedule_via_raw_endpoint(db: PgPool) {
     assert_eq!(api_response.body, mock_stop_schedule_response);
     assert_eq!(
         api_response.query,
-        "/v3/stops/10619/schedule.json?usage=short"
+        "/v4/stops/10619/schedule.json?usage=short"
     );
 }
 
@@ -339,7 +339,7 @@ async fn stop_number_returns_stop_schedule_issue_10(db: PgPool) {
             .expect("Failed to read stop schedule fixture");
 
     Mock::given(method("GET"))
-        .and(path_regex(r"^/v3/stops/.*/schedule.json$"))
+        .and(path_regex(r"^/v4/stops/.*/schedule.json$"))
         .respond_with(
             ResponseTemplate::new(200).set_body_string(mock_stop_schedule_response.clone()),
         )

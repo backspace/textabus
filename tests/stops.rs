@@ -22,7 +22,7 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
         .expect("Failed to read locations fixture");
 
     Mock::given(method("GET"))
-        .and(path_regex(r"^/v3/locations:.*\.json$"))
+        .and(path_regex(r"^/v4/locations:.*\.json$"))
         .and(query_param("usage", "short"))
         .respond_with(ResponseTemplate::new(200).set_body_string(mock_locations_response.clone()))
         .expect(1)
@@ -34,7 +34,7 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
         .expect("Failed to read stops fixture");
 
     Mock::given(method("GET"))
-        .and(path_regex(r"^/v3/stops.json$"))
+        .and(path_regex(r"^/v4/stops.json$"))
         .and(query_param("lat", "49.88895"))
         .and(query_param("lon", "-97.13424"))
         .and(query_param("distance", "500"))
@@ -58,7 +58,7 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
         ))
         .unwrap_or_else(|_| panic!("Failed to read routes fixture for stop {}", stop_key));
 
-        let mock_route_path = format!("/v3/routes.json?stop={}", stop_key);
+        let mock_route_path = format!("/v4/routes.json?stop={}", stop_key);
         mock_routes.push((
             mock_route_path.clone(),
             mock_routes_response.clone(),
@@ -66,7 +66,7 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
         ));
 
         Mock::given(method("GET"))
-            .and(path("/v3/routes.json"))
+            .and(path("/v4/routes.json"))
             .and(query_param("stop", stop_key.as_str()))
             .respond_with(ResponseTemplate::new(200).set_body_string(mock_routes_response))
             .expect(1)
@@ -146,7 +146,7 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
     assert_eq!(locations_response.body, mock_locations_response);
     assert_eq!(
         locations_response.query,
-        format!("/v3/locations:Union Station.json?usage=short")
+        format!("/v4/locations:Union Station.json?usage=short")
     );
 
     let stops_response = api_responses
@@ -157,7 +157,7 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
     assert_eq!(stops_response.body, mock_stops_response);
     assert_eq!(
         stops_response.query,
-        format!("/v3/stops.json?lat=49.88895&lon=-97.13424&distance=500&usage=short")
+        format!("/v4/stops.json?lat=49.88895&lon=-97.13424&distance=500&usage=short")
     );
 
     let routes_responses: Vec<&ApiResponse> = api_responses.iter().skip(2).collect();
@@ -181,7 +181,7 @@ async fn stops_handles_an_empty_locations_response(db: PgPool) {
         .expect("Failed to read locations fixture");
 
     Mock::given(method("GET"))
-        .and(path_regex(r"^/v3/locations:.*\.json$"))
+        .and(path_regex(r"^/v4/locations:.*\.json$"))
         .and(query_param("usage", "short"))
         .respond_with(ResponseTemplate::new(200).set_body_string(mock_locations_response.clone()))
         .expect(1)
@@ -221,7 +221,7 @@ async fn stops_handles_an_empty_locations_response(db: PgPool) {
         .expect("Failed to fetch API response");
 
     assert_eq!(api_response.body, mock_locations_response);
-    assert_eq!(api_response.query, "/v3/locations:acab.json?usage=short");
+    assert_eq!(api_response.query, "/v4/locations:acab.json?usage=short");
 }
 
 #[sqlx::test(fixtures("numbers-approved"))]
@@ -233,7 +233,7 @@ async fn stops_handles_an_empty_stops_response(db: PgPool) {
             .expect("Failed to read locations fixture");
 
     Mock::given(method("GET"))
-        .and(path_regex(r"^/v3/locations:.*\.json$"))
+        .and(path_regex(r"^/v4/locations:.*\.json$"))
         .and(query_param("usage", "short"))
         .respond_with(ResponseTemplate::new(200).set_body_string(mock_locations_response.clone()))
         .expect(1)
@@ -245,7 +245,7 @@ async fn stops_handles_an_empty_stops_response(db: PgPool) {
         .expect("Failed to read stops fixture");
 
     Mock::given(method("GET"))
-        .and(path_regex(r"^/v3/stops.json$"))
+        .and(path_regex(r"^/v4/stops.json$"))
         .respond_with(ResponseTemplate::new(200).set_body_string(mock_stops_response.clone()))
         .expect(1)
         .named("stops")

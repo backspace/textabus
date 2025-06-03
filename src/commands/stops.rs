@@ -14,7 +14,7 @@ pub async fn handle_stops_request(
     maybe_incoming_message_id: Option<Uuid>,
     db: &PgPool,
 ) -> Result<String, Box<dyn std::error::Error>> {
-    let locations_query = format!("/v3/locations:{}.json?usage=short", command.location);
+    let locations_query = format!("/v4/locations:{}.json?usage=short", command.location);
     log::trace!("locations URL: {}", locations_query);
 
     let (_locations_response_status, locations_response_text) = fetch_from_odws(
@@ -33,7 +33,7 @@ pub async fn handle_stops_request(
         };
 
     let stops_query = format!(
-        "/v3/stops.json?lat={}&lon={}&distance={}&usage=short",
+        "/v4/stops.json?lat={}&lon={}&distance={}&usage=short",
         latitude, longitude, STOPS_DISTANCE
     );
 
@@ -68,7 +68,7 @@ pub async fn handle_stops_request(
     let mut response = format!("Stops near {}\n", location_name);
 
     for stop in stops_response.stops.iter().take(MAXIMUM_STOPS_TO_RETURN) {
-        let routes_query = format!("/v3/routes.json?stop={}", stop.number);
+        let routes_query = format!("/v4/routes.json?stop={}", stop.number);
 
         log::trace!("routes URL: {}", routes_query);
 

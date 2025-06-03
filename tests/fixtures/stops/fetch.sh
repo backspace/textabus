@@ -4,5 +4,5 @@ STOP_NUMBERS=(10625 10641 11052 11010 10642 10901 10902 10624 10830 10590 10907 
 
 for STOP_NUMBER in "${STOP_NUMBERS[@]}"
 do
-  curl -o "routes/stop_${STOP_NUMBER}.json" "https://api.winnipegtransit.com/v3/routes.json?api-key=${API_KEY}&stop=${STOP_NUMBER}"
+  curl -o "routes/stop_${STOP_NUMBER}.json" "https://api.winnipegtransit.com/v4/routes.json?api-key=${API_KEY}&stop=${STOP_NUMBER}"
 done
