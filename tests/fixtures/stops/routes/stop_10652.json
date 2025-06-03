@@ -10,12 +10,24 @@
       "coverage": "express",
       "badge-label": 65,
       "badge-style": {
-        "class-names": { "class-name": ["badge-label", "express"] },
+        "class-names": {
+          "class-name": [
+            "badge-label",
+            "express"
+          ]
+        },
         "background-color": "#eed700",
         "border-color": "#cab700",
         "color": "#000000"
       },
-      "variants": [{ "key": "65-1-D" }, { "key": "65-0-R" }]
+      "variants": [
+        {
+          "key": "65-1-D"
+        },
+        {
+          "key": "65-0-R"
+        }
+      ]
     },
     {
       "key": 66,
@@ -27,19 +39,34 @@
       "coverage": "regular",
       "badge-label": 66,
       "badge-style": {
-        "class-names": { "class-name": ["badge-label", "regular"] },
+        "class-names": {
+          "class-name": [
+            "badge-label",
+            "regular"
+          ]
+        },
         "background-color": "#ffffff",
         "border-color": "#d9d9d9",
         "color": "#000000"
       },
       "variants": [
-        { "key": "66-1-D" },
-        { "key": "66-0-P" },
-        { "key": "66-1-K" },
-        { "key": "66-0-U" },
-        { "key": "66-0-C" }
+        {
+          "key": "66-1-D"
+        },
+        {
+          "key": "66-0-P"
+        },
+        {
+          "key": "66-1-K"
+        },
+        {
+          "key": "66-0-U"
+        },
+        {
+          "key": "66-0-C"
+        }
       ]
     }
   ],
-  "query-time": "2025-06-03T18:51:00"
+  "query-time": "2025-06-03T18:56:42"
 }

@@ -10,13 +10,25 @@
       "coverage": "regular",
       "badge-label": 23,
       "badge-style": {
-        "class-names": { "class-name": ["badge-label", "regular"] },
+        "class-names": {
+          "class-name": [
+            "badge-label",
+            "regular"
+          ]
+        },
         "background-color": "#ffffff",
         "border-color": "#d9d9d9",
         "color": "#000000"
       },
-      "variants": [{ "key": "23-1-C" }, { "key": "23-0-A" }]
+      "variants": [
+        {
+          "key": "23-1-C"
+        },
+        {
+          "key": "23-0-A"
+        }
+      ]
     }
   ],
-  "query-time": "2025-06-03T18:50:51"
+  "query-time": "2025-06-03T18:56:31"
 }

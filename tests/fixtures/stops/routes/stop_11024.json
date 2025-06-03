@@ -10,13 +10,25 @@
       "coverage": "super express",
       "badge-label": 34,
       "badge-style": {
-        "class-names": { "class-name": ["badge-label", "express"] },
+        "class-names": {
+          "class-name": [
+            "badge-label",
+            "express"
+          ]
+        },
         "background-color": "#eed700",
         "border-color": "#cab700",
         "color": "#000000"
       },
-      "variants": [{ "key": "34-0-M" }, { "key": "34-1-D" }]
+      "variants": [
+        {
+          "key": "34-0-M"
+        },
+        {
+          "key": "34-1-D"
+        }
+      ]
     }
   ],
-  "query-time": "2025-06-03T18:50:55"
+  "query-time": "2025-06-03T18:56:35"
 }

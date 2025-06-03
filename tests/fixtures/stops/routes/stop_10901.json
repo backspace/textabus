@@ -10,13 +10,25 @@
       "coverage": "regular",
       "badge-label": 38,
       "badge-style": {
-        "class-names": { "class-name": ["badge-label", "regular"] },
+        "class-names": {
+          "class-name": [
+            "badge-label",
+            "regular"
+          ]
+        },
         "background-color": "#ffffff",
         "border-color": "#d9d9d9",
         "color": "#000000"
       },
-      "variants": [{ "key": "38-1-F" }, { "key": "38-0-T" }]
+      "variants": [
+        {
+          "key": "38-1-F"
+        },
+        {
+          "key": "38-0-T"
+        }
+      ]
     }
   ],
-  "query-time": "2025-06-03T18:50:50"
+  "query-time": "2025-06-03T18:56:28"
 }

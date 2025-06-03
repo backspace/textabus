@@ -9,15 +9,26 @@
       "coverage": "rapid transit",
       "badge-label": "B",
       "badge-style": {
-        "class-names": { "class-name": ["badge-label", "rapid-transit"] },
+        "class-names": {
+          "class-name": [
+            "badge-label",
+            "rapid-transit"
+          ]
+        },
         "background-color": "#0060a9",
         "border-color": "#0060a9",
         "color": "#ffffff"
       },
       "variants": [
-        { "key": "BLUE-1-D" },
-        { "key": "BLUE-0-U" },
-        { "key": "BLUE-0-S" }
+        {
+          "key": "BLUE-1-D"
+        },
+        {
+          "key": "BLUE-0-U"
+        },
+        {
+          "key": "BLUE-0-S"
+        }
       ]
     },
     {
@@ -30,15 +41,26 @@
       "coverage": "regular",
       "badge-label": 68,
       "badge-style": {
-        "class-names": { "class-name": ["badge-label", "regular"] },
+        "class-names": {
+          "class-name": [
+            "badge-label",
+            "regular"
+          ]
+        },
         "background-color": "#ffffff",
         "border-color": "#d9d9d9",
         "color": "#000000"
       },
       "variants": [
-        { "key": "68-0-R" },
-        { "key": "68-1-#" },
-        { "key": "68-1-D" }
+        {
+          "key": "68-0-R"
+        },
+        {
+          "key": "68-1-#"
+        },
+        {
+          "key": "68-1-D"
+        }
       ]
     },
     {
@@ -51,12 +73,24 @@
       "coverage": "express",
       "badge-label": 65,
       "badge-style": {
-        "class-names": { "class-name": ["badge-label", "express"] },
+        "class-names": {
+          "class-name": [
+            "badge-label",
+            "express"
+          ]
+        },
         "background-color": "#eed700",
         "border-color": "#cab700",
         "color": "#000000"
       },
-      "variants": [{ "key": "65-1-D" }, { "key": "65-0-R" }]
+      "variants": [
+        {
+          "key": "65-1-D"
+        },
+        {
+          "key": "65-0-R"
+        }
+      ]
     },
     {
       "key": 66,
@@ -68,17 +102,32 @@
       "coverage": "regular",
       "badge-label": 66,
       "badge-style": {
-        "class-names": { "class-name": ["badge-label", "regular"] },
+        "class-names": {
+          "class-name": [
+            "badge-label",
+            "regular"
+          ]
+        },
         "background-color": "#ffffff",
         "border-color": "#d9d9d9",
         "color": "#000000"
       },
       "variants": [
-        { "key": "66-1-D" },
-        { "key": "66-0-P" },
-        { "key": "66-1-K" },
-        { "key": "66-0-U" },
-        { "key": "66-0-C" }
+        {
+          "key": "66-1-D"
+        },
+        {
+          "key": "66-0-P"
+        },
+        {
+          "key": "66-1-K"
+        },
+        {
+          "key": "66-0-U"
+        },
+        {
+          "key": "66-0-C"
+        }
       ]
     },
     {
@@ -91,18 +140,31 @@
       "coverage": "regular",
       "badge-label": 47,
       "badge-style": {
-        "class-names": { "class-name": ["badge-label", "regular"] },
+        "class-names": {
+          "class-name": [
+            "badge-label",
+            "regular"
+          ]
+        },
         "background-color": "#ffffff",
         "border-color": "#d9d9d9",
         "color": "#000000"
       },
       "variants": [
-        { "key": "47-1-#" },
-        { "key": "47-0-K" },
-        { "key": "47-1-U" },
-        { "key": "47-0-R" }
+        {
+          "key": "47-1-#"
+        },
+        {
+          "key": "47-0-K"
+        },
+        {
+          "key": "47-1-U"
+        },
+        {
+          "key": "47-0-R"
+        }
       ]
     }
   ],
-  "query-time": "2025-06-03T18:51:01"
+  "query-time": "2025-06-03T18:56:42"
 }

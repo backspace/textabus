@@ -10,12 +10,24 @@
       "coverage": "regular",
       "badge-label": 38,
       "badge-style": {
-        "class-names": { "class-name": ["badge-label", "regular"] },
+        "class-names": {
+          "class-name": [
+            "badge-label",
+            "regular"
+          ]
+        },
         "background-color": "#ffffff",
         "border-color": "#d9d9d9",
         "color": "#000000"
       },
-      "variants": [{ "key": "38-1-F" }, { "key": "38-0-T" }]
+      "variants": [
+        {
+          "key": "38-1-F"
+        },
+        {
+          "key": "38-0-T"
+        }
+      ]
     },
     {
       "key": 43,
@@ -27,12 +39,24 @@
       "coverage": "regular",
       "badge-label": 43,
       "badge-style": {
-        "class-names": { "class-name": ["badge-label", "regular"] },
+        "class-names": {
+          "class-name": [
+            "badge-label",
+            "regular"
+          ]
+        },
         "background-color": "#ffffff",
         "border-color": "#d9d9d9",
         "color": "#000000"
       },
-      "variants": [{ "key": "43-0-K" }, { "key": "43-1-D" }]
+      "variants": [
+        {
+          "key": "43-0-K"
+        },
+        {
+          "key": "43-1-D"
+        }
+      ]
     },
     {
       "key": 49,
@@ -44,15 +68,26 @@
       "coverage": "regular",
       "badge-label": 49,
       "badge-style": {
-        "class-names": { "class-name": ["badge-label", "regular"] },
+        "class-names": {
+          "class-name": [
+            "badge-label",
+            "regular"
+          ]
+        },
         "background-color": "#ffffff",
         "border-color": "#d9d9d9",
         "color": "#000000"
       },
       "variants": [
-        { "key": "49-0-S" },
-        { "key": "49-1-D" },
-        { "key": "49-0-T" }
+        {
+          "key": "49-0-S"
+        },
+        {
+          "key": "49-1-D"
+        },
+        {
+          "key": "49-0-T"
+        }
       ]
     },
     {
@@ -65,16 +100,29 @@
       "coverage": "regular",
       "badge-label": 50,
       "badge-style": {
-        "class-names": { "class-name": ["badge-label", "regular"] },
+        "class-names": {
+          "class-name": [
+            "badge-label",
+            "regular"
+          ]
+        },
         "background-color": "#ffffff",
         "border-color": "#d9d9d9",
         "color": "#000000"
       },
       "variants": [
-        { "key": "50-1-D" },
-        { "key": "50-1-W" },
-        { "key": "50-0-S" },
-        { "key": "50-1-*" }
+        {
+          "key": "50-1-D"
+        },
+        {
+          "key": "50-1-W"
+        },
+        {
+          "key": "50-0-S"
+        },
+        {
+          "key": "50-1-*"
+        }
       ]
     },
     {
@@ -87,18 +135,35 @@
       "coverage": "regular",
       "badge-label": 10,
       "badge-style": {
-        "class-names": { "class-name": ["badge-label", "regular"] },
+        "class-names": {
+          "class-name": [
+            "badge-label",
+            "regular"
+          ]
+        },
         "background-color": "#ffffff",
         "border-color": "#d9d9d9",
         "color": "#000000"
       },
       "variants": [
-        { "key": "10-0-SP" },
-        { "key": "10-0-ST" },
-        { "key": "10-1-WT" },
-        { "key": "10-1-#" },
-        { "key": "10-1-WP" },
-        { "key": "10-1-W" }
+        {
+          "key": "10-0-SP"
+        },
+        {
+          "key": "10-0-ST"
+        },
+        {
+          "key": "10-1-WT"
+        },
+        {
+          "key": "10-1-#"
+        },
+        {
+          "key": "10-1-WP"
+        },
+        {
+          "key": "10-1-W"
+        }
       ]
     },
     {
@@ -111,13 +176,25 @@
       "coverage": "regular",
       "badge-label": 56,
       "badge-style": {
-        "class-names": { "class-name": ["badge-label", "regular"] },
+        "class-names": {
+          "class-name": [
+            "badge-label",
+            "regular"
+          ]
+        },
         "background-color": "#ffffff",
         "border-color": "#d9d9d9",
         "color": "#000000"
       },
-      "variants": [{ "key": "56-0-S" }, { "key": "56-1-D" }]
+      "variants": [
+        {
+          "key": "56-0-S"
+        },
+        {
+          "key": "56-1-D"
+        }
+      ]
     }
   ],
-  "query-time": "2025-06-03T18:50:57"
+  "query-time": "2025-06-03T18:56:38"
 }

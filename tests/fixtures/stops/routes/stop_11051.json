@@ -10,12 +10,24 @@
       "coverage": "regular",
       "badge-label": 53,
       "badge-style": {
-        "class-names": { "class-name": ["badge-label", "regular"] },
+        "class-names": {
+          "class-name": [
+            "badge-label",
+            "regular"
+          ]
+        },
         "background-color": "#ffffff",
         "border-color": "#d9d9d9",
         "color": "#000000"
       },
-      "variants": [{ "key": "53-1-D" }, { "key": "53-0-N" }]
+      "variants": [
+        {
+          "key": "53-1-D"
+        },
+        {
+          "key": "53-0-N"
+        }
+      ]
     },
     {
       "key": 47,
@@ -27,18 +39,31 @@
       "coverage": "regular",
       "badge-label": 47,
       "badge-style": {
-        "class-names": { "class-name": ["badge-label", "regular"] },
+        "class-names": {
+          "class-name": [
+            "badge-label",
+            "regular"
+          ]
+        },
         "background-color": "#ffffff",
         "border-color": "#d9d9d9",
         "color": "#000000"
       },
       "variants": [
-        { "key": "47-1-#" },
-        { "key": "47-0-K" },
-        { "key": "47-1-U" },
-        { "key": "47-0-R" }
+        {
+          "key": "47-1-#"
+        },
+        {
+          "key": "47-0-K"
+        },
+        {
+          "key": "47-1-U"
+        },
+        {
+          "key": "47-0-R"
+        }
       ]
     }
   ],
-  "query-time": "2025-06-03T18:50:54"
+  "query-time": "2025-06-03T18:56:34"
 }
