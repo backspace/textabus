@@ -4,6 +4,8 @@
       "key": 10625,
       "name": "NB Main@Broadway (Union Station)",
       "number": 10625,
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "direction": "Northbound",
       "side": "Farside Opposite",
       "street": {
@@ -22,20 +24,22 @@
           "y": 5527987
         },
         "geographic": {
-          "latitude": "49.88927",
-          "longitude": "-97.13486"
+          "latitude": 49.88927,
+          "longitude": -97.13486
         }
       },
       "distances": {
-        "direct": "56.73"
+        "direct": 56.4
       }
     },
     {
       "key": 10641,
       "name": "SB Main@Broadway (Union Station)",
       "number": 10641,
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "direction": "Southbound",
-      "side": "Nearside",
+      "side": "Farside",
       "street": {
         "key": 2265,
         "name": "MainSt",
@@ -48,22 +52,24 @@
       "centre": {
         "utm": {
           "zone": "14U",
-          "x": 633950,
-          "y": 5527953
+          "x": 633983,
+          "y": 5527876
         },
         "geographic": {
-          "latitude": "49.88897",
-          "longitude": "-97.13518"
+          "latitude": 49.88827,
+          "longitude": -97.13474
         }
       },
       "distances": {
-        "direct": "67.31"
+        "direct": 84.17
       }
     },
     {
       "key": 11052,
       "name": "WB Broadway@Main",
       "number": 11052,
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "direction": "Westbound",
       "side": "Farside",
       "street": {
@@ -78,22 +84,24 @@
       "centre": {
         "utm": {
           "zone": "14U",
-          "x": 633910,
-          "y": 5527934
+          "x": 633907,
+          "y": 5527933
         },
         "geographic": {
-          "latitude": "49.8888",
-          "longitude": "-97.13574"
+          "latitude": 49.8888,
+          "longitude": -97.13578
         }
       },
       "distances": {
-        "direct": "108.96"
+        "direct": 111.8
       }
     },
     {
       "key": 11010,
       "name": "NB Fort@Broadway",
       "number": 11010,
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "direction": "Northbound",
       "side": "Farside",
       "street": {
@@ -112,49 +120,20 @@
           "y": 5527936
         },
         "geographic": {
-          "latitude": "49.88883",
-          "longitude": "-97.13632"
+          "latitude": 49.88883,
+          "longitude": -97.13632
         }
       },
       "distances": {
-        "direct": "150.26"
-      }
-    },
-    {
-      "key": 10642,
-      "name": "SB Main@Assiniboine",
-      "number": 10642,
-      "direction": "Southbound",
-      "side": "Nearside",
-      "street": {
-        "key": 2265,
-        "name": "MainSt",
-        "type": "Street"
-      },
-      "cross-street": {
-        "key": 174,
-        "name": "AssiniboineAve",
-        "type": "Avenue"
-      },
-      "centre": {
-        "utm": {
-          "zone": "14U",
-          "x": 634014,
-          "y": 5527789
-        },
-        "geographic": {
-          "latitude": "49.88748",
-          "longitude": "-97.13434"
-        }
-      },
-      "distances": {
-        "direct": "163.9"
+        "direct": 149.97
       }
     },
     {
       "key": 10901,
       "name": "SB Israel Asper@Canadian Museum for Human Rights",
       "number": 10901,
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "direction": "Southbound",
       "side": "Nearside",
       "street": {
@@ -171,21 +150,23 @@
         "utm": {
           "zone": "14U",
           "x": 634181,
-          "y": 5528050
+          "y": 5528049
         },
         "geographic": {
-          "latitude": "49.88979",
-          "longitude": "-97.13193"
+          "latitude": 49.88978,
+          "longitude": -97.13193
         }
       },
       "distances": {
-        "direct": "190.34"
+        "direct": 190.03
       }
     },
     {
       "key": 10902,
       "name": "NB Israel Asper@Canadian Museum for Human Rights",
       "number": 10902,
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "direction": "Northbound",
       "side": "Farside",
       "street": {
@@ -201,22 +182,24 @@
       "centre": {
         "utm": {
           "zone": "14U",
-          "x": 634217,
-          "y": 5527991
+          "x": 634220,
+          "y": 5527993
         },
         "geographic": {
-          "latitude": "49.88925",
-          "longitude": "-97.13145"
+          "latitude": 49.88927,
+          "longitude": -97.13141
         }
       },
       "distances": {
-        "direct": "203.3"
+        "direct": 206.9
       }
     },
     {
       "key": 10624,
       "name": "NB Main@Assiniboine",
       "number": 10624,
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "direction": "Northbound",
       "side": "Nearside Opposite",
       "street": {
@@ -236,18 +219,20 @@
           "y": 5527722
         },
         "geographic": {
-          "latitude": "49.88686",
-          "longitude": "-97.13349"
+          "latitude": 49.88686,
+          "longitude": -97.13349
         }
       },
       "distances": {
-        "direct": "238.46"
+        "direct": 238.67
       }
     },
     {
       "key": 10830,
       "name": "NB Fort@Assiniboine",
       "number": 10830,
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "direction": "Northbound",
       "side": "Farside",
       "street": {
@@ -267,48 +252,20 @@
           "y": 5527724
         },
         "geographic": {
-          "latitude": "49.88691",
-          "longitude": "-97.13531"
+          "latitude": 49.88691,
+          "longitude": -97.13531
         }
       },
       "distances": {
-        "direct": "239.72"
-      }
-    },
-    {
-      "key": 10590,
-      "name": "WB Broadway@Garry",
-      "number": 10590,
-      "direction": "Westbound",
-      "side": "Nearside",
-      "street": {
-        "key": 519,
-        "name": "Broadway"
-      },
-      "cross-street": {
-        "key": 1437,
-        "name": "GarrySt",
-        "type": "Street"
-      },
-      "centre": {
-        "utm": {
-          "zone": "14U",
-          "x": 633786,
-          "y": 5527881
-        },
-        "geographic": {
-          "latitude": "49.88836",
-          "longitude": "-97.13748"
-        }
-      },
-      "distances": {
-        "direct": "242.22"
+        "direct": 239.75
       }
     },
     {
       "key": 10907,
       "name": "EB Forks Market@The Forks Market",
       "number": 10907,
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "direction": "Eastbound",
       "side": "Farside Opposite",
       "street": {
@@ -328,18 +285,20 @@
           "y": 5527835
         },
         "geographic": {
-          "latitude": "49.88783",
-          "longitude": "-97.13071"
+          "latitude": 49.88783,
+          "longitude": -97.13071
         }
       },
       "distances": {
-        "direct": "282.46"
+        "direct": 282.8
       }
     },
     {
       "key": 10639,
       "name": "SB Main@St. Mary",
       "number": 10639,
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "direction": "Southbound",
       "side": "Farside",
       "street": {
@@ -359,18 +318,20 @@
           "y": 5528217
         },
         "geographic": {
-          "latitude": "49.89136",
-          "longitude": "-97.13643"
+          "latitude": 49.89136,
+          "longitude": -97.13643
         }
       },
       "distances": {
-        "direct": "311.07"
+        "direct": 310.79
       }
     },
     {
       "key": 10939,
       "name": "SB Israel Asper@William Stephenson",
       "number": 10939,
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "direction": "Southbound",
       "side": "Farside",
       "street": {
@@ -390,27 +351,29 @@
           "y": 5528250
         },
         "geographic": {
-          "latitude": "49.8916",
-          "longitude": "-97.13261"
+          "latitude": 49.8916,
+          "longitude": -97.13261
         }
       },
       "distances": {
-        "direct": "316.73"
+        "direct": 316.72
       }
     },
     {
       "key": 10589,
       "name": "EB Broadway@Smith",
       "number": 10589,
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "direction": "Eastbound",
-      "side": "Nearside",
+      "side": "Farside",
       "street": {
         "key": 519,
         "name": "Broadway"
       },
       "cross-street": {
-        "key": 1437,
-        "name": "GarrySt",
+        "key": 3371,
+        "name": "SmithSt",
         "type": "Street"
       },
       "centre": {
@@ -420,18 +383,52 @@
           "y": 5527827
         },
         "geographic": {
-          "latitude": "49.88788",
-          "longitude": "-97.13836"
+          "latitude": 49.88788,
+          "longitude": -97.13836
         }
       },
       "distances": {
-        "direct": "319.18"
+        "direct": 318.94
+      }
+    },
+    {
+      "key": 10590,
+      "name": "WB Broadway@Smith",
+      "number": 10590,
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
+      "direction": "Westbound",
+      "side": "Nearside",
+      "street": {
+        "key": 519,
+        "name": "Broadway"
+      },
+      "cross-street": {
+        "key": 3371,
+        "name": "SmithSt",
+        "type": "Street"
+      },
+      "centre": {
+        "utm": {
+          "zone": "14U",
+          "x": 633694,
+          "y": 5527852
+        },
+        "geographic": {
+          "latitude": 49.88812,
+          "longitude": -97.13877
+        }
+      },
+      "distances": {
+        "direct": 338.42
       }
     },
     {
       "key": 11051,
       "name": "NB Main@St. Mary",
       "number": 11051,
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "direction": "Northbound",
       "side": "Nearside Opposite",
       "street": {
@@ -451,18 +448,20 @@
           "y": 5528262
         },
         "geographic": {
-          "latitude": "49.89176",
-          "longitude": "-97.1362"
+          "latitude": 49.89176,
+          "longitude": -97.1362
         }
       },
       "distances": {
-        "direct": "342.87"
+        "direct": 342.61
       }
     },
     {
       "key": 10651,
       "name": "NB Smith@Broadway",
       "number": 10651,
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "direction": "Northbound",
       "side": "Farside",
       "street": {
@@ -481,18 +480,20 @@
           "y": 5527885
         },
         "geographic": {
-          "latitude": "49.88842",
-          "longitude": "-97.13904"
+          "latitude": 49.88842,
+          "longitude": -97.13904
         }
       },
       "distances": {
-        "direct": "349.95"
+        "direct": 349.68
       }
     },
     {
       "key": 11024,
       "name": "NB Fort@St. Mary",
       "number": 11024,
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "direction": "Northbound",
       "side": "Nearside",
       "street": {
@@ -512,18 +513,20 @@
           "y": 5528220
         },
         "geographic": {
-          "latitude": "49.89141",
-          "longitude": "-97.13773"
+          "latitude": 49.89141,
+          "longitude": -97.13773
         }
       },
       "distances": {
-        "direct": "370.9"
+        "direct": 370.59
       }
     },
     {
       "key": 10620,
       "name": "WB St Mary@Fort",
       "number": 10620,
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "direction": "Westbound",
       "side": "Nearside",
       "street": {
@@ -543,18 +546,20 @@
           "y": 5528255
         },
         "geographic": {
-          "latitude": "49.89172",
-          "longitude": "-97.13753"
+          "latitude": 49.89172,
+          "longitude": -97.13753
         }
       },
       "distances": {
-        "direct": "388.55"
+        "direct": 388.25
       }
     },
     {
       "key": 10675,
       "name": "NB Smith@Navy",
       "number": 10675,
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "direction": "Northbound",
       "side": "Farside",
       "street": {
@@ -573,18 +578,20 @@
           "y": 5527676
         },
         "geographic": {
-          "latitude": "49.88652",
-          "longitude": "-97.13821"
+          "latitude": 49.88652,
+          "longitude": -97.13821
         }
       },
       "distances": {
-        "direct": "392.57"
+        "direct": 392.45
       }
     },
     {
       "key": 10803,
       "name": "EB William Stephenson@Canadian Museum for Human Rights",
       "number": 10803,
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "direction": "Eastbound",
       "side": "Nearside",
       "street": {
@@ -604,18 +611,20 @@
           "y": 5528340
         },
         "geographic": {
-          "latitude": "49.89241",
-          "longitude": "-97.13297"
+          "latitude": 49.89241,
+          "longitude": -97.13297
         }
       },
       "distances": {
-        "direct": "395.66"
+        "direct": 395.59
       }
     },
     {
       "key": 10804,
       "name": "WB Pioneer@Canadian Museum for Human Rights",
       "number": 10804,
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "direction": "Westbound",
       "side": "Farside",
       "street": {
@@ -635,48 +644,20 @@
           "y": 5528354
         },
         "geographic": {
-          "latitude": "49.89253",
-          "longitude": "-97.13263"
+          "latitude": 49.89253,
+          "longitude": -97.13263
         }
       },
       "distances": {
-        "direct": "414.82"
-      }
-    },
-    {
-      "key": 10591,
-      "name": "WB Broadway@Donald",
-      "number": 10591,
-      "direction": "Westbound",
-      "side": "Nearside",
-      "street": {
-        "key": 519,
-        "name": "Broadway"
-      },
-      "cross-street": {
-        "key": 1070,
-        "name": "DonaldSt",
-        "type": "Street"
-      },
-      "centre": {
-        "utm": {
-          "zone": "14U",
-          "x": 633600,
-          "y": 5527811
-        },
-        "geographic": {
-          "latitude": "49.88777",
-          "longitude": "-97.1401"
-        }
-      },
-      "distances": {
-        "direct": "440.77"
+        "direct": 414.77
       }
     },
     {
       "key": 10158,
       "name": "NB Queen Elizabeth@Mayfair",
       "number": 10158,
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "direction": "Northbound",
       "side": "Nearside Opposite",
       "street": {
@@ -696,18 +677,20 @@
           "y": 5527536
         },
         "geographic": {
-          "latitude": "49.88517",
-          "longitude": "-97.13215"
+          "latitude": 49.88517,
+          "longitude": -97.13215
         }
       },
       "distances": {
-        "direct": "446.77"
+        "direct": 447
       }
     },
     {
       "key": 10588,
       "name": "EB Broadway@Donald",
       "number": 10588,
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "direction": "Eastbound",
       "side": "Nearside",
       "street": {
@@ -726,18 +709,20 @@
           "y": 5527772
         },
         "geographic": {
-          "latitude": "49.88742",
-          "longitude": "-97.14042"
+          "latitude": 49.88742,
+          "longitude": -97.14042
         }
       },
       "distances": {
-        "direct": "475.09"
+        "direct": 474.85
       }
     },
     {
       "key": 10672,
       "name": "SB Donald@York",
       "number": 10672,
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "direction": "Southbound",
       "side": "Farside",
       "street": {
@@ -757,18 +742,20 @@
           "y": 5527922
         },
         "geographic": {
-          "latitude": "49.88878",
-          "longitude": "-97.14098"
+          "latitude": 49.88878,
+          "longitude": -97.14098
         }
       },
       "distances": {
-        "direct": "484.29"
+        "direct": 483.99
       }
     },
     {
       "key": 10652,
       "name": "NB Smith@St. Mary",
       "number": 10652,
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "direction": "Northbound",
       "side": "Nearside",
       "street": {
@@ -788,18 +775,52 @@
           "y": 5528156
         },
         "geographic": {
-          "latitude": "49.89088",
-          "longitude": "-97.14038"
+          "latitude": 49.89088,
+          "longitude": -97.14038
         }
       },
       "distances": {
-        "direct": "490.36"
+        "direct": 490.03
+      }
+    },
+    {
+      "key": 10591,
+      "name": "WB Broadway@Donald",
+      "number": 10591,
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
+      "direction": "Westbound",
+      "side": "Farside",
+      "street": {
+        "key": 519,
+        "name": "Broadway"
+      },
+      "cross-street": {
+        "key": 1070,
+        "name": "DonaldSt",
+        "type": "Street"
+      },
+      "centre": {
+        "utm": {
+          "zone": "14U",
+          "x": 633547,
+          "y": 5527796
+        },
+        "geographic": {
+          "latitude": 49.88764,
+          "longitude": -97.14084
+        }
+      },
+      "distances": {
+        "direct": 495.53
       }
     },
     {
       "key": 10157,
       "name": "EB Mayfair@Queen Elizabeth",
       "number": 10157,
+      "effective-from": "2025-04-13T00:00:00",
+      "effective-to": "2025-06-29T02:59:59",
       "direction": "Eastbound",
       "side": "Nearside",
       "street": {
@@ -819,14 +840,14 @@
           "y": 5527463
         },
         "geographic": {
-          "latitude": "49.88453",
-          "longitude": "-97.13312"
+          "latitude": 49.88453,
+          "longitude": -97.13312
         }
       },
       "distances": {
-        "direct": "498.56"
+        "direct": 498.75
       }
     }
   ],
-  "query-time": "2024-01-11T20:02:39"
+  "query-time": "2025-06-03T20:34:45"
 }
