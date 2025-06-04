@@ -24,8 +24,8 @@
             "y": 5528255
           },
           "geographic": {
-            "latitude": "49.89172",
-            "longitude": "-97.13753"
+            "latitude": 49.89172,
+            "longitude": -97.13753
           }
         }
       },
@@ -52,8 +52,8 @@
             "y": 5528255
           },
           "geographic": {
-            "latitude": "49.89172",
-            "longitude": "-97.13753"
+            "latitude": 49.89172,
+            "longitude": -97.13753
           }
         }
       }
