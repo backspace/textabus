@@ -3,7 +3,7 @@
     {
       "key": 38,
       "number": 38,
-      "name": "Route 38 Salter",
+      "name": "Salter",
       "effective-from": "2025-04-13T00:00:00",
       "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
@@ -32,7 +32,7 @@
     {
       "key": 43,
       "number": 43,
-      "name": "Route 43 Munroe",
+      "name": "Munroe",
       "effective-from": "2025-04-13T00:00:00",
       "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
@@ -61,7 +61,7 @@
     {
       "key": 49,
       "number": 49,
-      "name": "Route 49 Dugald",
+      "name": "Dugald",
       "effective-from": "2025-04-13T00:00:00",
       "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
@@ -93,7 +93,7 @@
     {
       "key": 50,
       "number": 50,
-      "name": "Route 50 Archibald",
+      "name": "Archibald",
       "effective-from": "2025-04-13T00:00:00",
       "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
@@ -128,7 +128,7 @@
     {
       "key": 10,
       "number": 10,
-      "name": "Route 10 St. Boniface-West Broadway",
+      "name": "St. Boniface-West Broadway",
       "effective-from": "2025-04-13T00:00:00",
       "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
@@ -169,7 +169,7 @@
     {
       "key": 56,
       "number": 56,
-      "name": "Route 56 St. Boniface",
+      "name": "St. Boniface",
       "effective-from": "2025-04-13T00:00:00",
       "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
@@ -196,5 +196,5 @@
       ]
     }
   ],
-  "query-time": "2025-06-03T18:56:37"
+  "query-time": "2025-06-03T19:55:43"
 }

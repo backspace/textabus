@@ -3,7 +3,7 @@
     {
       "key": 53,
       "number": 53,
-      "name": "Route 53 Norwood",
+      "name": "Norwood",
       "effective-from": "2025-04-13T00:00:00",
       "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
@@ -32,7 +32,7 @@
     {
       "key": 47,
       "number": 47,
-      "name": "Route 47 Transcona - Pembina",
+      "name": "Transcona - Pembina",
       "effective-from": "2025-04-13T00:00:00",
       "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
@@ -65,5 +65,5 @@
       ]
     }
   ],
-  "query-time": "2025-06-03T18:56:34"
+  "query-time": "2025-06-03T19:55:34"
 }

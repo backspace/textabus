@@ -3,7 +3,7 @@
     {
       "key": 38,
       "number": 38,
-      "name": "Route 38 Salter",
+      "name": "Salter",
       "effective-from": "2025-04-13T00:00:00",
       "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
@@ -30,5 +30,5 @@
       ]
     }
   ],
-  "query-time": "2025-06-03T18:56:32"
+  "query-time": "2025-06-03T19:55:31"
 }

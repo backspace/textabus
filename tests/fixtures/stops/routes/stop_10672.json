@@ -3,7 +3,7 @@
     {
       "key": 65,
       "number": 65,
-      "name": "Route 65 Grant Express",
+      "name": "Grant Express",
       "effective-from": "2025-04-13T00:00:00",
       "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
@@ -32,7 +32,7 @@
     {
       "key": 66,
       "number": 66,
-      "name": "Route 66 Grant",
+      "name": "Grant",
       "effective-from": "2025-04-13T00:00:00",
       "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
@@ -68,5 +68,5 @@
       ]
     }
   ],
-  "query-time": "2025-06-03T18:56:41"
+  "query-time": "2025-06-03T19:55:51"
 }

@@ -3,7 +3,7 @@
     {
       "key": 53,
       "number": 53,
-      "name": "Route 53 Norwood",
+      "name": "Norwood",
       "effective-from": "2025-04-13T00:00:00",
       "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
@@ -32,7 +32,7 @@
     {
       "key": 54,
       "number": 54,
-      "name": "Route 54 St. Mary's Express",
+      "name": "St. Mary's Express",
       "effective-from": "2025-04-13T00:00:00",
       "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
@@ -64,7 +64,7 @@
     {
       "key": 55,
       "number": 55,
-      "name": "Route 55 St. Anne's",
+      "name": "St. Anne's",
       "effective-from": "2025-04-13T00:00:00",
       "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
@@ -105,7 +105,7 @@
     {
       "key": 59,
       "number": 59,
-      "name": "Route 59 South St. Anne's Express",
+      "name": "South St. Anne's Express",
       "effective-from": "2025-04-13T00:00:00",
       "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
@@ -137,7 +137,7 @@
     {
       "key": 14,
       "number": 14,
-      "name": "Route 14 Ellice-St. Mary's",
+      "name": "Ellice-St. Mary's",
       "effective-from": "2025-04-13T00:00:00",
       "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
@@ -172,7 +172,7 @@
     {
       "key": 57,
       "number": 57,
-      "name": "Route 57 Southdale Express",
+      "name": "Southdale Express",
       "effective-from": "2025-04-13T00:00:00",
       "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
@@ -201,7 +201,7 @@
     {
       "key": 19,
       "number": 19,
-      "name": "Route 19 Marion-Logan-Notre Dame",
+      "name": "Marion-Logan-Notre Dame",
       "effective-from": "2025-04-13T00:00:00",
       "effective-to": "2025-06-29T02:59:59",
       "customer-type": "regular",
@@ -246,5 +246,5 @@
       ]
     }
   ],
-  "query-time": "2025-06-03T18:56:41"
+  "query-time": "2025-06-03T19:55:48"
 }
