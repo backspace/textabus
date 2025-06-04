@@ -1,5 +1,5 @@
 use serde::Deserialize;
-use serde_json::Value;
+use serde_json::{Number, Value};
 use sqlx::{types::Uuid, PgPool};
 
 use crate::{commands::StopsCommand, config::Config, odws::fetch_from_odws};
@@ -131,7 +131,7 @@ pub async fn handle_stops_request(
 
 fn extract_location_details(
     locations_response_text: &str,
-) -> Result<(String, String, String), Box<dyn std::error::Error>> {
+) -> Result<(String, Number, Number), Box<dyn std::error::Error>> {
     let location_name;
     let latitude;
     let longitude;
@@ -196,8 +196,8 @@ mod tests {
             location_name,
             "Via Rail Station (Union Station) (123 Main Street)"
         );
-        assert_eq!(latitude, "49.88895");
-        assert_eq!(longitude, "-97.13424");
+        assert_eq!(latitude.to_string(), "49.88895");
+        assert_eq!(longitude.to_string(), "-97.13424");
     }
 
     #[test]
@@ -210,8 +210,8 @@ mod tests {
 
         let (location_name, latitude, longitude) = result.unwrap();
         assert_eq!(location_name, "245 SmithSt");
-        assert_eq!(latitude, "49.89218");
-        assert_eq!(longitude, "-97.14084");
+        assert_eq!(latitude.to_string(), "49.89218");
+        assert_eq!(longitude.to_string(), "-97.14084");
     }
 
     #[test]
@@ -224,8 +224,8 @@ mod tests {
 
         let (location_name, latitude, longitude) = result.unwrap();
         assert_eq!(location_name, "PortageAve@MainSt");
-        assert_eq!(latitude, "49.89553");
-        assert_eq!(longitude, "-97.13848");
+        assert_eq!(latitude.to_string(), "49.89553");
+        assert_eq!(longitude.to_string(), "-97.13848");
     }
 }
 
@@ -249,8 +249,8 @@ struct Centre {
 
 #[derive(Deserialize)]
 struct Geographic {
-    latitude: String,
-    longitude: String,
+    latitude: Number,
+    longitude: Number,
 }
 
 #[derive(Deserialize)]
