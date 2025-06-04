@@ -15,12 +15,12 @@
       "centre": {
         "utm": {
           "zone": "14U",
-          "x": "633694.71",
-          "y": "5528676.7"
+          "x": 633694.71,
+          "y": 5528676.7
         },
         "geographic": {
-          "latitude": "49.89553",
-          "longitude": "-97.13848"
+          "latitude": 49.89553,
+          "longitude": -97.13848
         }
       },
       "type": "intersection"
@@ -41,17 +41,16 @@
       "centre": {
         "utm": {
           "zone": "14U",
-          "x": "633694.71",
-          "y": "5528676.7"
+          "x": 633694.71,
+          "y": 5528676.7
         },
         "geographic": {
-          "latitude": "49.89553",
-          "longitude": "-97.13848"
+          "latitude": 49.89553,
+          "longitude": -97.13848
         }
       },
       "type": "intersection"
     }
   ],
-
-  "query-time": "2024-01-12T22:49:03"
+  "query-time": "2025-06-03T19:13:46"
 }

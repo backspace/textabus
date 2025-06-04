@@ -15,8 +15,8 @@
           "y": 5528300
         },
         "geographic": {
-          "latitude": "49.89218",
-          "longitude": "-97.14084"
+          "latitude": 49.89218,
+          "longitude": -97.14084
         }
       },
       "type": "address"
@@ -36,12 +36,12 @@
           "y": 5532745
         },
         "geographic": {
-          "latitude": "49.9319",
-          "longitude": "-97.12439"
+          "latitude": 49.9319,
+          "longitude": -97.12439
         }
       },
       "type": "address"
     }
   ],
-  "query-time": "2024-01-12T22:43:47"
+  "query-time": "2025-06-03T19:13:46"
 }

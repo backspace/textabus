@@ -4,8 +4,8 @@
       "key": 11556,
       "name": "Assiniboine Downs",
       "categories": [
-        "Entertainment: Tourist Attractions",
-        "Sports and Recreation: Race Tracks"
+        "Sports and Recreation: Race Tracks",
+        "Entertainment: Tourist Attractions"
       ],
       "address": {
         "key": 78758,
@@ -22,13 +22,13 @@
             "y": 5527870
           },
           "geographic": {
-            "latitude": "49.89117",
-            "longitude": "-97.32834"
+            "latitude": 49.89117,
+            "longitude": -97.32834
           }
         }
       },
       "type": "monument"
     }
   ],
-  "query-time": "2024-01-13T10:27:40"
+  "query-time": "2025-06-03T19:13:46"
 }
