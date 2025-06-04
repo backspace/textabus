@@ -1,3 +1,5 @@
+use chrono::Local;
+
 use serde::Deserialize;
 use serde_json::{Number, Value};
 use sqlx::{types::Uuid, PgPool};
@@ -14,7 +16,12 @@ pub async fn handle_stops_request(
     maybe_incoming_message_id: Option<Uuid>,
     db: &PgPool,
 ) -> Result<String, Box<dyn std::error::Error>> {
-    let locations_query = format!("/v4/locations:{}.json?usage=short", command.location);
+    let effective_on_string = Local::now().format("%Y-%m-%d").to_string();
+
+    let locations_query = format!(
+        "/v4/locations:{}.json?usage=short&effective-on={}",
+        command.location, effective_on_string
+    );
     log::trace!("locations URL: {}", locations_query);
 
     let (_locations_response_status, locations_response_text) = fetch_from_odws(
@@ -33,8 +40,8 @@ pub async fn handle_stops_request(
         };
 
     let stops_query = format!(
-        "/v4/stops.json?lat={}&lon={}&distance={}&usage=short",
-        latitude, longitude, STOPS_DISTANCE
+        "/v4/stops.json?lat={}&lon={}&distance={}&usage=short&effective-on={}",
+        latitude, longitude, STOPS_DISTANCE, effective_on_string
     );
 
     log::trace!("stops URL: {}", stops_query);
@@ -68,7 +75,10 @@ pub async fn handle_stops_request(
     let mut response = format!("Stops near {}\n", location_name);
 
     for stop in stops_response.stops.iter().take(MAXIMUM_STOPS_TO_RETURN) {
-        let routes_query = format!("/v4/routes.json?stop={}", stop.number);
+        let routes_query = format!(
+            "/v4/routes.json?stop={}&effective-on={}",
+            stop.number, effective_on_string
+        );
 
         log::trace!("routes URL: {}", routes_query);
 

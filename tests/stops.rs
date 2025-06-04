@@ -2,6 +2,7 @@ mod helpers;
 
 use helpers::get;
 
+use assertables::assert_starts_with;
 use indoc::indoc;
 use select::{document::Document, predicate::Name};
 use speculoos::prelude::*;
@@ -144,7 +145,7 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
 
     assert_eq!(locations_response.message_id, incoming_message.id);
     assert_eq!(locations_response.body, mock_locations_response);
-    assert_eq!(
+    assert_starts_with!(
         locations_response.query,
         format!("/v4/locations:Union Station.json?usage=short")
     );
@@ -155,7 +156,7 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
 
     assert_eq!(stops_response.message_id, incoming_message.id);
     assert_eq!(stops_response.body, mock_stops_response);
-    assert_eq!(
+    assert_starts_with!(
         stops_response.query,
         format!("/v4/stops.json?lat=49.88895&lon=-97.13424&distance=500&usage=short")
     );
@@ -169,7 +170,7 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
 
         assert_eq!(route_response.message_id, incoming_message.id);
         assert_eq!(route_response.body, *data);
-        assert_eq!(route_response.query, *path);
+        assert_starts_with!(route_response.query, *path);
     }
 }
 
@@ -221,7 +222,7 @@ async fn stops_handles_an_empty_locations_response(db: PgPool) {
         .expect("Failed to fetch API response");
 
     assert_eq!(api_response.body, mock_locations_response);
-    assert_eq!(api_response.query, "/v4/locations:acab.json?usage=short");
+    assert_starts_with!(api_response.query, "/v4/locations:acab.json?usage=short");
 }
 
 #[sqlx::test(fixtures("numbers-approved"))]
