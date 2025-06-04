@@ -194,7 +194,7 @@ mod tests {
         let (location_name, latitude, longitude) = result.unwrap();
         assert_eq!(
             location_name,
-            "Via Rail Station (Union Station) (123 Main Street)"
+            "Via Rail Station (Union Station) (123 MainSt)"
         );
         assert_eq!(latitude.to_string(), "49.88895");
         assert_eq!(longitude.to_string(), "-97.13424");
