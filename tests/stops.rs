@@ -163,9 +163,11 @@ async fn stops_returns_stops_and_routes_near_a_location(db: PgPool) {
 
     let routes_responses: Vec<&ApiResponse> = api_responses.iter().skip(2).collect();
 
-    for (index, (path, data, stop)) in mock_routes.iter().enumerate() {
+    for (path, data, stop) in mock_routes.iter() {
+        let stop_query_parameter = format!("stop={}", stop);
         let route_response = routes_responses
-            .get(index)
+            .iter()
+            .find(|r| r.query.contains(&stop_query_parameter))
             .unwrap_or_else(|| panic!("Expected persisted route response for stop {}", stop));
 
         assert_eq!(route_response.message_id, incoming_message.id);
