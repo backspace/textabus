@@ -77,7 +77,7 @@ jobs:
         with:
           key: sqlx-${{ env.SQLX_VERSION }}
       - name: Generate code coverage
-        run: export $(cat .env.test | xargs) && cargo install cargo-tarpaulin@0.25.2 && cargo tarpaulin --verbose --workspace --out lcov --output-dir coverage
+        run: export $(cat .env.test | xargs) && cargo install cargo-tarpaulin@0.25.2 --locked && cargo tarpaulin --verbose --workspace --out lcov --output-dir coverage
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost/postgres
       - name: Coveralls GitHub Action
