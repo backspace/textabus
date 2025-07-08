@@ -63,7 +63,12 @@ pub async fn handle_times_request(
             _ => panic!("Unexpected type parsing route number"),
         };
 
-        if !command.routes.is_empty() && !command.routes.contains(route_number) {
+        if !command.routes.is_empty()
+            && !command
+                .routes
+                .iter()
+                .any(|r| r.eq_ignore_ascii_case(route_number))
+        {
             continue;
         }
 
