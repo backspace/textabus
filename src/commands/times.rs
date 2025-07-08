@@ -51,6 +51,7 @@ pub async fn handle_times_request(
     };
 
     let mut schedule_lines: Vec<(NaiveDateTime, String)> = Vec::new();
+    let mut route_matched = false;
 
     for route_schedule in &parsed_response.stop_schedule.route_schedules {
         let number_as_string;
@@ -71,6 +72,8 @@ pub async fn handle_times_request(
         {
             continue;
         }
+
+        route_matched = true;
 
         for scheduled_stop in &route_schedule.scheduled_stops {
             let time = NaiveDateTime::parse_from_str(
@@ -139,6 +142,13 @@ pub async fn handle_times_request(
         } else {
             break;
         }
+    }
+
+    if !route_matched {
+        response_text.push_str(&format!(
+            "No routes found matching {} at this stop",
+            command.routes.join(" ")
+        ));
     }
 
     Ok(response_text)
